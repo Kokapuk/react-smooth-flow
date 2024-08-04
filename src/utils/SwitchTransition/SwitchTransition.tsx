@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { cloneElement, useEffect, useRef, useState } from 'react';
+import { cloneElement, RefObject, useEffect, useRef, useState } from 'react';
 import { Element, TransitionState } from '.';
 import { Rect } from '../LayoutTransition';
 
@@ -8,14 +8,16 @@ interface Props {
   classes: { enter: string; exit: string };
   freeSpaceOnExit?: boolean;
   trigger: 'transition' | 'animation';
+  nodeRef?: RefObject<HTMLElement>;
 }
 
-const SwitchTransition = ({ children, classes, freeSpaceOnExit, trigger }: Props) => {
+const SwitchTransition = ({ children, classes, freeSpaceOnExit, trigger, nodeRef }: Props) => {
   const [currentChild, setCurrentChild] = useState(children);
   const nextChild = useRef<Element>(false);
   const [transitionState, setTransitionState] = useState<TransitionState>('none');
   const savedPos = useRef<Pick<Rect, 'top' | 'left'> | null>(null);
-  const currentChildRef = useRef<HTMLElement | null>(null);
+  const innerCurrentChildRef = useRef<HTMLElement | null>(null);
+  const currentChildRef = nodeRef ?? innerCurrentChildRef;
   const [scrollY, setScrollY] = useState(0);
   const childKey = children ? children.key : false;
 
@@ -61,6 +63,17 @@ const SwitchTransition = ({ children, classes, freeSpaceOnExit, trigger }: Props
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if ((children as any).ref && !nodeRef) {
+    throw new Error(
+      'Wrapped element has a ref assigned. Either pass nodeRef prop or unassign ref from wrapped component.'
+    );
+  }
+
+  if (!currentChild) {
+    return null;
+  }
 
   const updateTransitionState = () => {
     switch (transitionState) {
@@ -110,12 +123,8 @@ const SwitchTransition = ({ children, classes, freeSpaceOnExit, trigger }: Props
     updateTransitionState();
   };
 
-  if (!currentChild) {
-    return null;
-  }
-
   return cloneElement(currentChild, {
-    ref: currentChildRef,
+    ref: nodeRef ? undefined : innerCurrentChildRef,
     className: cn(currentChild.props.className, transitionState !== 'none' && classes[transitionState]),
     onTransitionEnd: handleTransitionEnd,
     onAnimationEnd: handleAnimationEnd,

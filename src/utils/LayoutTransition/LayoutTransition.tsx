@@ -1,4 +1,4 @@
-import { cloneElement, DependencyList, HTMLProps, ReactElement, useLayoutEffect, useRef } from 'react';
+import { cloneElement, DependencyList, HTMLProps, ReactElement, RefObject, useLayoutEffect, useRef } from 'react';
 import { Rect } from '.';
 
 interface Props {
@@ -6,10 +6,12 @@ interface Props {
   deps: DependencyList;
   delayedDeps: DependencyList;
   duration: number;
+  nodeRef?: RefObject<HTMLElement>;
 }
 
-const LayoutTransition = ({ children, deps, delayedDeps, duration }: Props) => {
-  const element = useRef<HTMLElement | null>(null);
+const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef }: Props) => {
+  const elementRef = useRef<HTMLElement | null>(null);
+  const element = nodeRef ?? elementRef;
   const currentRect = useRef<Rect>({
     left: 0,
     top: 0,
@@ -104,8 +106,15 @@ const LayoutTransition = ({ children, deps, delayedDeps, duration }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, delayedDeps);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if ((children as any).ref && !nodeRef) {
+    throw new Error(
+      'Wrapped element has a ref assigned. Either pass nodeRef prop or unassign ref from wrapped component.'
+    );
+  }
+
   return cloneElement(children, {
-    ref: element,
+    ref: nodeRef ? undefined : elementRef,
   });
 };
 
