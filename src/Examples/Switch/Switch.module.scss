@@ -1,0 +1,38 @@
+.indicator {
+  height: 50px;
+  width: 50px;
+  background-color: green;
+  border-radius: 50%;
+  transition-duration: 600ms;
+  transition-property: opacity, transform;
+  margin: 0 auto 15px auto;
+
+  &.enter {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &.exit {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+.button {
+  &.enter {
+    animation: fade 300ms forwards;
+  }
+
+  &.exit {
+    animation: fade 300ms reverse forwards;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0; 
+  }
+  to {
+    opacity: 1;
+  }
+}
