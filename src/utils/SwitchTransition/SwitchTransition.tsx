@@ -21,6 +21,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
   const childRef = nodeRef ?? innerChildRef;
   const savedExitPos = useRef<Pick<Rect, 'top' | 'left'> | null>(null);
   const [scrollY, setScrollY] = useState(0);
+  const [lastProps, setLastProps] = useState(children ? children.props : null);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +33,6 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
       const rect = childRef.current.getBoundingClientRect();
       savedExitPos.current = { left: rect.left, top: rect.top + window.scrollY };
     }
-
 
     setOutChild(inChild);
     setInChild(children);
@@ -92,6 +92,14 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!children) {
+      return;
+    }
+
+    setLastProps(children.props);
+  }, [children]);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((children as any).ref && !nodeRef) {
     throw new Error(
@@ -104,6 +112,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
       {(!transitionState || transitionState === 'in' || transitionState === 'both') &&
         !!inChild &&
         cloneElement(inChild, {
+          ...(lastProps ?? {}),
           ref: nodeRef ? undefined : innerChildRef,
           className: cn(
             inChild.props.className,
@@ -113,6 +122,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
       {(transitionState === 'out' || transitionState === 'both') &&
         !!outChild &&
         cloneElement(outChild, {
+          ...(lastProps ?? {}),
           className: cn(outChild.props.className, classes.exit),
           style:
             freeSpaceOnExit && savedExitPos.current
