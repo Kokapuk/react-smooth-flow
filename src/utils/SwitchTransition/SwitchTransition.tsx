@@ -115,7 +115,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
           ...(lastProps ?? {}),
           ref: nodeRef ? undefined : innerChildRef,
           className: cn(
-            inChild.props.className,
+            (lastProps ?? inChild.props).className,
             (transitionState === 'in' || transitionState === 'both') && classes.enter
           ),
         })}
@@ -123,16 +123,16 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
         !!outChild &&
         cloneElement(outChild, {
           ...(lastProps ?? {}),
-          className: cn(outChild.props.className, classes.exit),
+          className: cn((lastProps ?? outChild.props).className, classes.exit),
           style:
             freeSpaceOnExit && savedExitPos.current
               ? {
-                  ...outChild.props.style,
+                  ...(lastProps ?? outChild.props).style,
                   position: 'fixed',
                   top: savedExitPos.current.top - scrollY,
                   left: savedExitPos.current.left,
                 }
-              : outChild.props.style,
+              : (lastProps ?? outChild.props).style,
         })}
     </>
   );
