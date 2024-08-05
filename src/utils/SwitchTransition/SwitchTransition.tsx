@@ -1,56 +1,83 @@
 import cn from 'classnames';
 import { cloneElement, RefObject, useEffect, useRef, useState } from 'react';
-import { Element, TransitionState } from '.';
+import { Element } from '.';
 import { Rect } from '../LayoutTransition';
 
 interface Props {
   children: Element;
   classes: { enter: string; exit: string };
+  timeout: number | { enter: number; exit: number };
+  mode?: 'out-in' | 'in-out';
   freeSpaceOnExit?: boolean;
-  trigger: 'transition' | 'animation';
   nodeRef?: RefObject<HTMLElement>;
 }
 
-const SwitchTransition = ({ children, classes, freeSpaceOnExit, trigger, nodeRef }: Props) => {
-  const [currentChild, setCurrentChild] = useState(children);
-  const nextChild = useRef<Element>(false);
-  const [transitionState, setTransitionState] = useState<TransitionState>('none');
-  const savedPos = useRef<Pick<Rect, 'top' | 'left'> | null>(null);
-  const innerCurrentChildRef = useRef<HTMLElement | null>(null);
-  const currentChildRef = nodeRef ?? innerCurrentChildRef;
-  const [scrollY, setScrollY] = useState(0);
+const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpaceOnExit, nodeRef }: Props) => {
+  const [inChild, setInChild] = useState<Element>(children);
+  const [outChild, setOutChild] = useState<Element>(false);
+  const [transitionState, setTransitionState] = useState<'out' | 'in' | 'both' | false>(false);
   const childKey = children ? children.key : false;
+  const innerChildRef = useRef<HTMLElement>(null);
+  const childRef = nodeRef ?? innerChildRef;
+  const savedExitPos = useRef<Pick<Rect, 'top' | 'left'> | null>(null);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    if (children === currentChild) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((inChild as any).key === childKey) {
       return;
     }
 
-    setTransitionState('exit');
-    savedPos.current = null;
+    if (childRef.current) {
+      const rect = childRef.current.getBoundingClientRect();
+      savedExitPos.current = { left: rect.left, top: rect.top + window.scrollY };
+    }
 
-    if (!currentChild) {
-      setCurrentChild(children);
 
-      if (trigger === 'animation') {
-        setTransitionState('enter');
-      } else if (trigger === 'transition') {
-        setTimeout(() => {
-          setTransitionState('enter');
-        }, 10);
+    setOutChild(inChild);
+    setInChild(children);
+
+    const shouldPlayOut = !!inChild;
+    const shouldPlayIn = !!children;
+    const enterTimeout = typeof timeout === 'number' ? timeout : timeout.exit;
+    const exitTimeout = typeof timeout === 'number' ? timeout : timeout.exit;
+
+    (async () => {
+      switch (mode) {
+        case 'out-in':
+          if (shouldPlayOut) {
+            setTransitionState('out');
+
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(undefined);
+              }, exitTimeout);
+            });
+          }
+
+          if (shouldPlayIn) {
+            setTransitionState('in');
+
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(undefined);
+              }, enterTimeout);
+            });
+          }
+
+          setTransitionState(false);
+          break;
+
+        case 'in-out':
+          setTransitionState('both');
+
+          setTimeout(() => {
+            setTransitionState(false);
+          }, enterTimeout);
+          break;
       }
+    })();
 
-      return;
-    }
-
-    nextChild.current = children;
-
-    if (!currentChildRef.current) {
-      return;
-    }
-
-    const currentChildRect = currentChildRef.current.getBoundingClientRect();
-    savedPos.current = { left: currentChildRect.left, top: currentChildRect.top + window.scrollY };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [childKey]);
 
@@ -59,6 +86,7 @@ const SwitchTransition = ({ children, classes, freeSpaceOnExit, trigger, nodeRef
       setScrollY(window.scrollY);
     };
 
+    setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
 
     return () => window.removeEventListener('scroll', handleScroll);
@@ -71,73 +99,33 @@ const SwitchTransition = ({ children, classes, freeSpaceOnExit, trigger, nodeRef
     );
   }
 
-  if (!currentChild) {
-    return null;
-  }
-
-  const updateTransitionState = () => {
-    switch (transitionState) {
-      case 'enter':
-        setTransitionState('none');
-        break;
-      case 'exit':
-        setCurrentChild(nextChild.current);
-
-        if (trigger === 'animation') {
-          setTransitionState('enter');
-        } else if (trigger === 'transition') {
-          setTimeout(() => {
-            setTransitionState('enter');
-          }, 10);
-        }
-
-        break;
-    }
-  };
-
-  const handleTransitionEnd = (event: React.TransitionEvent<HTMLElement>) => {
-    if (!currentChild) {
-      return;
-    }
-
-    currentChild.props.onTransitionEnd?.(event);
-
-    if (trigger !== 'transition') {
-      return;
-    }
-
-    updateTransitionState();
-  };
-
-  const handleAnimationEnd = (event: React.AnimationEvent<HTMLElement>) => {
-    if (!currentChild) {
-      return;
-    }
-
-    currentChild.props.onAnimationEnd?.(event);
-
-    if (trigger !== 'animation') {
-      return;
-    }
-
-    updateTransitionState();
-  };
-
-  return cloneElement(currentChild, {
-    ref: nodeRef ? undefined : innerCurrentChildRef,
-    className: cn(currentChild.props.className, transitionState !== 'none' && classes[transitionState]),
-    onTransitionEnd: handleTransitionEnd,
-    onAnimationEnd: handleAnimationEnd,
-    style:
-      freeSpaceOnExit && transitionState === 'exit' && savedPos.current
-        ? {
-            ...currentChild.props.style,
-            position: 'fixed',
-            top: savedPos.current.top - scrollY,
-            left: savedPos.current.left,
-          }
-        : currentChild.props.style,
-  });
+  return (
+    <>
+      {(!transitionState || transitionState === 'in' || transitionState === 'both') &&
+        !!inChild &&
+        cloneElement(inChild, {
+          ref: nodeRef ? undefined : innerChildRef,
+          className: cn(
+            inChild.props.className,
+            (transitionState === 'in' || transitionState === 'both') && classes.enter
+          ),
+        })}
+      {(transitionState === 'out' || transitionState === 'both') &&
+        !!outChild &&
+        cloneElement(outChild, {
+          className: cn(outChild.props.className, classes.exit),
+          style:
+            freeSpaceOnExit && savedExitPos.current
+              ? {
+                  ...outChild.props.style,
+                  position: 'fixed',
+                  top: savedExitPos.current.top - scrollY,
+                  left: savedExitPos.current.left,
+                }
+              : outChild.props.style,
+        })}
+    </>
+  );
 };
 
 export default SwitchTransition;

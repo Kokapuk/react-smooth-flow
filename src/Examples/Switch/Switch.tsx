@@ -11,7 +11,7 @@ const Switch = () => {
   return (
     <Example title="Switch">
       <SwitchTransition
-        trigger="transition"
+        timeout={600}
         freeSpaceOnExit
         classes={{
           enter: styles.enter,
@@ -23,13 +23,13 @@ const Switch = () => {
       <LayoutTransition deps={[isOn.relevant]} delayedDeps={[isOn.delayed]} duration={600}>
         <div>
           <SwitchTransition
-            trigger="animation"
+            timeout={300}
             classes={{
               enter: styles.enter,
               exit: styles.exit,
             }}
           >
-            <Button key={JSON.stringify(isOn)} className={styles.button} onClick={() => setOn((prev) => !prev)}>
+            <Button key={JSON.stringify(isOn.delayed)} className={styles.button} onClick={() => setOn((prev) => !prev)}>
               {isOn.delayed ? 'Switch Off' : 'Switch On'}
             </Button>
           </SwitchTransition>
