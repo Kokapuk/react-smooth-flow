@@ -46,25 +46,13 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
         case 'out-in':
           if (shouldPlayOut) {
             setTransitionState('out');
-
-            await new Promise((resolve) => {
-              setTimeout(() => {
-                resolve(undefined);
-              }, exitTimeout);
-            });
-
+            await new Promise((resolve) => setTimeout(() => resolve(undefined), exitTimeout));
             setCurrentChild(false);
           }
 
           if (shouldPlayIn) {
             setTransitionState('in');
-
-            await new Promise((resolve) => {
-              setTimeout(() => {
-                resolve(undefined);
-              }, enterTimeout);
-            });
-
+            await new Promise((resolve) => setTimeout(() => resolve(undefined), enterTimeout));
             setCurrentChild(children);
           }
 
@@ -73,10 +61,10 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
 
         case 'in-out':
           setTransitionState('both');
+          await new Promise((resolve) => setTimeout(() => resolve(undefined), enterTimeout));
 
-          setTimeout(() => {
-            setTransitionState(false);
-          }, enterTimeout);
+          setCurrentChild(children);
+          setTransitionState(false);
           break;
       }
     })();
@@ -109,7 +97,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
           ref: nodeRef ? undefined : currentChildRef,
           className: cn(currentChild.props.className, ['out', 'both'].includes(transitionState || '') && classes.exit),
           style:
-            transitionState === 'out' && freeSpaceOnExit && savedExitPos.current
+            ['out', 'both'].includes(transitionState || '') && freeSpaceOnExit && savedExitPos.current
               ? {
                   ...currentChild.props.style,
                   position: 'fixed',
@@ -118,7 +106,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
                 }
               : currentChild.props.style,
         })}
-      {(transitionState === 'in' || transitionState === 'both') &&
+      {['in', 'both'].includes(transitionState || '') &&
         !!nextChild &&
         cloneElement(nextChild, {
           className: cn(nextChild.props.className, classes.enter),
