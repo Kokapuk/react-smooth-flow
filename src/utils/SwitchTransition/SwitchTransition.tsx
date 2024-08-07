@@ -56,9 +56,9 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
           }
 
           if (shouldPlayIn) {
+            setCurrentChild(children);
             setTransitionState('in');
             await new Promise((resolve) => setTimeout(() => resolve(undefined), enterTimeout));
-            setCurrentChild(children);
           }
 
           setTransitionState(false);
@@ -100,7 +100,11 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
       {!!currentChild &&
         cloneElement(currentChild, {
           ref: nodeRef ? undefined : currentChildRef,
-          className: cn(currentChild.props.className, ['out', 'both'].includes(transitionState || '') && classes.exit),
+          className: cn(
+            currentChild.props.className,
+            ['out', 'both'].includes(transitionState || '') && classes.exit,
+            mode === 'out-in' && ['in', 'both'].includes(transitionState || '') && classes.enter
+          ),
           style:
             ['out', 'both'].includes(transitionState || '') && freeSpaceOnExit && savedExitRect.current
               ? {
@@ -113,7 +117,8 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
                 }
               : currentChild.props.style,
         })}
-      {['in', 'both'].includes(transitionState || '') &&
+      {mode === 'in-out' &&
+        ['in', 'both'].includes(transitionState || '') &&
         !!nextChild &&
         cloneElement(nextChild, {
           className: cn(nextChild.props.className, classes.enter),
