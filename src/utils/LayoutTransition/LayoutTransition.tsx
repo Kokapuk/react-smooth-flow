@@ -7,9 +7,10 @@ interface Props {
   delayedDeps: DependencyList;
   duration: number;
   nodeRef?: RefObject<HTMLElement>;
+  easing?: string;
 }
 
-const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef }: Props) => {
+const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef, easing }: Props) => {
   const elementRef = useRef<HTMLElement | null>(null);
   const element = nodeRef ?? elementRef;
   const currentRect = useRef<Rect>({
@@ -96,7 +97,7 @@ const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef }: Pr
       ],
       {
         duration,
-        easing: 'ease',
+        easing: easing ?? 'ease',
         fill: 'none',
       }
     );

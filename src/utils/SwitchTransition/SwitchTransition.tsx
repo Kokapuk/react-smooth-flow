@@ -19,7 +19,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
   const childKey = children ? children.key : false;
   const currentChildRef = useRef<HTMLElement>(null);
   const childRef = nodeRef ?? currentChildRef;
-  const savedExitPos = useRef<Pick<Rect, 'top' | 'left'> | null>(null);
+  const savedExitRect = useRef<Rect | null>(null);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -31,7 +31,12 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
 
     if (childRef.current) {
       const rect = childRef.current.getBoundingClientRect();
-      savedExitPos.current = { left: rect.left, top: rect.top + window.scrollY };
+      savedExitRect.current = {
+        left: rect.left,
+        top: rect.top + window.scrollY,
+        width: rect.width,
+        height: rect.height,
+      };
     }
 
     setNextChild(children);
@@ -97,12 +102,14 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
           ref: nodeRef ? undefined : currentChildRef,
           className: cn(currentChild.props.className, ['out', 'both'].includes(transitionState || '') && classes.exit),
           style:
-            ['out', 'both'].includes(transitionState || '') && freeSpaceOnExit && savedExitPos.current
+            ['out', 'both'].includes(transitionState || '') && freeSpaceOnExit && savedExitRect.current
               ? {
                   ...currentChild.props.style,
                   position: 'fixed',
-                  top: savedExitPos.current.top - scrollY,
-                  left: savedExitPos.current.left,
+                  top: savedExitRect.current.top - scrollY,
+                  left: savedExitRect.current.left,
+                  width: savedExitRect.current.width,
+                  height: savedExitRect.current.height,
                 }
               : currentChild.props.style,
         })}
