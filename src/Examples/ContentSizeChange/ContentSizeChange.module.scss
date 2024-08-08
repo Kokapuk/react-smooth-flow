@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  width: 350px;
+}
+
+.list {
+  display: flex;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.elementTransition {
+  &.exit {
+    animation: slideOut 300ms forwards;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX();
+  }
+  to {
+    opacity: 0;
+    transform: translateX(15px);
+  }
+}

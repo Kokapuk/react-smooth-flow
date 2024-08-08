@@ -54,7 +54,13 @@ const AnimatedList = () => {
       </div>
       <div className={styles.grid}>
         {buttons.delayed.map((i) => (
-          <LayoutTransition key={i} deps={[buttons.relevant]} delayedDeps={[buttons.delayed]} duration={300}>
+          <LayoutTransition
+            key={i}
+            deps={[buttons.relevant]}
+            delayedDeps={[buttons.delayed]}
+            duration={300}
+            constraints={['position']}
+          >
             <Button key={i} onClick={() => setButtons((prev) => prev.filter((j) => j !== i))}>
               Delete {i}
             </Button>

@@ -1,5 +1,5 @@
 import { cloneElement, DependencyList, HTMLProps, ReactElement, RefObject, useLayoutEffect, useRef } from 'react';
-import { Rect } from '.';
+import { Position, Rect } from '.';
 
 interface Props {
   children: ReactElement<HTMLProps<HTMLElement>>;
@@ -8,9 +8,20 @@ interface Props {
   duration: number;
   nodeRef?: RefObject<HTMLElement>;
   easing?: string;
+  constraints?: ('size' | 'position')[];
+  positionParent?: RefObject<HTMLElement>;
 }
 
-const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef, easing }: Props) => {
+const LayoutTransition = ({
+  children,
+  deps,
+  delayedDeps,
+  duration,
+  nodeRef,
+  easing,
+  constraints = ['size', 'position'],
+  positionParent,
+}: Props) => {
   const elementRef = useRef<HTMLElement | null>(null);
   const element = nodeRef ?? elementRef;
   const currentRect = useRef<Rect>({
@@ -19,6 +30,7 @@ const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef, easi
     height: 0,
     width: 0,
   });
+  const currentParentRect = useRef<Rect | null>(null);
   const transition = useRef<Animation | null>(null);
   const initialRender = useRef(true);
 
@@ -40,6 +52,20 @@ const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef, easi
       top: elementRect.top,
       width: elementRect.width,
       height: elementRect.height,
+    };
+
+    if (!positionParent?.current) {
+      currentParentRect.current = null;
+      return;
+    }
+
+    const parentRect = positionParent.current.getBoundingClientRect();
+
+    currentParentRect.current = {
+      left: parentRect.left,
+      top: parentRect.top,
+      width: parentRect.width,
+      height: parentRect.height,
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,35 +90,51 @@ const LayoutTransition = ({ children, deps, delayedDeps, duration, nodeRef, easi
       height: elementRect.height,
     };
 
-    const deltaRect: Rect = {
+    const deltaPos: Position = {
       left: currentRect.current.left - nextRect.left,
       top: currentRect.current.top - nextRect.top,
-      width: currentRect.current.width / nextRect.width,
-      height: currentRect.current.height / nextRect.height,
     };
+
+    const parentRect = positionParent?.current?.getBoundingClientRect();
+
+    const nextParentRect: Rect | null = parentRect
+      ? {
+          left: parentRect.left,
+          top: parentRect.top,
+          width: parentRect.width,
+          height: parentRect.height,
+        }
+      : null;
+
+    if (nextParentRect && currentParentRect.current) {
+      deltaPos.left -= currentParentRect.current.left - nextParentRect.left;
+      deltaPos.top -= currentParentRect.current.top - nextParentRect.top;
+    }
 
     if (transition.current) {
       const transform = parseTransform(window.getComputedStyle(element.current).transform);
-      deltaRect.left += transform.translateX;
-      deltaRect.top += transform.translateY;
-      deltaRect.width *= transform.scaleX;
-      deltaRect.height *= transform.scaleY;
+      deltaPos.left += transform.translateX;
+      deltaPos.top += transform.translateY;
 
       transition.current.cancel();
+
+      nextRect.width = element.current.getBoundingClientRect().width;
+      nextRect.height = element.current.getBoundingClientRect().height;
     }
 
     transition.current = element.current.animate(
       [
         {
-          transformOrigin: 'top left',
-          transform: `
-            translate(${deltaRect.left}px, ${deltaRect.top}px)
-            scale(${deltaRect.width}, ${deltaRect.height})
-          `,
+          transformOrigin: constraints.includes('position') ? 'top left' : undefined,
+          transform: constraints.includes('position') ? `translate(${deltaPos.left}px, ${deltaPos.top}px)` : undefined,
+          width: constraints.includes('size') ? `${currentRect.current.width}px` : undefined,
+          height: constraints.includes('size') ? `${currentRect.current.height}px` : undefined,
         },
         {
-          transformOrigin: 'top left',
-          transform: 'none',
+          transformOrigin: constraints.includes('position') ? 'top left' : undefined,
+          transform: constraints.includes('position') ? 'none' : undefined,
+          width: constraints.includes('size') ? `${nextRect.width}px` : undefined,
+          height: constraints.includes('size') ? `${nextRect.height}px` : undefined,
         },
       ],
       {
