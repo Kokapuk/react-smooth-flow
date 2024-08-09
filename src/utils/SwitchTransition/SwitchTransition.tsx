@@ -1,7 +1,8 @@
 import cn from 'classnames';
 import { cloneElement, RefObject, useEffect, useRef, useState } from 'react';
-import { Element } from '.';
+import { Element, TransitionState } from '.';
 import { Rect } from '../LayoutTransition';
+import getContainingBlock from '../getContainingBlock';
 
 interface Props {
   children: Element;
@@ -15,7 +16,7 @@ interface Props {
 const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpaceOnExit, nodeRef }: Props) => {
   const [currentChild, setCurrentChild] = useState<Element>(children);
   const [nextChild, setNextChild] = useState<Element>(false);
-  const [transitionState, setTransitionState] = useState<'out' | 'in' | 'both' | false>(false);
+  const [transitionState, setTransitionState] = useState<TransitionState>(false);
   const childKey = children ? children.key : false;
   const currentChildRef = useRef<HTMLElement>(null);
   const childRef = nodeRef ?? currentChildRef;
@@ -24,7 +25,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((currentChild as any).key === childKey) {
+    if ((currentChild as any)?.key === childKey) {
       setCurrentChild(children);
       return;
     }
@@ -37,6 +38,14 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
         width: rect.width,
         height: rect.height,
       };
+
+      const containingBlock = getContainingBlock(childRef.current);
+
+      if (containingBlock) {
+        const parentRect = containingBlock.getBoundingClientRect();
+        savedExitRect.current.left -= parentRect.left;
+        savedExitRect.current.top -= parentRect.top;
+      }
     }
 
     setNextChild(children);
@@ -89,7 +98,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if ((children as any).ref && !nodeRef) {
+  if ((children as any)?.ref && !nodeRef) {
     throw new Error(
       'Wrapped element has a ref assigned. Either pass nodeRef prop or unassign ref from wrapped component.'
     );
