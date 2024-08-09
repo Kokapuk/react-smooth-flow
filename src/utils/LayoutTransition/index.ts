@@ -1,8 +1,13 @@
 export { default } from './LayoutTransition';
 
-export interface Rect {
+export interface Position {
   left: number;
   top: number;
+}
+
+export interface Size {
   width: number;
   height: number;
 }
+
+export type Rect = Position & Size;

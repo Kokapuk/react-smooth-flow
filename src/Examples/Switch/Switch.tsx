@@ -20,7 +20,7 @@ const Switch = () => {
       >
         {isOn.relevant && <div className={styles.indicator} />}
       </SwitchTransition>
-      <LayoutTransition deps={[isOn.relevant]} delayedDeps={[isOn.delayed]} duration={600}>
+      <LayoutTransition deps={[isOn.relevant]} delayedDeps={[isOn.delayed]} duration={600} constraints={['position']}>
         <div>
           <SwitchTransition
             timeout={300}
