@@ -13,20 +13,3 @@
   padding: 15px;
   border-radius: 10px;
 }
-
-.elementTransition {
-  &.exit {
-    animation: slideOut 300ms forwards;
-  }
-}
-
-@keyframes slideOut {
-  from {
-    opacity: 1;
-    transform: translateX();
-  }
-  to {
-    opacity: 0;
-    transform: translateX(15px);
-  }
-}
