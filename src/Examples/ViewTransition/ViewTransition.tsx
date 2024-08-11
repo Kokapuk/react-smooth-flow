@@ -11,7 +11,7 @@ const ViewTransition = () => {
   const [isOn, setOn] = useState(true);
 
   const moveBtn = () => {
-    startViewTransition('moveBtn', 600, () => {
+    startViewTransition(['moveBtn'], 600, () => {
       flushSync(() =>
         setPos((prev) => {
           switch (prev) {
@@ -28,7 +28,7 @@ const ViewTransition = () => {
   };
 
   const toggleSwitch = () => {
-    startViewTransition('switchIndicator', 600, () => {
+    startViewTransition(['switchBtn', 'switchIndicator'], 600, () => {
       flushSync(() => setOn((prev) => !prev));
     });
   };
