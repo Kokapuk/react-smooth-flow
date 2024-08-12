@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Button from '../../components/Button';
@@ -11,7 +12,7 @@ const ViewTransition = () => {
   const [isOn, setOn] = useState(true);
 
   const moveBtn = () => {
-    startViewTransition(['moveBtn'], 600, () => {
+    startViewTransition(['moveBtn'], { duration: 600 }, () => {
       flushSync(() =>
         setPos((prev) => {
           switch (prev) {
@@ -28,7 +29,7 @@ const ViewTransition = () => {
   };
 
   const toggleSwitch = () => {
-    startViewTransition(['switchBtn', 'switchIndicator'], 600, () => {
+    startViewTransition(['switchBtn', 'switchIndicator'], { duration: 600 }, () => {
       flushSync(() => setOn((prev) => !prev));
     });
   };
@@ -41,7 +42,7 @@ const ViewTransition = () => {
           style={{
             display: 'block',
             marginInline: { left: 0, center: 'auto', right: 'auto 0' }[pos],
-            // borderRadius: { left: 0, center: 0, right: '50px' }[pos],
+            borderRadius: { left: 0, center: 0, right: '17px' }[pos],
             backgroundColor: { left: 'red', center: 'orange', right: 'green' }[pos],
           }}
           onClick={moveBtn}
@@ -56,9 +57,9 @@ const ViewTransition = () => {
           <div
             {...constructViewTransition({
               tag: 'switchIndicator',
-              classes: { enter: styles.enter, exit: styles.exit },
+              animationClass: styles.indicatorTransition,
             })}
-            className={styles.indicator}
+            className={cn(styles.indicator, !isOn && styles.inactive)}
           />
         )}
         <Button

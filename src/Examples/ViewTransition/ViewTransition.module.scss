@@ -3,25 +3,31 @@
   width: 50px;
   border-radius: 50%;
   background-color: seagreen;
-  
+
   margin: 0 auto 15px auto;
-}
 
-.enter {
-  animation: appear 600ms forwards;
-}
-
-.exit {
-  animation: appear 600ms forwards reverse ease-in;
-}
-
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: scale(0.5);
+  &.inactive {
+    background-color: crimson;
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
+}
+
+.indicatorTransition {
+  &:global(.enter) {
+    animation: appear 600ms forwards;
+  }
+
+  &:global(.exit) {
+    animation: appear 600ms forwards reverse ease-in;
+  }
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }

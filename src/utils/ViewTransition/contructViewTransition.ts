@@ -1,6 +1,6 @@
 export interface ViewTransitionProperties {
   tag: string;
-  classes?: { enter: string; exit: string };
+  animationClass?: string;
 }
 
 const constructViewTransition = (properties: ViewTransitionProperties) => ({
