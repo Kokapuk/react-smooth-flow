@@ -1,13 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
-import LayoutTransition from '../../utils/LayoutTransition';
-import useDelayedState from '../../utils/useDelayedState';
+import constructViewTransition from '../../utils/ViewTransition/contructViewTransition';
+import startViewTransition from '../../utils/ViewTransition/startViewTransition';
 import styles from './ContentSizeChange.module.scss';
 
 const ContentSizeChange = () => {
-  const [isLoading, setLoading] = useDelayedState(false);
-  const [list, setList] = useDelayedState(
+  const [isLoading, setLoading] = useState(false);
+  const [list, setList] = useState(
     Array(3)
       .fill(0)
       .map((_, index) => index + 1)
@@ -17,37 +18,39 @@ const ContentSizeChange = () => {
   return (
     <Example title="Content size change">
       <div className={styles.container}>
-        <LayoutTransition
-          duration={300}
-          deps={[isLoading.relevant]}
-          delayedDeps={[isLoading.delayed]}
-          constraints={['size']}
+        <Button
+          {...constructViewTransition({ tag: 'size-button' })}
+          onClick={() => {
+            startViewTransition(
+              ['size-button', 'size-container', ...list.map((i) => `size-button-${i}`).reverse()],
+              { duration: 300 },
+              () =>
+                flushSync(() => {
+                  setLoading((prev) => !prev);
+                  setList((prev) => [...prev, prev.length ? Math.max(...prev) + 1 : 1]);
+                })
+            );
+          }}
         >
-          <Button style={{ overflow: 'hidden' }} onClick={() => setLoading((prev) => !prev)}>
-            {isLoading.delayed ? 'Loading...' : 'Load'}
-          </Button>
-        </LayoutTransition>
-        <LayoutTransition
-          nodeRef={listRef}
-          duration={300}
-          deps={[list.relevant]}
-          delayedDeps={[list.delayed]}
-          constraints={['size']}
-        >
-          <div ref={listRef} className={styles.list}>
-            {list.delayed.map((i) => (
-              <LayoutTransition
-                positionParent={listRef}
-                duration={300}
-                deps={[list.relevant]}
-                delayedDeps={[list.delayed]}
-                key={i}
-              >
-                <Button onClick={() => setList((prev) => prev.filter((j) => j != i))}>Delete {i}</Button>
-              </LayoutTransition>
-            ))}
-          </div>
-        </LayoutTransition>
+          {isLoading ? 'Loading...' : 'Load'}
+        </Button>
+        <div {...constructViewTransition({ tag: 'size-container' })} ref={listRef} className={styles.list}>
+          {list.map((i) => (
+            <Button
+              key={i}
+              {...constructViewTransition({ tag: `size-button-${i}` })}
+              onClick={() =>
+                startViewTransition(
+                  ['size-container', ...list.map((i) => `size-button-${i}`)],
+                  { duration: 300 },
+                  () => flushSync(() => setList((prev) => prev.filter((j) => j != i)))
+                )
+              }
+            >
+              Delete {i}
+            </Button>
+          ))}
+        </div>
       </div>
     </Example>
   );
