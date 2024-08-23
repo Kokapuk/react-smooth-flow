@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
-import constructViewTransition from '../../utils/ViewTransition/contructViewTransition';
+import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
 import startViewTransition from '../../utils/ViewTransition/startViewTransition';
 import styles from './ContentSizeChange.module.scss';
 

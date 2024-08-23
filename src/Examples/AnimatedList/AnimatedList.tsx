@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
 import styles from './AnimatedList.module.scss';
-import constructViewTransition from '../../utils/ViewTransition/contructViewTransition';
+import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
 import { flushSync } from 'react-dom';
 import startViewTransition from '../../utils/ViewTransition/startViewTransition';
 

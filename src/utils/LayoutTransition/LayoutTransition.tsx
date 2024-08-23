@@ -1,5 +1,5 @@
 import { cloneElement, DependencyList, HTMLProps, ReactElement, RefObject, useLayoutEffect, useRef } from 'react';
-import { Position, Rect } from '.';
+import { Position, Rect } from '../types';
 
 interface Props {
   children: ReactElement<HTMLProps<HTMLElement>>;

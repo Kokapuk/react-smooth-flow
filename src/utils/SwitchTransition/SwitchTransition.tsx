@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import { cloneElement, RefObject, useEffect, useRef, useState } from 'react';
 import { Element, TransitionState } from '.';
-import { Rect } from '../LayoutTransition';
 import getContainingBlock from '../getContainingBlock';
+import { Rect } from '../types';
 
 interface Props {
   children: Element;

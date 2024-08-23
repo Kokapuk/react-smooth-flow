@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import getContainingBlock from '../getContainingBlock';
-import { Rect } from '../LayoutTransition';
-import { ViewTransitionProperties } from './contructViewTransition';
+import { Rect } from '../types';
+import { ViewTransitionProperties } from './constructViewTransition';
 import styles from './Snapshot.module.scss';
 
 type TransitionType = 'mutation' | 'in-out' | 'enter' | 'exit';
