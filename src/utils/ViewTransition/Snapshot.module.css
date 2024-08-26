@@ -1,0 +1,7 @@
+.snapshotContainer {
+  display: flex;
+}
+
+.snapshotContainer > * {
+  flex: 1;
+}

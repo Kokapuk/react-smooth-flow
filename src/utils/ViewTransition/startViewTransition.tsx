@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import getContainingBlock from '../getContainingBlock';
 import { Rect } from '../types';
 import { ViewTransitionProperties } from './constructViewTransition';
-import styles from './Snapshot.module.scss';
+import styles from './Snapshot.module.css';
 
 type TransitionType = 'mutation' | 'in-out' | 'enter' | 'exit';
 
@@ -172,7 +172,7 @@ const playTransition = (
   if (transitionType === 'mutation') {
     playMutationTransition(viewTransitionRoot, oldSnapshot!, newSnapshot!, tag, config);
   } else if (transitionType === 'enter' || transitionType === 'exit') {
-    playerEnterExitTransition(viewTransitionRoot, oldSnapshot!, newSnapshot!, tag, config, transitionType);
+    playEnterExitTransition(viewTransitionRoot, oldSnapshot!, newSnapshot!, tag, config, transitionType);
   } else if (transitionType === 'in-out') {
     playInOutTransition(viewTransitionRoot, oldSnapshot!, newSnapshot!, tag);
   }
@@ -250,7 +250,7 @@ const playMutationTransition = (
   };
 };
 
-const playerEnterExitTransition = (
+const playEnterExitTransition = (
   viewTransitionRoot: HTMLElement,
   oldSnapshot: Snapshot,
   newSnapshot: Snapshot,
