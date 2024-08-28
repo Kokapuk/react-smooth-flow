@@ -17,7 +17,7 @@ interface Snapshot {
 
 interface ViewTransitionConfig {
   duration: number;
-  easing?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out';
+  easing?: string;
   noInOut?: boolean;
 }
 
