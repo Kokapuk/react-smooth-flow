@@ -19,3 +19,11 @@ export interface Snapshot {
   computedStyle: ComputedStyle;
   viewTransitionProperties: ViewTransitionProperties;
 }
+
+export interface TransitionSnapshot {
+  transition: Animation;
+  prevSnapshotImage?: SVGSVGElement;
+  nextSnapshotImage?: SVGSVGElement;
+  targetElement?: HTMLElement;
+  targetResetVisibility?: string;
+}

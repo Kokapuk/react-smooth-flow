@@ -1,11 +1,12 @@
-import { Snapshot, ViewTransitionConfig } from '.';
+import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 import getViewTransitionRoot from './getViewTransitionRoot';
 
 const playMutationTransition = async (
   targetElement: HTMLElement,
   prevSnapshot: Snapshot,
   nextSnapshot: Snapshot,
-  config: ViewTransitionConfig
+  config: ViewTransitionConfig,
+  activeTransitions: { [key: string]: TransitionSnapshot[] }
 ) => {
   const viewTransitionRoot = getViewTransitionRoot();
 
@@ -39,11 +40,11 @@ const playMutationTransition = async (
     borderStyle: nextSnapshot.computedStyle.borderStyle,
   };
 
-  const prevAnimation = prevSnapshot.image.animate([{ ...fromKeyframes }, { ...toKeyFrames }], {
+  const prevTransition = prevSnapshot.image.animate([{ ...fromKeyframes }, { ...toKeyFrames }], {
     duration: config.duration,
     easing: config.easing ?? 'ease',
   });
-  const nextAnimation = nextSnapshot.image.animate(
+  const nextTransition = nextSnapshot.image.animate(
     [
       { opacity: '0', ...fromKeyframes },
       { opacity: '1', ...toKeyFrames },
@@ -54,11 +55,26 @@ const playMutationTransition = async (
     }
   );
 
-  await prevAnimation.finished;
-  await nextAnimation.finished;
-  prevSnapshot.image.remove();
-  nextSnapshot.image.remove();
-  targetElement.style.visibility = resetVisibility;
+  activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [prevTransition, nextTransition].map((i) => ({
+    transition: i,
+    prevSnapshotImage: prevSnapshot.image,
+    nextSnapshotImage: nextSnapshot.image,
+    targetElement,
+    targetResetVisibility: resetVisibility,
+  }));
+
+  try {
+    await prevTransition.finished;
+    await nextTransition.finished;
+
+    activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
+
+    prevSnapshot.image.remove();
+    nextSnapshot.image.remove();
+    targetElement.style.visibility = resetVisibility;
+  } catch {
+    /* empty */
+  }
 };
 
 export default playMutationTransition;

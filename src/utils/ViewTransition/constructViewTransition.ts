@@ -1,4 +1,4 @@
-import { ViewTransitionProperties } from '.';
+import { ViewTransitionProperties } from './types';
 
 const constructViewTransition = (properties: ViewTransitionProperties) => ({
   'data-viewtransition': JSON.stringify(properties),

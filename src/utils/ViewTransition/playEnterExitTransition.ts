@@ -1,11 +1,12 @@
-import { Snapshot, ViewTransitionConfig } from '.';
+import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 import getViewTransitionRoot from './getViewTransitionRoot';
 
 const playEnterExitTransition = async (
   targetElement: HTMLElement | null,
   prevSnapshot: Snapshot | null,
   nextSnapshot: Snapshot | null,
-  config: ViewTransitionConfig
+  config: ViewTransitionConfig,
+  activeTransitions: { [key: string]: TransitionSnapshot[] }
 ) => {
   const viewTransitionRoot = getViewTransitionRoot();
 
@@ -17,7 +18,7 @@ const playEnterExitTransition = async (
   if (prevSnapshot) {
     viewTransitionRoot.append(prevSnapshot.image);
 
-    const exitAnimation = prevSnapshot.image.animate(
+    const exitTransition = prevSnapshot.image.animate(
       prevSnapshot.viewTransitionProperties.exitKeyframes ?? [{ opacity: '1' }, { opacity: '0' }],
       {
         duration: config.duration,
@@ -25,12 +26,20 @@ const playEnterExitTransition = async (
       }
     );
 
-    await exitAnimation.finished;
-    prevSnapshot.image.remove();
+    activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [
+      { transition: exitTransition, prevSnapshotImage: prevSnapshot.image },
+    ];
+
+    try {
+      await exitTransition.finished;
+      prevSnapshot.image.remove();
+    } catch {
+      /* empty */
+    }
   } else if (nextSnapshot) {
     viewTransitionRoot.append(nextSnapshot.image);
 
-    const enterAnimation = nextSnapshot.image.animate(
+    const enterTransition = nextSnapshot.image.animate(
       nextSnapshot.viewTransitionProperties.enterKeyframes ?? [{ opacity: '0' }, { opacity: '1' }],
       {
         duration: config.duration,
@@ -38,8 +47,21 @@ const playEnterExitTransition = async (
       }
     );
 
-    await enterAnimation.finished;
-    nextSnapshot.image.remove();
+    activeTransitions[nextSnapshot.viewTransitionProperties.tag] = [
+      {
+        transition: enterTransition,
+        prevSnapshotImage: nextSnapshot.image,
+        targetElement: targetElement as HTMLElement,
+        targetResetVisibility: resetVisibility,
+      },
+    ];
+
+    try {
+      await enterTransition.finished;
+      nextSnapshot.image.remove();
+    } catch {
+      /* empty */
+    }
   }
 
   if (targetElement && resetVisibility !== undefined) {

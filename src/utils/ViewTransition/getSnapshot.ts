@@ -1,4 +1,4 @@
-import { ComputedStyle, Snapshot } from '.';
+import { ComputedStyle, Snapshot } from './types';
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
 
