@@ -29,7 +29,7 @@ const ViewTransition = () => {
   };
 
   const toggleSwitch = () => {
-    startViewTransition(['switchBtn', 'switchIndicator'], { duration: 600 }, () => {
+    startViewTransition(['switchIndicator', 'switchBtn'], { duration: 600 }, () => {
       flushSync(() => setOn((prev) => !prev));
     });
   };
@@ -44,12 +44,15 @@ const ViewTransition = () => {
             marginInline: { left: 0, center: 'auto', right: 'auto 0' }[pos],
             borderRadius: { left: 0, center: 0, right: '17px' }[pos],
             backgroundColor: { left: 'red', center: 'orange', right: 'green' }[pos],
+            borderColor: { left: 'orange', center: 'green', right: 'red' }[pos],
+            borderStyle: 'solid',
+            borderWidth: { left: '10px', center: '5px', right: '3px' }[pos],
           }}
           onClick={moveBtn}
         >
           {pos === 'left' && '->'}
           {pos === 'center' && '->'}
-          {pos === 'right' && '<---'}
+          {pos === 'right' && '<------'}
         </Button>
       </div>
       <div>
@@ -57,7 +60,14 @@ const ViewTransition = () => {
           <div
             {...constructViewTransition({
               tag: 'switchIndicator',
-              animationClass: styles.indicatorTransition,
+              enterKeyframes: [
+                { transform: 'scale(.8)', opacity: '0' },
+                { transform: 'scale(1)', opacity: '1' },
+              ],
+              exitKeyframes: [
+                { transform: 'scale(1)', opacity: '1' },
+                { transform: 'scale(.8)', opacity: '0' },
+              ],
             })}
             className={cn(styles.indicator, !isOn && styles.inactive)}
           />

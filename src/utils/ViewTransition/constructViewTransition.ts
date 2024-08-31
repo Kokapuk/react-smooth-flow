@@ -1,7 +1,4 @@
-export interface ViewTransitionProperties {
-  tag: string;
-  animationClass?: string;
-}
+import { ViewTransitionProperties } from '.';
 
 const constructViewTransition = (properties: ViewTransitionProperties) => ({
   'data-viewtransition': JSON.stringify(properties),
