@@ -12,7 +12,7 @@ const playMutationTransition = async (
 
   const resetVisibility = targetElement.style.visibility;
 
-  if (!config.suppressHidingOnEnter) {
+  if (!config.suppressHidingTags?.includes(prevSnapshot.viewTransitionProperties.tag)) {
     targetElement.style.visibility = 'hidden';
   }
 

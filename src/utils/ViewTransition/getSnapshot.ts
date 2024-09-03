@@ -1,9 +1,13 @@
-import { ComputedStyle, Snapshot } from './types';
+import { ComputedStyle, Snapshot, ViewTransitionConfig } from './types';
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 
-const getSnapshot = (targetElement: HTMLElement | null, excludeTags: string[]): Snapshot | null => {
+const getSnapshot = (
+  targetElement: HTMLElement | null,
+  excludeTags: string[],
+  config: ViewTransitionConfig
+): Snapshot | null => {
   if (!targetElement) {
     return null;
   }
@@ -17,6 +21,10 @@ const getSnapshot = (targetElement: HTMLElement | null, excludeTags: string[]): 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
   excludeTags.forEach((tag) => {
+    if (config.suppressHidingTags?.includes(tag)) {
+      return;
+    }
+
     getElementByViewTransitionTag(tag, targetElementClone)?.remove();
   });
 
