@@ -10,6 +10,7 @@ import styles from './ViewTransition.module.scss';
 const ViewTransition = () => {
   const [pos, setPos] = useState<'left' | 'center' | 'right'>('center');
   const [isOn, setOn] = useState(true);
+  const [inSquare, setInSquare] = useState(false);
 
   const moveBtn = () => {
     startViewTransition(['moveBtn'], { duration: 600 }, () => {
@@ -80,6 +81,35 @@ const ViewTransition = () => {
           {isOn ? 'Switch Off' : 'Switch On'}
         </Button>
       </div>
+
+      <div style={{ display: 'flex', gap: 15 }}>
+        {!inSquare && (
+          <div
+            {...constructViewTransition({ tag: 'switchSquare' })}
+            style={{ background: 'red', width: '50%', height: 50 }}
+          />
+        )}
+        <div
+          {...constructViewTransition({ tag: 'switchContainer' })}
+          style={{ border: '1px solid white', width: '50%', minHeight: 20, height: 'min-content', marginLeft: 'auto' }}
+        >
+          {inSquare && (
+            <div
+              {...constructViewTransition({ tag: 'switchSquare' })}
+              style={{ background: 'red', width: '100%', height: 50 }}
+            />
+          )}
+        </div>
+      </div>
+      <Button
+        onClick={() =>
+          startViewTransition(['switchContainer', 'switchSquare'], { duration: 600 }, () => {
+            flushSync(() => setInSquare((prev) => !prev));
+          })
+        }
+      >
+        Switch
+      </Button>
     </Example>
   );
 };

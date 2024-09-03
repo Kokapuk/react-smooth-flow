@@ -1,8 +1,9 @@
 import { ComputedStyle, Snapshot } from './types';
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
+import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 
-const getSnapshot = (targetElement: HTMLElement | null): Snapshot | null => {
+const getSnapshot = (targetElement: HTMLElement | null, excludeTags: string[]): Snapshot | null => {
   if (!targetElement) {
     return null;
   }
@@ -13,12 +14,15 @@ const getSnapshot = (targetElement: HTMLElement | null): Snapshot | null => {
   rect.left += window.scrollX;
   rect.top += window.scrollY;
 
-  const resetBackgroundColor = targetElement.style.backgroundColor;
-  const resetBorderRadius = targetElement.style.borderRadius;
-  const resetBorderWidth = targetElement.style.borderWidth;
-  targetElement.style.backgroundColor = 'transparent';
-  targetElement.style.borderRadius = '0';
-  targetElement.style.borderWidth = '0';
+  const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
+
+  excludeTags.forEach((tag) => {
+    getElementByViewTransitionTag(tag, targetElementClone)?.remove();
+  });
+
+  targetElementClone.style.backgroundColor = 'transparent';
+  targetElementClone.style.borderRadius = '0';
+  targetElementClone.style.borderWidth = '0';
 
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
@@ -47,13 +51,9 @@ const getSnapshot = (targetElement: HTMLElement | null): Snapshot | null => {
       .map(([key, value]) => `${key}: ${value}`)
       .join('; ')}">
       <div class="${styles.snapshotContainer}" xmlns="http://www.w3.org/1999/xhtml">
-        ${targetElement.outerHTML.replace(/\sdata-viewtransition=".+?"/gm, '')}
+        ${targetElementClone.outerHTML.replace(/\sdata-viewtransition=".+?"/gm, '')}
       </div>
     </foreignObject>`;
-
-  targetElement.style.backgroundColor = resetBackgroundColor;
-  targetElement.style.borderRadius = resetBorderRadius;
-  targetElement.style.borderWidth = resetBorderWidth;
 
   return { rect, image, computedStyle, viewTransitionProperties: JSON.parse(targetElement.dataset.viewtransition!) };
 };

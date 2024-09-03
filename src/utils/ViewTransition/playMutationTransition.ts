@@ -16,39 +16,27 @@ const playMutationTransition = async (
   viewTransitionRoot.append(prevSnapshot.image);
   viewTransitionRoot.append(nextSnapshot.image);
 
-  const fromKeyframes = {
-    width: `${prevSnapshot.rect.width}px`,
-    height: `${prevSnapshot.rect.height}px`,
-    left: `${prevSnapshot.rect.left}px`,
-    top: `${prevSnapshot.rect.top}px`,
-    backgroundColor: prevSnapshot.computedStyle.backgroundColor,
-    borderRadius: prevSnapshot.computedStyle.borderRadius,
-    borderWidth: prevSnapshot.computedStyle.borderWidth,
-    borderColor: prevSnapshot.computedStyle.borderColor,
-    borderStyle: prevSnapshot.computedStyle.borderStyle,
-  };
+  const keyframes = [prevSnapshot, nextSnapshot].map((i) => ({
+    width: `${i.rect.width}px`,
+    height: `${i.rect.height}px`,
+    left: `${i.rect.left}px`,
+    top: `${i.rect.top}px`,
+    backgroundColor: i.computedStyle.backgroundColor,
+    borderRadius: i.computedStyle.borderRadius,
+    borderWidth: i.computedStyle.borderWidth,
+    borderColor: i.computedStyle.borderColor,
+    borderStyle: i.computedStyle.borderStyle,
+  }));
 
-  const toKeyFrames = {
-    width: `${nextSnapshot.rect.width}px`,
-    height: `${nextSnapshot.rect.height}px`,
-    left: `${nextSnapshot.rect.left}px`,
-    top: `${nextSnapshot.rect.top}px`,
-    backgroundColor: nextSnapshot.computedStyle.backgroundColor,
-    borderRadius: nextSnapshot.computedStyle.borderRadius,
-    borderWidth: nextSnapshot.computedStyle.borderWidth,
-    borderColor: nextSnapshot.computedStyle.borderColor,
-    borderStyle: nextSnapshot.computedStyle.borderStyle,
-  };
-
-  const prevTransition = prevSnapshot.image.animate([{ ...fromKeyframes }, { ...toKeyFrames }], {
-    duration: config.duration,
-    easing: config.easing ?? 'ease',
-  });
+  const prevTransition = prevSnapshot.image.animate(
+    [{ opacity: '1', ...keyframes[0] }, { opacity: '1' }, { opacity: '0', ...keyframes[1] }],
+    {
+      duration: config.duration,
+      easing: config.easing ?? 'ease',
+    }
+  );
   const nextTransition = nextSnapshot.image.animate(
-    [
-      { opacity: '0', ...fromKeyframes },
-      { opacity: '1', ...toKeyFrames },
-    ],
+    [{ opacity: '0', ...keyframes[0] }, { opacity: '1' }, { opacity: '1', ...keyframes[1] }],
     {
       duration: config.duration,
       easing: config.easing ?? 'ease',

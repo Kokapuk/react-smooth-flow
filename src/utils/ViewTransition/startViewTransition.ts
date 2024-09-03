@@ -20,9 +20,19 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
     });
   });
 
-  const prevSnapshots = tags.map((i) => getSnapshot(getElementByViewTransitionTag(i) as HTMLElement | null));
+  const prevSnapshots = tags.map((i) =>
+    getSnapshot(
+      getElementByViewTransitionTag(i) as HTMLElement | null,
+      tags.filter((j) => j !== i)
+    )
+  );
   await modifyDom();
-  const nextSnapshots = tags.map((i) => getSnapshot(getElementByViewTransitionTag(i) as HTMLElement | null));
+  const nextSnapshots = tags.map((i) =>
+    getSnapshot(
+      getElementByViewTransitionTag(i) as HTMLElement | null,
+      tags.filter((j) => j !== i)
+    )
+  );
 
   const pairs = prevSnapshots.map((i, index) => ({ prev: i, next: nextSnapshots[index] }));
 
