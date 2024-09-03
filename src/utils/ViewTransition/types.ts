@@ -9,6 +9,7 @@ export interface ViewTransitionProperties {
 export interface ViewTransitionConfig {
   duration: number;
   easing?: string;
+  suppressHidingOnEnter?: boolean;
 }
 
 export type ComputedStyle = Omit<CSSStyleDeclaration, 'item' | 'getPropertyPriority' | 'getPropertyValue'>;

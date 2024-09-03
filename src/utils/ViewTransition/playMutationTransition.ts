@@ -11,7 +11,10 @@ const playMutationTransition = async (
   const viewTransitionRoot = getViewTransitionRoot();
 
   const resetVisibility = targetElement.style.visibility;
-  targetElement.style.visibility = 'hidden';
+
+  if (!config.suppressHidingOnEnter) {
+    targetElement.style.visibility = 'hidden';
+  }
 
   viewTransitionRoot.append(prevSnapshot.image);
   viewTransitionRoot.append(nextSnapshot.image);
