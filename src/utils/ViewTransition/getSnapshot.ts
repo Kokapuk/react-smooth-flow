@@ -2,6 +2,7 @@ import { ComputedStyle, Snapshot, ViewTransitionConfig } from './types';
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
+import getTotalZIndex from './getTotalZIndex';
 
 const getSnapshot = (
   targetElement: HTMLElement | null,
@@ -25,7 +26,11 @@ const getSnapshot = (
       return;
     }
 
-    getElementByViewTransitionTag(tag, targetElementClone)?.remove();
+    const element = getElementByViewTransitionTag(tag, targetElementClone) as HTMLElement | null;
+
+    if (element) {
+      element.style.visibility = 'hidden';
+    }
   });
 
   targetElementClone.style.backgroundColor = 'transparent';
@@ -35,6 +40,7 @@ const getSnapshot = (
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
   image.style.userSelect = 'none';
+  image.style.zIndex = `${getTotalZIndex(targetElement)}`;
   image.style.position = 'absolute';
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;

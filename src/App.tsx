@@ -1,5 +1,6 @@
 import AnimatedList from './Examples/AnimatedList';
 import ContentSizeChange from './Examples/ContentSizeChange';
+import Modal from './Examples/Modal';
 import Switch from './Examples/Switch/Switch';
 import ViewTransition from './Examples/ViewTransition';
 
@@ -10,6 +11,7 @@ const App = () => {
       <ContentSizeChange />
       <Switch />
       <ViewTransition />
+      <Modal />
     </>
   );
 };
