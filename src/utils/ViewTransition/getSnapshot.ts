@@ -16,8 +16,11 @@ const getSnapshot = (
   const computedStyle = { ...window.getComputedStyle(targetElement) } as ComputedStyle;
 
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
-  rect.left += window.scrollX;
-  rect.top += window.scrollY;
+
+  if (computedStyle.position !== 'fixed') {
+    rect.left += window.scrollX;
+    rect.top += window.scrollY;
+  }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
@@ -36,12 +39,13 @@ const getSnapshot = (
   targetElementClone.style.backgroundColor = 'transparent';
   targetElementClone.style.borderRadius = '0';
   targetElementClone.style.borderWidth = '0';
+  targetElementClone.style.position = 'static';
 
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
   image.style.userSelect = 'none';
   image.style.zIndex = `${getTotalZIndex(targetElement)}`;
-  image.style.position = 'absolute';
+  image.style.position = computedStyle.position === 'fixed' ? 'fixed' : 'absolute';
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
