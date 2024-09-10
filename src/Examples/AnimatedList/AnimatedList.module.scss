@@ -4,24 +4,3 @@
   grid-template-columns: repeat(3, 1fr);
   position: relative;
 }
-
-.elementTransition {
-  &:global(.enter) {
-    animation: fall 300ms forwards;
-  }
-
-  &:global(.exit) {
-    animation: fall 300ms forwards reverse ease-in;
-  }
-
-  @keyframes fall {
-    from {
-      opacity: 0;
-      transform: translateY(-75px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}

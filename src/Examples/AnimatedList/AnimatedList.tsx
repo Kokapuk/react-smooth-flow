@@ -31,7 +31,7 @@ const AnimatedList = () => {
   const shuffle = () => {
     startViewTransition(
       buttons.map((i) => `button-${i}`),
-      { duration: 300, noInOut: true },
+      { duration: 300 },
       () => {
         flushSync(() => {
           setButtons((prev) => {
@@ -56,7 +56,7 @@ const AnimatedList = () => {
 
     startViewTransition(
       [...buttons, newButton].map((i) => `button-${i}`),
-      { duration: 300, noInOut: true },
+      { duration: 300 },
       () => {
         flushSync(() => setButtons((prev) => [...prev, newButton]));
       }
@@ -66,7 +66,7 @@ const AnimatedList = () => {
   const removeElement = (element: number) => {
     startViewTransition(
       buttons.map((i) => `button-${i}`),
-      { duration: 300, noInOut: true },
+      { duration: 300 },
       () => flushSync(() => setButtons((prev) => prev.filter((j) => j !== element)))
     );
   };
@@ -80,7 +80,17 @@ const AnimatedList = () => {
       <div className={styles.grid}>
         {buttons.map((i) => (
           <Button
-            {...constructViewTransition({ tag: `button-${i}`, animationClass: styles.elementTransition })}
+            {...constructViewTransition({
+              tag: `button-${i}`,
+              enterKeyframes: [
+                { transform: 'translateY(-75px)', opacity: '0' },
+                { transform: 'translateY(0)', opacity: '1' },
+              ],
+              exitKeyframes: [
+                { transform: 'translateY(0)', opacity: '1' },
+                { transform: 'translateY(-75px)', opacity: '0' },
+              ],
+            })}
             key={i}
             onClick={() => removeElement(i)}
           >

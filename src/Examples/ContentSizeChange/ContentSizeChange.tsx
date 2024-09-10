@@ -21,13 +21,15 @@ const ContentSizeChange = () => {
         <Button
           {...constructViewTransition({ tag: 'size-button' })}
           onClick={() => {
+            const newElement = list.length ? Math.max(...list) + 1 : 1;
+
             startViewTransition(
-              ['size-button', 'size-container', ...list.map((i) => `size-button-${i}`).reverse()],
+              ['size-button', 'size-container', ...[...list, newElement].map((i) => `size-button-${i}`).reverse()],
               { duration: 300 },
               () =>
                 flushSync(() => {
                   setLoading((prev) => !prev);
-                  setList((prev) => [...prev, prev.length ? Math.max(...prev) + 1 : 1]);
+                  setList((prev) => [...prev, newElement]);
                 })
             );
           }}
@@ -38,12 +40,20 @@ const ContentSizeChange = () => {
           {list.map((i) => (
             <Button
               key={i}
-              {...constructViewTransition({ tag: `size-button-${i}` })}
+              {...constructViewTransition({
+                tag: `size-button-${i}`,
+                enterKeyframes: [
+                  { transform: 'translateY(-50px)', opacity: '0' },
+                  { transform: 'translateY(0)', opacity: '1' },
+                ],
+                exitKeyframes: [
+                  { transform: 'translateY(0)', opacity: '1' },
+                  { transform: 'translateY(-50px)', opacity: '0' },
+                ],
+              })}
               onClick={() =>
-                startViewTransition(
-                  ['size-container', ...list.map((i) => `size-button-${i}`)],
-                  { duration: 300 },
-                  () => flushSync(() => setList((prev) => prev.filter((j) => j != i)))
+                startViewTransition(['size-container', ...list.map((i) => `size-button-${i}`)], { duration: 300 }, () =>
+                  flushSync(() => setList((prev) => prev.filter((j) => j != i)))
                 )
               }
             >
