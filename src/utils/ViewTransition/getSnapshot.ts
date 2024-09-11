@@ -1,8 +1,10 @@
-import { ComputedStyle, Snapshot, ViewTransitionConfig } from './types';
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
+import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 import getTotalZIndex from './getTotalZIndex';
+import hasFixedPosition from './hasFixedPosition';
+import { Snapshot, ViewTransitionConfig } from './types';
 
 const getSnapshot = (
   targetElement: HTMLElement | null,
@@ -13,11 +15,11 @@ const getSnapshot = (
     return null;
   }
 
-  const computedStyle = { ...window.getComputedStyle(targetElement) } as ComputedStyle;
-
+  const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
+  const hasFixedPos = hasFixedPosition(targetElement);
 
-  if (computedStyle.position !== 'fixed') {
+  if (!hasFixedPos) {
     rect.left += window.scrollX;
     rect.top += window.scrollY;
   }
@@ -45,7 +47,7 @@ const getSnapshot = (
   image.style.pointerEvents = 'none';
   image.style.userSelect = 'none';
   image.style.zIndex = `${getTotalZIndex(targetElement)}`;
-  image.style.position = computedStyle.position === 'fixed' ? 'fixed' : 'absolute';
+  image.style.position = hasFixedPos ? 'fixed' : 'absolute';
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
@@ -53,10 +55,26 @@ const getSnapshot = (
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
   image.style.backgroundColor = computedStyle.backgroundColor;
-  image.style.borderRadius = computedStyle.borderRadius;
-  image.style.borderWidth = computedStyle.borderWidth;
-  image.style.borderColor = computedStyle.borderColor;
-  image.style.borderStyle = computedStyle.borderStyle;
+  
+  image.style.borderTopRightRadius = computedStyle.borderTopRightRadius;
+  image.style.borderBottomRightRadius = computedStyle.borderBottomRightRadius;
+  image.style.borderBottomLeftRadius = computedStyle.borderBottomLeftRadius;
+  image.style.borderTopLeftRadius = computedStyle.borderTopLeftRadius;
+
+  image.style.borderTopWidth = computedStyle.borderTopWidth;
+  image.style.borderRightWidth = computedStyle.borderRightWidth;
+  image.style.borderBottomWidth = computedStyle.borderBottomWidth;
+  image.style.borderLeftWidth = computedStyle.borderLeftWidth;
+
+  image.style.borderTopColor = computedStyle.borderTopColor;
+  image.style.borderRightColor = computedStyle.borderRightColor;
+  image.style.borderBottomColor = computedStyle.borderBottomColor;
+  image.style.borderLeftColor = computedStyle.borderLeftColor;
+
+  image.style.borderTopStyle = computedStyle.borderTopStyle;
+  image.style.borderRightStyle = computedStyle.borderRightStyle;
+  image.style.borderBottomStyle = computedStyle.borderBottomStyle;
+  image.style.borderLeftStyle = computedStyle.borderLeftStyle;
 
   const foreignObjectStyles = {
     width: `${rect.width}px`,

@@ -25,10 +25,26 @@ const playMutationTransition = async (
     left: `${i.rect.left}px`,
     top: `${i.rect.top}px`,
     backgroundColor: i.computedStyle.backgroundColor,
-    borderRadius: i.computedStyle.borderRadius,
-    borderWidth: i.computedStyle.borderWidth,
-    borderColor: i.computedStyle.borderColor,
-    borderStyle: i.computedStyle.borderStyle,
+    
+    borderTopRightRadius: i.computedStyle.borderTopRightRadius,
+    borderBottomRightRadius: i.computedStyle.borderBottomRightRadius,
+    borderBottomLeftRadius: i.computedStyle.borderBottomLeftRadius,
+    borderTopLeftRadius: i.computedStyle.borderTopLeftRadius,
+
+    borderTopWidth: i.computedStyle.borderTopWidth,
+    borderRightWidth: i.computedStyle.borderRightWidth,
+    borderBottomWidth: i.computedStyle.borderBottomWidth,
+    borderLeftWidth: i.computedStyle.borderLeftWidth,
+
+    borderTopColor: i.computedStyle.borderTopColor,
+    borderRightColor: i.computedStyle.borderRightColor,
+    borderBottomColor: i.computedStyle.borderBottomColor,
+    borderLeftColor: i.computedStyle.borderLeftColor,
+    
+    borderTopStyle: i.computedStyle.borderTopStyle,
+    borderRightStyle: i.computedStyle.borderRightStyle,
+    borderBottomStyle: i.computedStyle.borderBottomStyle,
+    borderLeftStyle: i.computedStyle.borderLeftStyle,
   }));
 
   const prevTransition = prevSnapshot.image.animate(
