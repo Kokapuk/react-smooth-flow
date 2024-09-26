@@ -1,5 +1,6 @@
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
+import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 import getTotalZIndex from './getTotalZIndex';
@@ -42,6 +43,7 @@ const getSnapshot = (
   targetElementClone.style.borderRadius = '0';
   targetElementClone.style.borderWidth = '0';
   targetElementClone.style.position = 'static';
+  targetElementClone.style.margin = '0';
 
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
@@ -54,8 +56,9 @@ const getSnapshot = (
   image.style.height = `${rect.height}px`;
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
-  image.style.backgroundColor = computedStyle.backgroundColor;
-  
+  image.style.backgroundColor = getColorWithOpacity(computedStyle.backgroundColor, computedStyle.opacity);
+  image.style.opacity = computedStyle.opacity;
+
   image.style.borderTopRightRadius = computedStyle.borderTopRightRadius;
   image.style.borderBottomRightRadius = computedStyle.borderBottomRightRadius;
   image.style.borderBottomLeftRadius = computedStyle.borderBottomLeftRadius;

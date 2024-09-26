@@ -1,5 +1,6 @@
 import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 import getViewTransitionRoot from './getViewTransitionRoot';
+import getColorWithOpacity from './getColorWithOpacity';
 
 const playMutationTransition = async (
   targetElement: HTMLElement,
@@ -24,8 +25,8 @@ const playMutationTransition = async (
     height: `${i.rect.height}px`,
     left: `${i.rect.left}px`,
     top: `${i.rect.top}px`,
-    backgroundColor: i.computedStyle.backgroundColor,
-    
+    backgroundColor: getColorWithOpacity(i.computedStyle.backgroundColor, i.computedStyle.opacity),
+
     borderTopRightRadius: i.computedStyle.borderTopRightRadius,
     borderBottomRightRadius: i.computedStyle.borderBottomRightRadius,
     borderBottomLeftRadius: i.computedStyle.borderBottomLeftRadius,
@@ -40,7 +41,7 @@ const playMutationTransition = async (
     borderRightColor: i.computedStyle.borderRightColor,
     borderBottomColor: i.computedStyle.borderBottomColor,
     borderLeftColor: i.computedStyle.borderLeftColor,
-    
+
     borderTopStyle: i.computedStyle.borderTopStyle,
     borderRightStyle: i.computedStyle.borderRightStyle,
     borderBottomStyle: i.computedStyle.borderBottomStyle,
