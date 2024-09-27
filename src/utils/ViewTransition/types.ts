@@ -10,6 +10,7 @@ export interface ViewTransitionConfig {
   duration: number;
   easing?: string;
   suppressHidingTags?: string[];
+  forceFixedPos?: boolean;
 }
 
 export type ComputedStyle = Omit<CSSStyleDeclaration, 'item' | 'getPropertyPriority' | 'getPropertyValue'>;

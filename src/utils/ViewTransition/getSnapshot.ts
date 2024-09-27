@@ -20,7 +20,7 @@ const getSnapshot = (
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
   const hasFixedPos = hasFixedPosition(targetElement);
 
-  if (!hasFixedPos) {
+  if (!hasFixedPos && !config.forceFixedPos) {
     rect.left += window.scrollX;
     rect.top += window.scrollY;
   }
@@ -39,17 +39,17 @@ const getSnapshot = (
     }
   });
 
-  targetElementClone.style.backgroundColor = 'transparent';
-  targetElementClone.style.borderRadius = '0';
-  targetElementClone.style.borderWidth = '0';
-  targetElementClone.style.position = 'static';
-  targetElementClone.style.margin = '0';
+  targetElementClone.style.setProperty('background-color', 'transparent', 'important');
+  targetElementClone.style.setProperty('border-radius', '0', 'important');
+  targetElementClone.style.setProperty('border-width', '0', 'important');
+  targetElementClone.style.setProperty('position', 'static', 'important');
+  targetElementClone.style.setProperty('margin', '0', 'important');
 
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
   image.style.userSelect = 'none';
   image.style.zIndex = `${getTotalZIndex(targetElement)}`;
-  image.style.position = hasFixedPos ? 'fixed' : 'absolute';
+  image.style.position = hasFixedPos || config.forceFixedPos ? 'fixed' : 'absolute';
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
