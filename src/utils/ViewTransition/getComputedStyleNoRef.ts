@@ -12,7 +12,7 @@ const getComputedStyleNoRef = (element: HTMLElement) => {
   const computedStyle: { [key: string]: string } = {};
 
   properties.forEach(
-    (i) => (computedStyle[i.replace(/-./g, (i) => i[1].toUpperCase())] = computedStyleWithRef.getPropertyValue(i))
+    (i) => (computedStyle[i.replace(/-./g, (i) => i[1].toUpperCase())] = computedStyleWithRef.getPropertyValue(i)),
   );
 
   return computedStyle as unknown as ComputedStyle;

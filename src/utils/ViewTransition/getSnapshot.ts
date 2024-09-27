@@ -1,16 +1,17 @@
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
+import elementHasFixedPosition from './elementHasFixedPosition';
+import hideElementsWithTags from './excludeElementWithTagsFromSnapshot';
 import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
-import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 import getTotalZIndex from './getTotalZIndex';
-import hasFixedPosition from './hasFixedPosition';
 import { Snapshot, ViewTransitionConfig } from './types';
+import unifyIds from './unifyIds';
 
 const getSnapshot = (
   targetElement: HTMLElement | null,
   excludeTags: string[],
-  config: ViewTransitionConfig
+  config: ViewTransitionConfig,
 ): Snapshot | null => {
   if (!targetElement) {
     return null;
@@ -18,7 +19,7 @@ const getSnapshot = (
 
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
-  const hasFixedPos = hasFixedPosition(targetElement);
+  const hasFixedPos = elementHasFixedPosition(targetElement);
 
   if (!hasFixedPos && !config.forceFixedPos) {
     rect.left += window.scrollX;
@@ -27,23 +28,15 @@ const getSnapshot = (
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
-  excludeTags.forEach((tag) => {
-    if (config.suppressHidingTags?.includes(tag)) {
-      return;
-    }
-
-    const element = getElementByViewTransitionTag(tag, targetElementClone) as HTMLElement | null;
-
-    if (element) {
-      element.style.visibility = 'hidden';
-    }
-  });
+  hideElementsWithTags(excludeTags, targetElementClone, config.suppressHidingTags);
+  unifyIds(targetElementClone, excludeTags);
 
   targetElementClone.style.setProperty('background-color', 'transparent', 'important');
   targetElementClone.style.setProperty('border-radius', '0', 'important');
   targetElementClone.style.setProperty('border-width', '0', 'important');
   targetElementClone.style.setProperty('position', 'static', 'important');
   targetElementClone.style.setProperty('margin', '0', 'important');
+  targetElementClone.style.setProperty('pointer-events', 'none', 'important');
 
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
@@ -87,8 +80,8 @@ const getSnapshot = (
 
   image.innerHTML = `
     <foreignObject style="${Object.entries(foreignObjectStyles)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join('; ')}">
+    .map(([key, value]) => `${key}: ${value}`)
+    .join('; ')}">
       <div class="${styles.snapshotContainer}" xmlns="http://www.w3.org/1999/xhtml">
         ${targetElementClone.outerHTML.replace(/\sdata-viewtransition=".+?"/gm, '')}
       </div>

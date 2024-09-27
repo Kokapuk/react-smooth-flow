@@ -1,6 +1,6 @@
-import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
-import getViewTransitionRoot from './getViewTransitionRoot';
 import getColorWithOpacity from './getColorWithOpacity';
+import getViewTransitionRoot from './getViewTransitionRoot';
+import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 
 const playMutationTransition = async (
   targetElement: HTMLElement,
