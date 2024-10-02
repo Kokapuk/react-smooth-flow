@@ -4,6 +4,7 @@ export interface ViewTransitionProperties {
   tag: string;
   enterKeyframes?: Keyframe[];
   exitKeyframes?: Keyframe[];
+  contentAlight?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
 }
 
 export interface ViewTransitionConfig {

@@ -1,7 +1,26 @@
+.snapshotWrapper {
+  position: relative;
+}
+
 .snapshotContainer {
   display: flex;
-  height: 100%;
-  width: 100%;
+  position: absolute;
+}
+
+.snapshotContainer.top {
+  top: 0;
+}
+
+.snapshotContainer.right {
+  right: 0;
+}
+
+.snapshotContainer.bottom {
+  bottom: 0;
+}
+
+.snapshotContainer.left {
+  left: 0;
 }
 
 .snapshotContainer > * {

@@ -5,13 +5,13 @@ import hideElementsWithTags from './excludeElementWithTagsFromSnapshot';
 import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getTotalZIndex from './getTotalZIndex';
-import { Snapshot, ViewTransitionConfig } from './types';
+import { Snapshot, ViewTransitionConfig, ViewTransitionProperties } from './types';
 import unifyIds from './unifyIds';
 
 const getSnapshot = (
   targetElement: HTMLElement | null,
   excludeTags: string[],
-  config: ViewTransitionConfig,
+  config: ViewTransitionConfig
 ): Snapshot | null => {
   if (!targetElement) {
     return null;
@@ -20,6 +20,7 @@ const getSnapshot = (
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
   const hasFixedPos = elementHasFixedPosition(targetElement);
+  const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ViewTransitionProperties;
 
   if (!hasFixedPos && !config.forceFixedPos) {
     rect.left += window.scrollX;
@@ -72,22 +73,29 @@ const getSnapshot = (
   image.style.borderBottomStyle = computedStyle.borderBottomStyle;
   image.style.borderLeftStyle = computedStyle.borderLeftStyle;
 
-  const foreignObjectStyles = {
+  const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
     height: `${rect.height}px`,
     transform: `translate(-${computedStyle.borderLeftWidth}, -${computedStyle.borderTopWidth})`,
-  };
+  })
+    .map(([key, value]) => `${key}: ${value}`)
+    .join('; ');
+
+  const snapshotContainerClasses = [
+    styles.snapshotContainer,
+    ...(viewTransitionProperties.contentAlight
+      ? viewTransitionProperties.contentAlight.split(' ').map((i) => styles[i])
+      : [styles.top, styles.left]),
+  ].join(' ');
 
   image.innerHTML = `
-    <foreignObject style="${Object.entries(foreignObjectStyles)
-    .map(([key, value]) => `${key}: ${value}`)
-    .join('; ')}">
-      <div class="${styles.snapshotContainer}" xmlns="http://www.w3.org/1999/xhtml">
+    <foreignObject class="${styles.snapshotWrapper}" width="100%" height="100%">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="${snapshotContainerClasses}" style="${snapshotContainerStyles}">
         ${targetElementClone.outerHTML.replace(/\sdata-viewtransition=".+?"/gm, '')}
       </div>
     </foreignObject>`;
 
-  return { rect, image, computedStyle, viewTransitionProperties: JSON.parse(targetElement.dataset.viewtransition!) };
+  return { rect, image, computedStyle, viewTransitionProperties: viewTransitionProperties };
 };
 
 export default getSnapshot;

@@ -36,6 +36,16 @@ const unifyIds = (targetElement: Element, excludeTags: string[]) => {
     i.setAttribute('clip-path', `url(#${idMap[id]})`);
   });
 
+  Array.from(targetElement.querySelectorAll('[mask^="url(#"]')).forEach((i) => {
+    const id = i.getAttribute('mask')?.match(/url\(#(.+)\)/)?.[1];
+
+    if (!id) {
+      return;
+    }
+
+    i.setAttribute('mask', `url(#${idMap[id]})`);
+  });
+
   Array.from(targetElement.querySelectorAll('use[href^="#"]')).forEach((i) => {
     const id = i.getAttribute('href')?.replace('#', '');
 

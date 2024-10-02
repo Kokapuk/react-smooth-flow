@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  gap: 15px;
+  background-color: green;
+  width: fit-content;
+  padding: 15px;
+  margin-left: auto;
+}
+
+.buttonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  width: fit-content;
+}
+
+.button {
+  height: 48px;
+  width: 48px;
+  padding: 0;
+  background-color: purple;
+  border-radius: 50%;
+  border: 0;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.expandedContent {
+  max-width: 225px;
+  background-color: purple;
+  padding: 15px;
+}
