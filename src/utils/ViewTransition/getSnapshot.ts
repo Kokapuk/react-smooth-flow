@@ -83,8 +83,8 @@ const getSnapshot = (
 
   const snapshotContainerClasses = [
     styles.snapshotContainer,
-    ...(viewTransitionProperties.contentAlight
-      ? viewTransitionProperties.contentAlight.split(' ').map((i) => styles[i])
+    ...(viewTransitionProperties.contentAlign
+      ? viewTransitionProperties.contentAlign.split(' ').map((i) => styles[i])
       : [styles.top, styles.left]),
   ].join(' ');
 
@@ -95,7 +95,7 @@ const getSnapshot = (
       </div>
     </foreignObject>`;
 
-  return { rect, image, computedStyle, viewTransitionProperties: viewTransitionProperties };
+  return { rect, image, computedStyle, viewTransitionProperties };
 };
 
 export default getSnapshot;

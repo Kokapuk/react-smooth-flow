@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { flushSync } from 'react-dom';
 import Example from '../../components/Example';
-import styles from './PreserveAspectRatio.module.scss';
 import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
 import startViewTransition from '../../utils/ViewTransition/startViewTransition';
-import { flushSync } from 'react-dom';
+import styles from './PreserveAspectRatio.module.scss';
 
 const buttons = [1, 2, 3, 4];
 
@@ -12,7 +12,7 @@ const PreserveAspectRatio = () => {
 
   return (
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
-      <div className={styles.container} {...constructViewTransition({ tag: 'container', contentAlight: 'top right' })}>
+      <div className={styles.container} {...constructViewTransition({ tag: 'container', contentAlign: 'top right' })}>
         {activeSection !== null && (
           <p className={styles.expandedContent} {...constructViewTransition({ tag: `panel-${activeSection}` })}>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error accusantium sequi cum minima, enim dolor
