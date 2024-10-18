@@ -21,6 +21,7 @@ export interface Snapshot {
   image: SVGSVGElement;
   computedStyle: ComputedStyle;
   viewTransitionProperties: ViewTransitionProperties;
+  hasFixedPos: boolean;
 }
 
 export interface TransitionSnapshot {

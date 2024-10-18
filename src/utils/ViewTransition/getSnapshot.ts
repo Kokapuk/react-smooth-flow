@@ -19,13 +19,8 @@ const getSnapshot = (
 
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
-  const hasFixedPos = elementHasFixedPosition(targetElement);
+  const hasFixedPos = elementHasFixedPosition(targetElement) || !!config.forceFixedPos;
   const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ViewTransitionProperties;
-
-  if (!hasFixedPos && !config.forceFixedPos) {
-    rect.left += window.scrollX;
-    rect.top += window.scrollY;
-  }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
@@ -43,13 +38,10 @@ const getSnapshot = (
   image.style.pointerEvents = 'none';
   image.style.userSelect = 'none';
   image.style.zIndex = `${getTotalZIndex(targetElement)}`;
-  image.style.position = hasFixedPos || config.forceFixedPos ? 'fixed' : 'absolute';
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
   image.style.height = `${rect.height}px`;
-  image.style.left = `${rect.left}px`;
-  image.style.top = `${rect.top}px`;
   image.style.backgroundColor = getColorWithOpacity(computedStyle.backgroundColor, computedStyle.opacity);
   image.style.opacity = computedStyle.opacity;
 
@@ -95,7 +87,7 @@ const getSnapshot = (
       </div>
     </foreignObject>`;
 
-  return { rect, image, computedStyle, viewTransitionProperties };
+  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPos };
 };
 
 export default getSnapshot;

@@ -1,8 +1,9 @@
-import { TransitionSnapshot, ViewTransitionConfig } from './types';
+import applyPositionToSnapshots from './applyPositionToSnapshot';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 import getSnapshot from './getSnapshot';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
+import { TransitionSnapshot, ViewTransitionConfig } from './types';
 
 const activeTransitions: { [key: string]: TransitionSnapshot[] } = {};
 
@@ -37,6 +38,8 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
   );
 
   const pairs = prevSnapshots.map((i, index) => ({ prev: i, next: nextSnapshots[index] }));
+
+  applyPositionToSnapshots(pairs);
 
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
     const targetElement = (
