@@ -19,7 +19,7 @@ const getSnapshot = (
 
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
-  const hasFixedPos = elementHasFixedPosition(targetElement) || !!config.forceFixedPos;
+  const hasFixedPosition = elementHasFixedPosition(targetElement) || !!config.forceFixedPosition;
   const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ViewTransitionProperties;
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
@@ -87,7 +87,7 @@ const getSnapshot = (
       </div>
     </foreignObject>`;
 
-  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPos };
+  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition };
 };
 
 export default getSnapshot;

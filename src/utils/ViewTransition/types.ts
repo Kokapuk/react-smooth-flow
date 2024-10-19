@@ -12,7 +12,7 @@ export interface ViewTransitionConfig {
   duration: number;
   easing?: string;
   suppressHidingTags?: string[];
-  forceFixedPos?: boolean;
+  forceFixedPosition?: boolean;
 }
 
 export type ComputedStyle = Omit<CSSStyleDeclaration, 'item' | 'getPropertyPriority' | 'getPropertyValue'>;
@@ -22,7 +22,7 @@ export interface Snapshot {
   image: SVGSVGElement;
   computedStyle: ComputedStyle;
   viewTransitionProperties: ViewTransitionProperties;
-  hasFixedPos: boolean;
+  hasFixedPosition: boolean;
 }
 
 export interface TransitionSnapshot {
