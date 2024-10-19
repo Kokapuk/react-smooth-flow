@@ -15,54 +15,65 @@ const playEnterExitTransition = async (
     targetElement.style.visibility = 'hidden';
   }
 
-  if (prevSnapshot) {
-    viewTransitionRoot.append(prevSnapshot.image);
-
-    const exitTransition = prevSnapshot.image.animate(
-      prevSnapshot.viewTransitionProperties.exitKeyframes ?? [{ opacity: '1' }, { opacity: '0' }],
-      {
-        duration: config.duration,
-        easing: config.easing ?? 'ease',
+  await Promise.all([
+    (async () => {
+      if (!prevSnapshot) {
+        return;
       }
-    );
 
-    activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [
-      { transition: exitTransition, prevSnapshotImage: prevSnapshot.image },
-    ];
+      viewTransitionRoot.append(prevSnapshot.image);
 
-    try {
-      await exitTransition.finished;
-      prevSnapshot.image.remove();
-    } catch {
-      /* empty */
-    }
-  } else if (nextSnapshot) {
-    viewTransitionRoot.append(nextSnapshot.image);
+      const exitTransition = prevSnapshot.image.animate(
+        prevSnapshot.viewTransitionProperties.exitKeyframes ?? [{ opacity: '1' }, { opacity: '0' }],
+        {
+          duration: config.duration,
+          easing: config.easing ?? 'ease',
+        }
+      );
 
-    const enterTransition = nextSnapshot.image.animate(
-      nextSnapshot.viewTransitionProperties.enterKeyframes ?? [{ opacity: '0' }, { opacity: '1' }],
-      {
-        duration: config.duration,
-        easing: config.easing ?? 'ease',
+      activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [
+        { transition: exitTransition, prevSnapshotImage: prevSnapshot.image },
+      ];
+
+      try {
+        await exitTransition.finished;
+        prevSnapshot.image.remove();
+      } catch {
+        /* empty */
       }
-    );
+    })(),
+    (async () => {
+      if (!nextSnapshot) {
+        return;
+      }
 
-    activeTransitions[nextSnapshot.viewTransitionProperties.tag] = [
-      {
-        transition: enterTransition,
-        prevSnapshotImage: nextSnapshot.image,
-        targetElement: targetElement as HTMLElement,
-        targetResetVisibility: resetVisibility,
-      },
-    ];
+      viewTransitionRoot.append(nextSnapshot.image);
 
-    try {
-      await enterTransition.finished;
-      nextSnapshot.image.remove();
-    } catch {
-      /* empty */
-    }
-  }
+      const enterTransition = nextSnapshot.image.animate(
+        nextSnapshot.viewTransitionProperties.enterKeyframes ?? [{ opacity: '0' }, { opacity: '1' }],
+        {
+          duration: config.duration,
+          easing: config.easing ?? 'ease',
+        }
+      );
+
+      activeTransitions[nextSnapshot.viewTransitionProperties.tag] = [
+        {
+          transition: enterTransition,
+          prevSnapshotImage: nextSnapshot.image,
+          targetElement: targetElement as HTMLElement,
+          targetResetVisibility: resetVisibility,
+        },
+      ];
+
+      try {
+        await enterTransition.finished;
+        nextSnapshot.image.remove();
+      } catch {
+        /* empty */
+      }
+    })(),
+  ]);
 
   if (targetElement && resetVisibility !== undefined) {
     targetElement.style.visibility = resetVisibility;

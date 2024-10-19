@@ -5,6 +5,7 @@ export interface ViewTransitionProperties {
   enterKeyframes?: Keyframe[];
   exitKeyframes?: Keyframe[];
   contentAlign?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
+  avoidMutationTransition?: boolean;
 }
 
 export interface ViewTransitionConfig {

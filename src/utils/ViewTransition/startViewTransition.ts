@@ -38,7 +38,6 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
   );
 
   const pairs = prevSnapshots.map((i, index) => ({ prev: i, next: nextSnapshots[index] }));
-
   applyPositionToSnapshots(pairs);
 
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
@@ -46,9 +45,14 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
       nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.viewTransitionProperties.tag) : null
     ) as HTMLElement | null;
 
-    if (prevSnapshot && nextSnapshot) {
+    if (
+      prevSnapshot &&
+      nextSnapshot &&
+      !prevSnapshot.viewTransitionProperties.avoidMutationTransition &&
+      !nextSnapshot.viewTransitionProperties.avoidMutationTransition
+    ) {
       playMutationTransition(targetElement!, prevSnapshot, nextSnapshot, config, activeTransitions);
-    } else if (!prevSnapshot || !nextSnapshot) {
+    } else {
       playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot, config, activeTransitions);
     }
   }
