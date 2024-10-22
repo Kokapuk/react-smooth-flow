@@ -86,10 +86,7 @@ const AnimatedList = () => {
                 { transform: 'translateY(-75px)', opacity: '0' },
                 { transform: 'translateY(0)', opacity: '1' },
               ],
-              exitKeyframes: [
-                { transform: 'translateY(0)', opacity: '1' },
-                { transform: 'translateY(-75px)', opacity: '0' },
-              ],
+              exitKeyframes: 'reversedEnter',
             })}
             key={i}
             onClick={() => removeElement(i)}

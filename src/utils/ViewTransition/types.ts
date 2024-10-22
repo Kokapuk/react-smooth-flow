@@ -3,7 +3,7 @@ import { Rect } from '../types';
 export interface ViewTransitionProperties {
   tag: string;
   enterKeyframes?: Keyframe[];
-  exitKeyframes?: Keyframe[];
+  exitKeyframes?: Keyframe[] | 'reversedEnter';
   contentAlign?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
   avoidMutationTransition?: boolean;
 }

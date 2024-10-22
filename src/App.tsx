@@ -1,4 +1,5 @@
 import AnimatedList from './Examples/AnimatedList';
+import Clipping from './Examples/Clipping';
 import ContentSizeChange from './Examples/ContentSizeChange';
 import Modal from './Examples/Modal';
 import PreserveAspectRatio from './Examples/PreserveAspectRatio';
@@ -14,6 +15,7 @@ const App = () => {
       <ViewTransition />
       <Modal />
       <PreserveAspectRatio />
+      <Clipping />
     </>
   );
 };

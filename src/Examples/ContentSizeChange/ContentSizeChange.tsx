@@ -46,10 +46,7 @@ const ContentSizeChange = () => {
                   { transform: 'translateY(-50px)', opacity: '0' },
                   { transform: 'translateY(0)', opacity: '1' },
                 ],
-                exitKeyframes: [
-                  { transform: 'translateY(0)', opacity: '1' },
-                  { transform: 'translateY(-50px)', opacity: '0' },
-                ],
+                // exitKeyframes: 'reversedEnter',
               })}
               onClick={() =>
                 startViewTransition(['size-container', ...list.map((i) => `size-button-${i}`)], { duration: 300 }, () =>

@@ -65,10 +65,7 @@ const ViewTransition = () => {
                 { transform: 'scale(.8)', opacity: '0' },
                 { transform: 'scale(1)', opacity: '1' },
               ],
-              exitKeyframes: [
-                { transform: 'scale(1)', opacity: '1' },
-                { transform: 'scale(.8)', opacity: '0' },
-              ],
+              exitKeyframes: 'reversedEnter',
             })}
             className={cn(styles.indicator, !isOn && styles.inactive)}
           />

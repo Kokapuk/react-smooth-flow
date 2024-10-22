@@ -23,13 +23,21 @@ const playEnterExitTransition = async (
 
       viewTransitionRoot.append(prevSnapshot.image);
 
-      const exitTransition = prevSnapshot.image.animate(
-        prevSnapshot.viewTransitionProperties.exitKeyframes ?? [{ opacity: '1' }, { opacity: '0' }],
-        {
-          duration: config.duration,
-          easing: config.easing ?? 'ease',
-        }
-      );
+      let exitKeyframes: Keyframe[] | undefined = undefined;
+
+      if (
+        prevSnapshot.viewTransitionProperties.exitKeyframes === 'reversedEnter' &&
+        prevSnapshot.viewTransitionProperties.enterKeyframes
+      ) {
+        exitKeyframes = [...prevSnapshot.viewTransitionProperties.enterKeyframes].reverse();
+      } else if (prevSnapshot.viewTransitionProperties.exitKeyframes !== 'reversedEnter') {
+        exitKeyframes = prevSnapshot.viewTransitionProperties.exitKeyframes;
+      }
+
+      const exitTransition = prevSnapshot.image.animate(exitKeyframes ?? [{ opacity: '1' }, { opacity: '0' }], {
+        duration: config.duration,
+        easing: config.easing ?? 'ease',
+      });
 
       activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [
         { transition: exitTransition, prevSnapshotImage: prevSnapshot.image },

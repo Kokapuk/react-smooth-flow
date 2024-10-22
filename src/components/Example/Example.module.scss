@@ -5,6 +5,7 @@
   width: fit-content;
   padding: 25px;
   position: relative;
+  flex-shrink: 0;
 
   &::before {
     content: var(--title);
