@@ -30,5 +30,8 @@ export interface TransitionSnapshot {
   prevSnapshotImage?: SVGSVGElement;
   nextSnapshotImage?: SVGSVGElement;
   targetElement?: HTMLElement;
-  targetResetVisibility?: string;
+  targetResetStyles?: {
+    opacity: string;
+    transition: string;
+  };
 }

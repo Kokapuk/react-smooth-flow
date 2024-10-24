@@ -10,9 +10,16 @@ const playEnterExitTransition = async (
 ) => {
   const viewTransitionRoot = getViewTransitionRoot();
 
-  const resetVisibility = targetElement?.style.visibility;
+  const targetResetStyles: TransitionSnapshot['targetResetStyles'] = targetElement
+    ? {
+        opacity: targetElement.style.opacity,
+        transition: targetElement.style.transition,
+      }
+    : undefined;
+
   if (targetElement) {
-    targetElement.style.visibility = 'hidden';
+    targetElement.style.opacity = '0';
+    targetElement.style.transition = 'none';
   }
 
   await Promise.all([
@@ -70,7 +77,7 @@ const playEnterExitTransition = async (
           transition: enterTransition,
           prevSnapshotImage: nextSnapshot.image,
           targetElement: targetElement as HTMLElement,
-          targetResetVisibility: resetVisibility,
+          targetResetStyles,
         },
       ];
 
@@ -83,8 +90,9 @@ const playEnterExitTransition = async (
     })(),
   ]);
 
-  if (targetElement && resetVisibility !== undefined) {
-    targetElement.style.visibility = resetVisibility;
+  if (targetElement && targetResetStyles) {
+    targetElement.style.opacity = targetResetStyles.opacity;
+    targetElement.style.transition = targetResetStyles.transition;
   }
 };
 

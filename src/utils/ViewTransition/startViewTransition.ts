@@ -15,8 +15,9 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
       i.prevSnapshotImage?.remove();
       i.nextSnapshotImage?.remove();
 
-      if (i.targetElement && i.targetResetVisibility !== undefined) {
-        i.targetElement.style.visibility = i.targetResetVisibility;
+      if (i.targetElement && i.targetResetStyles) {
+        i.targetElement.style.opacity = i.targetResetStyles.opacity;
+        i.targetElement.style.transition = i.targetResetStyles.transition;
       }
     });
   });
