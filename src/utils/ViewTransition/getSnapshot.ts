@@ -1,7 +1,7 @@
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
 import elementHasFixedPosition from './elementHasFixedPosition';
-import hideElementsWithTags from './excludeElementWithTagsFromSnapshot';
+import hideElementsWithTags from './hideElementsWithTags';
 import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getTotalZIndex from './getTotalZIndex';

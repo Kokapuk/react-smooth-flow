@@ -33,5 +33,6 @@ export interface TransitionSnapshot {
   targetResetStyles?: {
     opacity: string;
     transition: string;
+    pointerEvents: string;
   };
 }

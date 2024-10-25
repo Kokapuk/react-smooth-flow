@@ -14,11 +14,13 @@ const playMutationTransition = async (
   const targetResetStyles: TransitionSnapshot['targetResetStyles'] = {
     opacity: targetElement.style.opacity,
     transition: targetElement.style.transition,
+    pointerEvents: targetElement.style.pointerEvents,
   };
 
   if (!config.suppressHidingTags?.includes(prevSnapshot.viewTransitionProperties.tag)) {
     targetElement.style.opacity = '0';
     targetElement.style.transition = 'none';
+    targetElement.style.pointerEvents = 'none';
   }
 
   viewTransitionRoot.append(prevSnapshot.image);
@@ -83,8 +85,10 @@ const playMutationTransition = async (
 
     prevSnapshot.image.remove();
     nextSnapshot.image.remove();
+    
     targetElement.style.opacity = targetResetStyles.opacity;
-    targetElement.style.transition = targetResetStyles.transition;
+    targetElement.style.pointerEvents = targetResetStyles.pointerEvents;
+    setTimeout(() => (targetElement.style.transition = targetResetStyles.transition));
   } catch {
     /* empty */
   }

@@ -17,7 +17,8 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
 
       if (i.targetElement && i.targetResetStyles) {
         i.targetElement.style.opacity = i.targetResetStyles.opacity;
-        i.targetElement.style.transition = i.targetResetStyles.transition;
+        i.targetElement.style.pointerEvents = i.targetResetStyles.pointerEvents;
+        setTimeout(() => (i.targetElement!.style.transition = i.targetResetStyles!.transition));
       }
     });
   });

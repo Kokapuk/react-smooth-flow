@@ -14,12 +14,14 @@ const playEnterExitTransition = async (
     ? {
         opacity: targetElement.style.opacity,
         transition: targetElement.style.transition,
+        pointerEvents: targetElement.style.pointerEvents,
       }
     : undefined;
 
   if (targetElement) {
     targetElement.style.opacity = '0';
     targetElement.style.transition = 'none';
+    targetElement.style.pointerEvents = 'none';
   }
 
   await Promise.all([
@@ -92,7 +94,8 @@ const playEnterExitTransition = async (
 
   if (targetElement && targetResetStyles) {
     targetElement.style.opacity = targetResetStyles.opacity;
-    targetElement.style.transition = targetResetStyles.transition;
+    targetElement.style.pointerEvents = targetResetStyles.pointerEvents;
+    setTimeout(() => (targetElement.style.transition = targetResetStyles.transition));
   }
 };
 
