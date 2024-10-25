@@ -12,6 +12,7 @@ export default (tags: string[], targetElement: HTMLElement, suppressHidingTags?:
       return;
     }
 
-    element.style.visibility = 'hidden';
+    element.style.opacity = '0';
+    element.style.transition = 'none';
   });
 };

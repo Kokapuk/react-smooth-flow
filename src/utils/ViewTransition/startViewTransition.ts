@@ -15,11 +15,7 @@ export default async (tags: string[], config: ViewTransitionConfig, modifyDom: (
       i.prevSnapshotImage?.remove();
       i.nextSnapshotImage?.remove();
 
-      if (i.targetElement && i.targetResetStyles) {
-        i.targetElement.style.opacity = i.targetResetStyles.opacity;
-        i.targetElement.style.pointerEvents = i.targetResetStyles.pointerEvents;
-        setTimeout(() => (i.targetElement!.style.transition = i.targetResetStyles!.transition));
-      }
+      i.resetTargetStyles?.();
     });
   });
 

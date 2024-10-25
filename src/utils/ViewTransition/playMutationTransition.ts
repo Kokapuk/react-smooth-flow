@@ -1,5 +1,6 @@
 import getColorWithOpacity from './getColorWithOpacity';
 import getViewTransitionRoot from './getViewTransitionRoot';
+import hideElementNoTransition from './hideElementNoTransition';
 import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 
 export default async (
@@ -11,16 +12,10 @@ export default async (
 ) => {
   const viewTransitionRoot = getViewTransitionRoot();
 
-  const targetResetStyles: TransitionSnapshot['targetResetStyles'] = {
-    opacity: targetElement.style.opacity,
-    transition: targetElement.style.transition,
-    pointerEvents: targetElement.style.pointerEvents,
-  };
+  let resetTargetStyles: (() => void) | undefined = undefined;
 
   if (!config.suppressHidingTags?.includes(prevSnapshot.viewTransitionProperties.tag)) {
-    targetElement.style.opacity = '0';
-    targetElement.style.transition = 'none';
-    targetElement.style.pointerEvents = 'none';
+    resetTargetStyles = hideElementNoTransition(targetElement);
   }
 
   viewTransitionRoot.append(prevSnapshot.image);
@@ -74,7 +69,7 @@ export default async (
     prevSnapshotImage: prevSnapshot.image,
     nextSnapshotImage: nextSnapshot.image,
     targetElement,
-    targetResetStyles,
+    resetTargetStyles,
   }));
 
   try {
@@ -86,9 +81,7 @@ export default async (
     prevSnapshot.image.remove();
     nextSnapshot.image.remove();
 
-    targetElement.style.opacity = targetResetStyles.opacity;
-    targetElement.style.pointerEvents = targetResetStyles.pointerEvents;
-    setTimeout(() => (targetElement.style.transition = targetResetStyles.transition));
+    resetTargetStyles?.();
   } catch {
     /* empty */
   }

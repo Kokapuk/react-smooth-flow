@@ -1,5 +1,6 @@
 import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 import getViewTransitionRoot from './getViewTransitionRoot';
+import hideElementNoTransition from './hideElementNoTransition';
 
 export default async (
   targetElement: HTMLElement | null,
@@ -10,19 +11,7 @@ export default async (
 ) => {
   const viewTransitionRoot = getViewTransitionRoot();
 
-  const targetResetStyles: TransitionSnapshot['targetResetStyles'] = targetElement
-    ? {
-        opacity: targetElement.style.opacity,
-        transition: targetElement.style.transition,
-        pointerEvents: targetElement.style.pointerEvents,
-      }
-    : undefined;
-
-  if (targetElement) {
-    targetElement.style.opacity = '0';
-    targetElement.style.transition = 'none';
-    targetElement.style.pointerEvents = 'none';
-  }
+  const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
 
   await Promise.all([
     (async () => {
@@ -79,7 +68,7 @@ export default async (
           transition: enterTransition,
           prevSnapshotImage: nextSnapshot.image,
           targetElement: targetElement as HTMLElement,
-          targetResetStyles,
+          resetTargetStyles,
         },
       ];
 
@@ -92,9 +81,5 @@ export default async (
     })(),
   ]);
 
-  if (targetElement && targetResetStyles) {
-    targetElement.style.opacity = targetResetStyles.opacity;
-    targetElement.style.pointerEvents = targetResetStyles.pointerEvents;
-    setTimeout(() => (targetElement.style.transition = targetResetStyles.transition));
-  }
+  resetTargetStyles?.();
 };
