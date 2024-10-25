@@ -1,4 +1,4 @@
-const getViewTransitionRoot = () => {
+export default () => {
   const viewTransitionRoot = document.getElementById('viewTransitionRoot');
 
   if (!viewTransitionRoot) {
@@ -7,4 +7,3 @@ const getViewTransitionRoot = () => {
 
   return viewTransitionRoot;
 };
-export default getViewTransitionRoot;

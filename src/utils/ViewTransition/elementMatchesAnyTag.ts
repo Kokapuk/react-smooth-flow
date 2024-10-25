@@ -1,4 +1,4 @@
-const elementMatchesAnyTag = (element: Element, tags: string[]) => {
+export default (element: Element, tags: string[]) => {
   for (const tag in tags) {
     if (element.matches(`[data-viewtransition*='tag":"${tag}"']`)) {
       return true;
@@ -7,5 +7,3 @@ const elementMatchesAnyTag = (element: Element, tags: string[]) => {
 
   return false;
 };
-
-export default elementMatchesAnyTag;

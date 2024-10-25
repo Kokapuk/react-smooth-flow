@@ -1,4 +1,4 @@
-const getTotalZIndex = (element: HTMLElement) => {
+export default (element: HTMLElement) => {
   let target: HTMLElement | null = element;
   let zIndex = 0;
 
@@ -15,5 +15,3 @@ const getTotalZIndex = (element: HTMLElement) => {
 
   return zIndex;
 };
-
-export default getTotalZIndex;

@@ -1,4 +1,4 @@
-const elementHasFixedPosition = (element: HTMLElement) => {
+export default (element: HTMLElement) => {
   let target: HTMLElement | null = element;
 
   while (target && target !== document.body) {
@@ -13,5 +13,3 @@ const elementHasFixedPosition = (element: HTMLElement) => {
 
   return false;
 };
-
-export default elementHasFixedPosition;

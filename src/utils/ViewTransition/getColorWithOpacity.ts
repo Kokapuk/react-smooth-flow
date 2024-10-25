@@ -1,4 +1,4 @@
-const getColorWithOpacity = (originalColor: string, opacity: number | string) => {
+export default (originalColor: string, opacity: number | string) => {
   const matches = originalColor.match(/(?:\d+)?\.?\d+/gm);
 
   if (!matches || matches.length < 3) {
@@ -15,5 +15,3 @@ const getColorWithOpacity = (originalColor: string, opacity: number | string) =>
 
   return `rgba(${rgb}, ${newOpacity * originalOpacity})`;
 };
-
-export default getColorWithOpacity;

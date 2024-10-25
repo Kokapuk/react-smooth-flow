@@ -2,7 +2,7 @@ import getColorWithOpacity from './getColorWithOpacity';
 import getViewTransitionRoot from './getViewTransitionRoot';
 import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 
-const playMutationTransition = async (
+export default async (
   targetElement: HTMLElement,
   prevSnapshot: Snapshot,
   nextSnapshot: Snapshot,
@@ -85,7 +85,7 @@ const playMutationTransition = async (
 
     prevSnapshot.image.remove();
     nextSnapshot.image.remove();
-    
+
     targetElement.style.opacity = targetResetStyles.opacity;
     targetElement.style.pointerEvents = targetResetStyles.pointerEvents;
     setTimeout(() => (targetElement.style.transition = targetResetStyles.transition));
@@ -93,5 +93,3 @@ const playMutationTransition = async (
     /* empty */
   }
 };
-
-export default playMutationTransition;

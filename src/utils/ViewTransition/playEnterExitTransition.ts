@@ -1,7 +1,7 @@
 import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 import getViewTransitionRoot from './getViewTransitionRoot';
 
-const playEnterExitTransition = async (
+export default async (
   targetElement: HTMLElement | null,
   prevSnapshot: Snapshot | null,
   nextSnapshot: Snapshot | null,
@@ -98,5 +98,3 @@ const playEnterExitTransition = async (
     setTimeout(() => (targetElement.style.transition = targetResetStyles.transition));
   }
 };
-
-export default playEnterExitTransition;

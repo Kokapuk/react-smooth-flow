@@ -1,6 +1,6 @@
 import { Dispatch, useEffect, useState } from 'react';
 
-const useDelayedState = <T>(
+export default <T>(
   initialState: T,
   updateOnChange?: boolean
 ): [{ relevant: T; delayed: T }, Dispatch<React.SetStateAction<T>>] => {
@@ -21,5 +21,3 @@ const useDelayedState = <T>(
 
   return [{ relevant: state, delayed: delayedState }, setState];
 };
-
-export default useDelayedState;

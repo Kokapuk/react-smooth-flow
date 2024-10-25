@@ -1,6 +1,6 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 
-const unifyIds = (targetElement: Element, excludeTags: string[]) => {
+export default (targetElement: Element, excludeTags: string[]) => {
   const elements: Element[] = [];
 
   if (targetElement.matches('[id]')) {
@@ -56,5 +56,3 @@ const unifyIds = (targetElement: Element, excludeTags: string[]) => {
     i.setAttribute('href', `#${idMap[id]}`);
   });
 };
-
-export default unifyIds;

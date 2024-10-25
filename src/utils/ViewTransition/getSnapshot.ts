@@ -8,7 +8,7 @@ import getTotalZIndex from './getTotalZIndex';
 import { Snapshot, ViewTransitionConfig, ViewTransitionProperties } from './types';
 import unifyIds from './unifyIds';
 
-const getSnapshot = (
+export default (
   targetElement: HTMLElement | null,
   excludeTags: string[],
   config: ViewTransitionConfig
@@ -89,5 +89,3 @@ const getSnapshot = (
 
   return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition };
 };
-
-export default getSnapshot;
