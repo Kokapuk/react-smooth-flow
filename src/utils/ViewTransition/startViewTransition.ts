@@ -11,11 +11,7 @@ export default async (tags: string[], config: ViewTransitionConfig, modifyDom: (
   tags.forEach((i) => {
     activeTransitions[i]?.forEach((i) => {
       i.transition.cancel();
-
-      i.prevSnapshotImage?.remove();
-      i.nextSnapshotImage?.remove();
-
-      i.resetTargetStyles?.();
+      i.onCancel();
     });
   });
 

@@ -15,6 +15,16 @@ const PreserveAspectRatio = () => {
       <div className={styles.container} {...constructViewTransition({ tag: 'container', contentAlign: 'top right' })}>
         {activeSection !== null && (
           <p className={styles.expandedContent} {...constructViewTransition({ tag: `panel-${activeSection}` })}>
+            <button
+              style={{ float: 'right', height: 22, width: 22 }}
+              onClick={() =>
+                startViewTransition(['container', ...buttons.map((i) => `panel-${i}`)], { duration: 600 }, () => {
+                  flushSync(() => setActiveSection(null));
+                })
+              }
+            >
+              X
+            </button>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error accusantium sequi cum minima, enim dolor
             commodi dolore quae? Itaque explicabo velit voluptatibus sint excepturi animi, deserunt laboriosam sit quas
             dolorum?
@@ -26,11 +36,12 @@ const PreserveAspectRatio = () => {
             <button
               onClick={() =>
                 startViewTransition(['container', ...buttons.map((i) => `panel-${i}`)], { duration: 600 }, () =>
-                  flushSync(() => setActiveSection(activeSection === i ? null : i))
+                  flushSync(() => setActiveSection(i))
                 )
               }
               className={styles.button}
               key={i}
+              style={{ visibility: activeSection === i ? 'hidden' : undefined }}
               {...(activeSection !== i ? constructViewTransition({ tag: `panel-${i}` }) : null)}
             >
               {i}

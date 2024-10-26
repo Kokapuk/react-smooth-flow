@@ -64,12 +64,16 @@ export default async (
     }
   );
 
+  const removeSnapshotsAndResetTarget = () => {
+    prevSnapshot.image.remove();
+    nextSnapshot.image.remove();
+
+    resetTargetStyles?.();
+  };
+
   activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [prevTransition, nextTransition].map((i) => ({
     transition: i,
-    prevSnapshotImage: prevSnapshot.image,
-    nextSnapshotImage: nextSnapshot.image,
-    targetElement,
-    resetTargetStyles,
+    onCancel: removeSnapshotsAndResetTarget,
   }));
 
   try {
@@ -78,10 +82,7 @@ export default async (
 
     activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
 
-    prevSnapshot.image.remove();
-    nextSnapshot.image.remove();
-
-    resetTargetStyles?.();
+    removeSnapshotsAndResetTarget();
   } catch {
     /* empty */
   }

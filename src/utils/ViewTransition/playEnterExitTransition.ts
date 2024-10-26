@@ -38,16 +38,19 @@ export default async (
       });
 
       activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [
-        { transition: exitTransition, prevSnapshotImage: prevSnapshot.image },
+        { transition: exitTransition, onCancel: () => prevSnapshot.image.remove() },
       ];
 
       try {
         await exitTransition.finished;
+
+        activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
         prevSnapshot.image.remove();
       } catch {
         /* empty */
       }
     })(),
+
     (async () => {
       if (!nextSnapshot) {
         return;
@@ -63,18 +66,23 @@ export default async (
         }
       );
 
+      const removeSnapshotAndResetTarget = () => {
+        nextSnapshot.image.remove();
+        resetTargetStyles?.();
+      };
+
       activeTransitions[nextSnapshot.viewTransitionProperties.tag] = [
         {
           transition: enterTransition,
-          prevSnapshotImage: nextSnapshot.image,
-          targetElement: targetElement as HTMLElement,
-          resetTargetStyles,
+          onCancel: removeSnapshotAndResetTarget,
         },
       ];
 
       try {
         await enterTransition.finished;
-        nextSnapshot.image.remove();
+
+        activeTransitions[nextSnapshot.viewTransitionProperties.tag] = [];
+        removeSnapshotAndResetTarget();
       } catch {
         /* empty */
       }

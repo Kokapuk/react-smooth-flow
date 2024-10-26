@@ -27,8 +27,5 @@ export interface Snapshot {
 
 export interface TransitionSnapshot {
   transition: Animation;
-  prevSnapshotImage?: SVGSVGElement;
-  nextSnapshotImage?: SVGSVGElement;
-  targetElement?: HTMLElement;
-  resetTargetStyles?: () => void;
+  onCancel(): void;
 }
