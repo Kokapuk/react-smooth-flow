@@ -7,7 +7,7 @@ import { TransitionSnapshot, ViewTransitionConfig } from './types';
 
 const activeTransitions: { [key: string]: TransitionSnapshot[] } = {};
 
-export default async (tags: string[], config: ViewTransitionConfig, modifyDom: () => void) => {
+const startViewTransition = async (tags: string[], config: ViewTransitionConfig, modifyDom: () => void) => {
   tags.forEach((i) => {
     activeTransitions[i]?.forEach((i) => {
       i.transition.cancel();
@@ -51,3 +51,5 @@ export default async (tags: string[], config: ViewTransitionConfig, modifyDom: (
     }
   }
 };
+
+export default startViewTransition;

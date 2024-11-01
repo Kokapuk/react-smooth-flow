@@ -3,7 +3,7 @@ import getViewTransitionRoot from './getViewTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
 
-export default async (
+const playMutationTransition = async (
   targetElement: HTMLElement,
   prevSnapshot: Snapshot,
   nextSnapshot: Snapshot,
@@ -87,3 +87,5 @@ export default async (
     /* empty */
   }
 };
+
+export default playMutationTransition;

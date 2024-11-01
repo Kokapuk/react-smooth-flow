@@ -11,7 +11,7 @@ const setSnapshotPosition = (snapshot: Snapshot, position: 'absolute' | 'fixed')
   }
 };
 
-export default (pairs: { prev: Snapshot | null; next: Snapshot | null }[]) => {
+const applyPositionToSnapshot = (pairs: { prev: Snapshot | null; next: Snapshot | null }[]) => {
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
     if (!prevSnapshot || !nextSnapshot) {
       ([prevSnapshot, nextSnapshot].filter(Boolean) as Snapshot[]).forEach((i) => {
@@ -26,3 +26,5 @@ export default (pairs: { prev: Snapshot | null; next: Snapshot | null }[]) => {
     );
   }
 };
+
+export default applyPositionToSnapshot;

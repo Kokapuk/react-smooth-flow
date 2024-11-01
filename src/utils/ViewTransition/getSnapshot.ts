@@ -1,14 +1,14 @@
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
 import elementHasFixedPosition from './elementHasFixedPosition';
-import hideElementsWithTags from './hideElementsWithTags';
 import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getTotalZIndex from './getTotalZIndex';
+import hideElementsWithTags from './hideElementsWithTags';
 import { Snapshot, ViewTransitionConfig, ViewTransitionProperties } from './types';
 import unifyIds from './unifyIds';
 
-export default (
+const getSnapshot = (
   targetElement: HTMLElement | null,
   excludeTags: string[],
   config: ViewTransitionConfig
@@ -89,3 +89,5 @@ export default (
 
   return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition };
 };
+
+export default getSnapshot;

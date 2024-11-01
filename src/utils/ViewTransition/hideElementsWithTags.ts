@@ -1,6 +1,6 @@
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 
-export default (tags: string[], targetElement: HTMLElement, suppressHidingTags?: string[]) => {
+const hideElementsWithTags = (tags: string[], targetElement: HTMLElement, suppressHidingTags?: string[]) => {
   tags.forEach((tag) => {
     if (suppressHidingTags?.includes(tag)) {
       return;
@@ -16,3 +16,5 @@ export default (tags: string[], targetElement: HTMLElement, suppressHidingTags?:
     element.style.transition = 'none';
   });
 };
+
+export default hideElementsWithTags;

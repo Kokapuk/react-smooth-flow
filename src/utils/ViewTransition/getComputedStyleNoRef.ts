@@ -1,6 +1,6 @@
 import { ComputedStyle } from './types';
 
-export default (element: HTMLElement) => {
+const getComputedStyleNoRef = (element: HTMLElement) => {
   const computedStyleWithRef = window.getComputedStyle(element);
 
   if (!navigator.userAgent.includes('Firefox')) {
@@ -17,3 +17,5 @@ export default (element: HTMLElement) => {
 
   return computedStyle as unknown as ComputedStyle;
 };
+
+export default getComputedStyleNoRef;

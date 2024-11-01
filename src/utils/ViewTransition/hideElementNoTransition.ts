@@ -1,4 +1,4 @@
-export default (target: HTMLElement) => {
+const hideElementNoTransition = (target: HTMLElement) => {
   const resetStyles = {
     opacity: target.style.opacity,
     transition: target.style.transition,
@@ -15,3 +15,5 @@ export default (target: HTMLElement) => {
     setTimeout(() => (target.style.transition = resetStyles.transition));
   };
 };
+
+export default hideElementNoTransition;
