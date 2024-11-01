@@ -9,7 +9,7 @@ interface Props {
 
 const Example = forwardRef<HTMLDivElement, Props>(({ children, title, style }, ref) => {
   return (
-    <div ref={ref} className={styles.example} style={{ '--title': `"${title}"`, ...style } as CSSProperties}>
+    <div ref={ref} className={styles.example} data-title={title} style={{ ...style } as CSSProperties}>
       {children}
     </div>
   );

@@ -12,47 +12,51 @@ const Clipping = () => {
   return (
     <Example
       title="Clipping"
-      style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15, overflow: 'hidden' }}
+      style={{
+        width: 250,
+      }}
     >
-      <div
-        className={styles.target}
-        style={isToggled ? undefined : { visibility: 'hidden' }}
-        {...(isToggled
-          ? constructViewTransition({
-              tag: 'nonClipped',
-              enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
-              exitKeyframes: 'reversedEnter',
-              useParentAsTransitionRoot: true,
-            })
-          : null)}
-      >
-        Non Clipped
+      <div className={styles.container}>
+        <div
+          className={styles.target}
+          style={isToggled ? undefined : { visibility: 'hidden' }}
+          {...(isToggled
+            ? constructViewTransition({
+                tag: 'nonClipped',
+                enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
+                exitKeyframes: 'reversedEnter',
+                useParentAsTransitionRoot: true,
+              })
+            : null)}
+        >
+          Non Clipped
+        </div>
+        <div
+          className={styles.target}
+          style={isToggled ? undefined : { visibility: 'hidden' }}
+          {...(isToggled
+            ? constructViewTransition({
+                tag: 'clipped',
+                enterKeyframes: [
+                  { transform: 'translateX(-100%)', clipPath: 'inset(0 0 0 100%)' },
+                  { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
+                ],
+                exitKeyframes: 'reversedEnter',
+              })
+            : null)}
+        >
+          Clipped
+        </div>
+        <Button
+          onClick={() =>
+            startViewTransition(['nonClipped', 'clipped'], { duration: 600 }, () =>
+              flushSync(() => setToggled((prev) => !prev))
+            )
+          }
+        >
+          Toggle
+        </Button>
       </div>
-      <div
-        className={styles.target}
-        style={isToggled ? undefined : { visibility: 'hidden' }}
-        {...(isToggled
-          ? constructViewTransition({
-              tag: 'clipped',
-              enterKeyframes: [
-                { transform: 'translateX(-125%)', clipPath: 'inset(0 0 0 125%)' },
-                { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
-              ],
-              exitKeyframes: 'reversedEnter',
-            })
-          : null)}
-      >
-        Clipped
-      </div>
-      <Button
-        onClick={() =>
-          startViewTransition(['nonClipped', 'clipped'], { duration: 600 }, () =>
-            flushSync(() => setToggled((prev) => !prev))
-          )
-        }
-      >
-        Toggle
-      </Button>
     </Example>
   );
 };
