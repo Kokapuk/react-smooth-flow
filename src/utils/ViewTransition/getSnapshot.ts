@@ -17,10 +17,24 @@ const getSnapshot = (
     return null;
   }
 
+  const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ViewTransitionProperties;
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
   const hasFixedPosition = elementHasFixedPosition(targetElement) || !!config.forceFixedPosition;
-  const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ViewTransitionProperties;
+
+  const transitionRoot = viewTransitionProperties.useParentAsTransitionRoot ? targetElement.parentElement! : null;
+  const transitionRootRect = transitionRoot?.getBoundingClientRect().toJSON() as Rect | null;
+
+  if (viewTransitionProperties.useParentAsTransitionRoot && !transitionRootRect) {
+    throw Error(
+      `Failed to get bounding client rect for parent element of target with tag "${viewTransitionProperties.tag}"`
+    );
+  }
+
+  if (transitionRootRect) {
+    rect.top -= transitionRootRect.top;
+    rect.left -= transitionRootRect.left;
+  }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
@@ -87,7 +101,7 @@ const getSnapshot = (
       </div>
     </foreignObject>`;
 
-  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition };
+  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition, transitionRoot };
 };
 
 export default getSnapshot;

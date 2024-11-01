@@ -1,19 +1,13 @@
 import applyPositionToSnapshots from './applyPositionToSnapshot';
+import cancelViewTransition from './cancelViewTransition';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 import getSnapshot from './getSnapshot';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
-import { TransitionSnapshot, ViewTransitionConfig } from './types';
-
-const activeTransitions: { [key: string]: TransitionSnapshot[] } = {};
+import { ViewTransitionConfig } from './types';
 
 const startViewTransition = async (tags: string[], config: ViewTransitionConfig, modifyDom: () => void) => {
-  tags.forEach((i) => {
-    activeTransitions[i]?.forEach((i) => {
-      i.transition.cancel();
-      i.onCancel();
-    });
-  });
+  cancelViewTransition(...tags);
 
   const prevSnapshots = tags.map((i) =>
     getSnapshot(
@@ -32,6 +26,22 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
   );
 
   const pairs = prevSnapshots.map((i, index) => ({ prev: i, next: nextSnapshots[index] }));
+
+  pairs.forEach(({ prev, next }) => {
+    if (!prev || !next) {
+      return;
+    }
+
+    if (
+      prev.viewTransitionProperties.useParentAsTransitionRoot !==
+      next.viewTransitionProperties.useParentAsTransitionRoot
+    ) {
+      throw Error(
+        `"useParentAsTransitionRoot" property differ for previous and next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.viewTransitionProperties.tag}`
+      );
+    }
+  });
+
   applyPositionToSnapshots(pairs);
 
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
@@ -45,9 +55,9 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
       !prevSnapshot.viewTransitionProperties.avoidMutationTransition &&
       !nextSnapshot.viewTransitionProperties.avoidMutationTransition
     ) {
-      playMutationTransition(targetElement!, prevSnapshot, nextSnapshot, config, activeTransitions);
+      playMutationTransition(targetElement!, prevSnapshot, nextSnapshot, config);
     } else {
-      playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot, config, activeTransitions);
+      playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot, config);
     }
   }
 };

@@ -6,6 +6,7 @@ export interface ViewTransitionProperties {
   exitKeyframes?: Keyframe[] | 'reversedEnter';
   contentAlign?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
   avoidMutationTransition?: boolean;
+  useParentAsTransitionRoot?: boolean;
 }
 
 export interface ViewTransitionConfig {
@@ -23,6 +24,7 @@ export interface Snapshot {
   computedStyle: ComputedStyle;
   viewTransitionProperties: ViewTransitionProperties;
   hasFixedPosition: boolean;
+  transitionRoot?: HTMLElement | null;
 }
 
 export interface TransitionSnapshot {

@@ -1,16 +1,16 @@
 import getColorWithOpacity from './getColorWithOpacity';
 import getViewTransitionRoot from './getViewTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
-import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
+import { activeTransitions } from './store';
+import { Snapshot, ViewTransitionConfig } from './types';
 
 const playMutationTransition = async (
   targetElement: HTMLElement,
   prevSnapshot: Snapshot,
   nextSnapshot: Snapshot,
-  config: ViewTransitionConfig,
-  activeTransitions: { [key: string]: TransitionSnapshot[] }
+  config: ViewTransitionConfig
 ) => {
-  const viewTransitionRoot = getViewTransitionRoot();
+  const viewTransitionRoot = prevSnapshot.transitionRoot ?? getViewTransitionRoot();
 
   let resetTargetStyles: (() => void) | undefined = undefined;
 

@@ -10,15 +10,19 @@ const Clipping = () => {
   const [isToggled, setToggled] = useState(true);
 
   return (
-    <Example title="Clipping" style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15 }}>
+    <Example
+      title="Clipping"
+      style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15, overflow: 'hidden' }}
+    >
       <div
         className={styles.target}
         style={isToggled ? undefined : { visibility: 'hidden' }}
         {...(isToggled
           ? constructViewTransition({
               tag: 'nonClipped',
-              enterKeyframes: [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
+              enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
               exitKeyframes: 'reversedEnter',
+              useParentAsTransitionRoot: true,
             })
           : null)}
       >
@@ -31,7 +35,7 @@ const Clipping = () => {
           ? constructViewTransition({
               tag: 'clipped',
               enterKeyframes: [
-                { transform: 'translateX(-100%)', clipPath: 'inset(0 0 0 100%)' },
+                { transform: 'translateX(-125%)', clipPath: 'inset(0 0 0 125%)' },
                 { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
               ],
               exitKeyframes: 'reversedEnter',

@@ -3,7 +3,7 @@ import { Snapshot } from './types';
 const setSnapshotPosition = (snapshot: Snapshot, position: 'absolute' | 'fixed') => {
   snapshot.image.style.position = position;
 
-  if (position === 'absolute') {
+  if (position === 'absolute' && !snapshot.viewTransitionProperties.useParentAsTransitionRoot) {
     snapshot.rect.left += window.scrollX;
     snapshot.rect.top += window.scrollY;
     snapshot.image.style.left = `${snapshot.rect.left}px`;
@@ -15,14 +15,20 @@ const applyPositionToSnapshot = (pairs: { prev: Snapshot | null; next: Snapshot 
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
     if (!prevSnapshot || !nextSnapshot) {
       ([prevSnapshot, nextSnapshot].filter(Boolean) as Snapshot[]).forEach((i) => {
-        setSnapshotPosition(i, i.hasFixedPosition ? 'fixed' : 'absolute');
+        setSnapshotPosition(
+          i,
+          i.hasFixedPosition && !i.viewTransitionProperties.useParentAsTransitionRoot ? 'fixed' : 'absolute'
+        );
       });
 
       continue;
     }
 
     [prevSnapshot, nextSnapshot].forEach((i) =>
-      setSnapshotPosition(i, nextSnapshot.hasFixedPosition ? 'fixed' : 'absolute')
+      setSnapshotPosition(
+        i,
+        nextSnapshot.hasFixedPosition && !i.viewTransitionProperties.useParentAsTransitionRoot ? 'fixed' : 'absolute'
+      )
     );
   }
 };

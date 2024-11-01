@@ -1,15 +1,15 @@
 import getViewTransitionRoot from './getViewTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
-import { Snapshot, TransitionSnapshot, ViewTransitionConfig } from './types';
+import { activeTransitions } from './store';
+import { Snapshot, ViewTransitionConfig } from './types';
 
 const playEnterExitTransition = async (
   targetElement: HTMLElement | null,
   prevSnapshot: Snapshot | null,
   nextSnapshot: Snapshot | null,
-  config: ViewTransitionConfig,
-  activeTransitions: { [key: string]: TransitionSnapshot[] }
+  config: ViewTransitionConfig
 ) => {
-  const viewTransitionRoot = getViewTransitionRoot();
+  const viewTransitionRoot = prevSnapshot?.transitionRoot ?? nextSnapshot?.transitionRoot ?? getViewTransitionRoot();
 
   const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
 
