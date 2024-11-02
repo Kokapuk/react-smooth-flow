@@ -99,9 +99,7 @@ const SwitchTransition = ({ children, classes, timeout, mode = 'out-in', freeSpa
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if ((children as any)?.ref && !nodeRef) {
-    throw new Error(
-      'Wrapped element has a ref assigned. Either pass nodeRef prop or unassign ref from wrapped component.'
-    );
+    throw Error('Wrapped element has a ref assigned. Either pass nodeRef prop or unassign ref from wrapped component.');
   }
 
   return (

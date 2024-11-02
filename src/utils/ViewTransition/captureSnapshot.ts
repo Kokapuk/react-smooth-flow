@@ -8,7 +8,7 @@ import hideElementsWithTags from './hideElementsWithTags';
 import { Snapshot, ViewTransitionConfig, ViewTransitionProperties } from './types';
 import unifyIds from './unifyIds';
 
-const getSnapshot = (
+const captureSnapshot = (
   targetElement: HTMLElement | null,
   excludeTags: string[],
   config: ViewTransitionConfig
@@ -104,4 +104,4 @@ const getSnapshot = (
   return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition, transitionRoot };
 };
 
-export default getSnapshot;
+export default captureSnapshot;

@@ -1,24 +1,25 @@
 import applyPositionToSnapshots from './applyPositionToSnapshot';
 import cancelViewTransition from './cancelViewTransition';
+import captureSnapshot from './captureSnapshot';
+import checkSnapshotPairsValidity from './checkSnapshotPairsValidity';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
-import getSnapshot from './getSnapshot';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
 import { ViewTransitionConfig } from './types';
 
-const startViewTransition = async (tags: string[], config: ViewTransitionConfig, modifyDom: () => void) => {
+const startViewTransition = async (tags: string[], config: ViewTransitionConfig, modifyDOM: () => void) => {
   cancelViewTransition(...tags);
 
   const prevSnapshots = tags.map((i) =>
-    getSnapshot(
+    captureSnapshot(
       getElementByViewTransitionTag(i) as HTMLElement | null,
       tags.filter((j) => j !== i),
       config
     )
   );
-  await modifyDom();
+  await modifyDOM();
   const nextSnapshots = tags.map((i) =>
-    getSnapshot(
+    captureSnapshot(
       getElementByViewTransitionTag(i) as HTMLElement | null,
       tags.filter((j) => j !== i),
       config
@@ -26,22 +27,7 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
   );
 
   const pairs = prevSnapshots.map((i, index) => ({ prev: i, next: nextSnapshots[index] }));
-
-  pairs.forEach(({ prev, next }) => {
-    if (!prev || !next) {
-      return;
-    }
-
-    if (
-      prev.viewTransitionProperties.useParentAsTransitionRoot !==
-      next.viewTransitionProperties.useParentAsTransitionRoot
-    ) {
-      throw Error(
-        `"useParentAsTransitionRoot" property differ for previous and next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.viewTransitionProperties.tag}`
-      );
-    }
-  });
-
+  checkSnapshotPairsValidity(pairs);
   applyPositionToSnapshots(pairs);
 
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {

@@ -1,8 +1,9 @@
 const getViewTransitionRoot = () => {
-  const viewTransitionRoot = document.getElementById('viewTransitionRoot');
+  const viewTransitionRootId = 'viewTransitionRoot';
+  const viewTransitionRoot = document.getElementById(viewTransitionRootId);
 
   if (!viewTransitionRoot) {
-    throw new Error('Element with id "viewTransitionRoot" does not exist');
+    throw Error(`Element with id "${viewTransitionRootId}" does not exist`);
   }
 
   return viewTransitionRoot;
