@@ -27,7 +27,7 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
   );
 
   const pairs = prevSnapshots.map((i, index) => ({ prev: i, next: nextSnapshots[index] }));
-  checkSnapshotPairsValidity(pairs);
+  checkSnapshotPairsValidity(pairs, tags);
   applyPositionToSnapshots(pairs);
 
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
