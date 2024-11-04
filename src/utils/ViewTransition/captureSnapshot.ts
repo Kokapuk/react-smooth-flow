@@ -3,6 +3,7 @@ import styles from './Snapshot.module.css';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
+import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import { Snapshot, ViewTransitionConfig, ViewTransitionProperties } from './types';
@@ -22,14 +23,17 @@ const captureSnapshot = (
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
   const hasFixedPosition = elementHasFixedPosition(targetElement) || !!config.forceFixedPosition;
 
-  const transitionRoot = viewTransitionProperties.useParentAsTransitionRoot ? targetElement.parentElement! : null;
-  const transitionRootRect = transitionRoot?.getBoundingClientRect().toJSON() as Rect | null;
+  const transitionRoot = viewTransitionProperties.viewTransitionRootTag
+    ? (getElementByViewTransitionRootTag(viewTransitionProperties.viewTransitionRootTag) as HTMLElement | null)
+    : null;
 
-  if (viewTransitionProperties.useParentAsTransitionRoot && !transitionRootRect) {
+  if (!transitionRoot && viewTransitionProperties.viewTransitionRootTag) {
     throw Error(
-      `Failed to get bounding client rect for parent element of target with tag "${viewTransitionProperties.tag}"`
+      `Failed to get element with view transition root tag "${viewTransitionProperties.viewTransitionRootTag}"`
     );
   }
+
+  const transitionRootRect = transitionRoot?.getBoundingClientRect().toJSON() as Rect | null;
 
   if (transitionRootRect) {
     rect.top -= transitionRootRect.top;

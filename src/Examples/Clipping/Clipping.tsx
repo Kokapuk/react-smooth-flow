@@ -5,6 +5,7 @@ import styles from './Clipping.module.scss';
 import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
 import startViewTransition from '../../utils/ViewTransition/startViewTransition';
 import { flushSync } from 'react-dom';
+import constructViewTransitionRoot from '../../utils/ViewTransition/constructViewTransitionRoot';
 
 const Clipping = () => {
   const [isToggled, setToggled] = useState(true);
@@ -16,7 +17,7 @@ const Clipping = () => {
         width: 250,
       }}
     >
-      <div className={styles.container}>
+      <div className={styles.container} {...constructViewTransitionRoot('clippingContainer')}>
         <div
           className={styles.target}
           style={isToggled ? undefined : { visibility: 'hidden' }}
@@ -25,7 +26,7 @@ const Clipping = () => {
                 tag: 'nonClipped',
                 enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
                 exitKeyframes: 'reversedEnter',
-                useParentAsTransitionRoot: true,
+                viewTransitionRootTag: 'clippingContainer',
               })
             : null)}
         >

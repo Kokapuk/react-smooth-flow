@@ -6,7 +6,7 @@ export interface ViewTransitionProperties {
   exitKeyframes?: Keyframe[] | 'reversedEnter';
   contentAlign?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
   avoidMutationTransition?: boolean;
-  useParentAsTransitionRoot?: boolean;
+  viewTransitionRootTag?: string;
 }
 
 export interface ViewTransitionConfig {

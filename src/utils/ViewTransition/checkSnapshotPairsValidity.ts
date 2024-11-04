@@ -12,11 +12,10 @@ const checkSnapshotPairsValidity = (
     if (
       prev &&
       next &&
-      prev.viewTransitionProperties.useParentAsTransitionRoot !==
-        next.viewTransitionProperties.useParentAsTransitionRoot
+      prev.viewTransitionProperties.viewTransitionRootTag !== next.viewTransitionProperties.viewTransitionRootTag
     ) {
       throw Error(
-        `"useParentAsTransitionRoot" property differ for the previous and the next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.viewTransitionProperties.tag}`
+        `"viewTransitionRootTag" property differ for the previous and the next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.viewTransitionProperties.tag}`
       );
     }
 
