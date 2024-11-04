@@ -20,7 +20,7 @@ const checkSnapshotPairsValidity = (
     }
 
     [prev, next].filter(Boolean).forEach((i) => {
-      if (!i!.transitionRoot) {
+      if (!i!.viewTransitionRoot) {
         return;
       }
 
@@ -36,14 +36,14 @@ const checkSnapshotPairsValidity = (
         return anyParentMatchesAnyTag(element.parentElement);
       };
 
-      if (!anyParentMatchesAnyTag(i!.transitionRoot)) {
+      if (!anyParentMatchesAnyTag(i!.viewTransitionRoot)) {
         return;
       }
 
       throw Error(
         `Snapshot with the tag "${
           i!.viewTransitionProperties.tag
-        }" has the property "useParentAsTransitionRoot" set to "true", but one of its parents will also be transitioned`
+        }" has the custom view transition root, but either the root it self or one of its parents will also be transitioned`
       );
     });
   });

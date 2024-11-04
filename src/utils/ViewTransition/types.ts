@@ -24,7 +24,7 @@ export interface Snapshot {
   computedStyle: ComputedStyle;
   viewTransitionProperties: ViewTransitionProperties;
   hasFixedPosition: boolean;
-  transitionRoot?: HTMLElement | null;
+  viewTransitionRoot?: HTMLElement | null;
 }
 
 export interface TransitionSnapshot {

@@ -105,7 +105,7 @@ const captureSnapshot = (
       </div>
     </foreignObject>`;
 
-  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition, transitionRoot };
+  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition, viewTransitionRoot: transitionRoot };
 };
 
 export default captureSnapshot;

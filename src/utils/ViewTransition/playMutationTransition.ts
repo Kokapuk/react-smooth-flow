@@ -10,7 +10,7 @@ const playMutationTransition = async (
   nextSnapshot: Snapshot,
   config: ViewTransitionConfig
 ) => {
-  const viewTransitionRoot = prevSnapshot.transitionRoot ?? getViewTransitionRoot();
+  const viewTransitionRoot = prevSnapshot.viewTransitionRoot ?? getViewTransitionRoot();
 
   let resetTargetStyles: (() => void) | undefined = undefined;
 

@@ -9,7 +9,7 @@ const playEnterExitTransition = async (
   nextSnapshot: Snapshot | null,
   config: ViewTransitionConfig
 ) => {
-  const viewTransitionRoot = prevSnapshot?.transitionRoot ?? nextSnapshot?.transitionRoot ?? getViewTransitionRoot();
+  const viewTransitionRoot = prevSnapshot?.viewTransitionRoot ?? nextSnapshot?.viewTransitionRoot ?? getViewTransitionRoot();
 
   const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
 
