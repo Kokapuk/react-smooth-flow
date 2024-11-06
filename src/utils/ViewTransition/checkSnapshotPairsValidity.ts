@@ -1,5 +1,11 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
-import { Snapshot } from './types';
+import { Snapshot, ViewTransitionProperties } from './types';
+
+const consistentTransitionProperties: (keyof ViewTransitionProperties)[] = [
+  'viewTransitionRootTag',
+  'avoidMutationTransition',
+  'mutationTransitionFadeType',
+];
 
 const checkSnapshotPairsValidity = (
   pairs: {
@@ -9,14 +15,14 @@ const checkSnapshotPairsValidity = (
   tags: string[]
 ) => {
   pairs.forEach(({ prev, next }) => {
-    if (
-      prev &&
-      next &&
-      prev.viewTransitionProperties.viewTransitionRootTag !== next.viewTransitionProperties.viewTransitionRootTag
-    ) {
-      throw Error(
-        `"viewTransitionRootTag" property differ for the previous and the next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.viewTransitionProperties.tag}`
-      );
+    if (prev && next) {
+      consistentTransitionProperties.forEach((i) => {
+        if (prev.viewTransitionProperties[i] !== next.viewTransitionProperties[i]) {
+          throw Error(
+            `"${i}" property differ for the previous and the next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.viewTransitionProperties.tag}`
+          );
+        }
+      });
     }
 
     [prev, next].filter(Boolean).forEach((i) => {

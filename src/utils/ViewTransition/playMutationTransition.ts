@@ -49,20 +49,49 @@ const playMutationTransition = async (
     borderLeftStyle: i.computedStyle.borderLeftStyle,
   }));
 
-  const prevTransition = prevSnapshot.image.animate(
-    [{ opacity: '1', ...keyframes[0] }, { opacity: '1' }, { opacity: '0', ...keyframes[1] }],
-    {
+  const animationOptions: KeyframeAnimationOptions = {
+    duration: config.duration,
+    easing: config.easing ?? 'ease',
+  };
+  const transitions: Animation[] = [];
+
+  if (
+    prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === undefined ||
+    prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'overlap'
+  ) {
+    const prevTransition = prevSnapshot.image.animate(
+      [{ opacity: 1, ...keyframes[0] }, { opacity: 1 }, { opacity: 0, ...keyframes[1] }],
+      animationOptions
+    );
+
+    const nextTransition = nextSnapshot.image.animate(
+      [{ opacity: 0, ...keyframes[0] }, { opacity: 1 }, { opacity: 1, ...keyframes[1] }],
+      animationOptions
+    );
+
+    transitions.push(prevTransition, nextTransition);
+  } else if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'sequential') {
+    const prevTransition = prevSnapshot.image.animate([keyframes[0], keyframes[1]], {
       duration: config.duration,
       easing: config.easing ?? 'ease',
-    }
-  );
-  const nextTransition = nextSnapshot.image.animate(
-    [{ opacity: '0', ...keyframes[0] }, { opacity: '1' }, { opacity: '1', ...keyframes[1] }],
-    {
-      duration: config.duration,
-      easing: config.easing ?? 'ease',
-    }
-  );
+    });
+
+    const nextTransition = nextSnapshot.image.animate(
+      [{ opacity: 0, ...keyframes[0] }, { opacity: 0 }, /*{ opacity: 0 },*/ { opacity: 1, ...keyframes[1] }],
+      animationOptions
+    );
+
+    const prevContentTransition = prevSnapshot.image.children[0].animate(
+      [{ opacity: 1 }, /*{ opacity: 0 },*/ { opacity: 0 }, { opacity: 0 }],
+      animationOptions
+    );
+
+    transitions.push(prevTransition, nextTransition, prevContentTransition);
+  } else {
+    throw Error(
+      `"${prevSnapshot.viewTransitionProperties.mutationTransitionFadeType}" is invalid  mutation transition fade type`
+    );
+  }
 
   const removeSnapshotsAndResetTarget = () => {
     prevSnapshot.image.remove();
@@ -71,13 +100,12 @@ const playMutationTransition = async (
     resetTargetStyles?.();
   };
 
-  activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [prevTransition, nextTransition].map((i) => ({
+  activeTransitions[prevSnapshot.viewTransitionProperties.tag] = transitions.map((i) => ({
     transition: i,
     onCancel: removeSnapshotsAndResetTarget,
   }));
 
-  await prevTransition.finished;
-  await nextTransition.finished;
+  await Promise.all(transitions.map((i) => i.finished));
 
   activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
 

@@ -1,5 +1,7 @@
 import { Rect } from '../types';
 
+export type MutationTransitionFadeType = 'overlap' | 'sequential';
+
 export interface ViewTransitionProperties {
   tag: string;
   enterKeyframes?: Keyframe[];
@@ -7,6 +9,7 @@ export interface ViewTransitionProperties {
   contentAlign?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
   avoidMutationTransition?: boolean;
   viewTransitionRootTag?: string;
+  mutationTransitionFadeType?: MutationTransitionFadeType;
 }
 
 export interface ViewTransitionConfig {

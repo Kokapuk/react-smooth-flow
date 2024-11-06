@@ -5,6 +5,9 @@ import startViewTransition from '../../utils/ViewTransition/startViewTransition'
 import styles from './PreserveAspectRatio.module.scss';
 
 const buttons = [1, 2, 3, 4];
+const materialDesignEmphasizedEasing =
+  'linear(0, 0.002, 0.01 3.6%, 0.034, 0.074 9.1%, 0.128 11.4%, 0.194 13.4%, 0.271 15%, 0.344 16.1%, 0.544, 0.66 20.6%, 0.717 22.4%, 0.765 24.6%, 0.808 27.3%, 0.845 30.4%, 0.883 35.1%, 0.916 40.6%, 0.942 47.2%, 0.963 55%, 0.979 64%, 0.991 74.4%, 0.998 86.4%, 1)';
+// https://linear-easing-generator.netlify.app/?codeType=svg&code=M+0%2C0%0AC+0.05%2C+0%2C+0.133333%2C+0.06%2C+0.166666%2C+0.4%0AC+0.208333%2C+0.82%2C+0.25%2C+1%2C+1%2C+1&simplify=0.0017&round=3
 
 const PreserveAspectRatio = () => {
   const [activeSection, setActiveSection] = useState<number | null>(null);
@@ -13,12 +16,20 @@ const PreserveAspectRatio = () => {
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
       <div className={styles.container} {...constructViewTransition({ tag: 'container', contentAlign: 'top right' })}>
         {activeSection !== null && (
-          <p className={styles.expandedContent} {...constructViewTransition({ tag: `panel-${activeSection}` })}>
+          <p
+            className={styles.expandedContent}
+            {...constructViewTransition({ tag: `panel-${activeSection}`, mutationTransitionFadeType: 'sequential' })}
+          >
             <button
               style={{ float: 'right', height: 22, width: 22 }}
               onClick={() =>
-                startViewTransition(['container', ...buttons.map((i) => `panel-${i}`)], { duration: 600 }, () =>
-                  setActiveSection(null)
+                startViewTransition(
+                  ['container', `panel-${activeSection}`],
+                  {
+                    duration: 750,
+                    easing: materialDesignEmphasizedEasing,
+                  },
+                  () => setActiveSection(null)
                 )
               }
             >
@@ -34,14 +45,23 @@ const PreserveAspectRatio = () => {
           {buttons.map((i) => (
             <button
               onClick={() =>
-                startViewTransition(['container', ...buttons.map((i) => `panel-${i}`)], { duration: 600 }, () =>
-                  setActiveSection(i)
+                startViewTransition(
+                  ['container', `panel-${i}`, activeSection ? `panel-${activeSection}` : null].filter(
+                    Boolean
+                  ) as string[],
+                  {
+                    duration: 750,
+                    easing: materialDesignEmphasizedEasing,
+                  },
+                  () => setActiveSection(i)
                 )
               }
               className={styles.button}
               key={i}
               style={{ visibility: activeSection === i ? 'hidden' : undefined }}
-              {...(activeSection !== i ? constructViewTransition({ tag: `panel-${i}` }) : null)}
+              {...(activeSection !== i
+                ? constructViewTransition({ tag: `panel-${i}`, mutationTransitionFadeType: 'sequential' })
+                : null)}
             >
               {i}
             </button>

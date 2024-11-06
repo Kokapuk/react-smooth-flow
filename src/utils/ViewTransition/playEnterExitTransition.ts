@@ -9,7 +9,8 @@ const playEnterExitTransition = async (
   nextSnapshot: Snapshot | null,
   config: ViewTransitionConfig
 ) => {
-  const viewTransitionRoot = prevSnapshot?.viewTransitionRoot ?? nextSnapshot?.viewTransitionRoot ?? getViewTransitionRoot();
+  const viewTransitionRoot =
+    prevSnapshot?.viewTransitionRoot ?? nextSnapshot?.viewTransitionRoot ?? getViewTransitionRoot();
 
   const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
 
@@ -32,7 +33,7 @@ const playEnterExitTransition = async (
         exitKeyframes = prevSnapshot.viewTransitionProperties.exitKeyframes;
       }
 
-      const exitTransition = prevSnapshot.image.animate(exitKeyframes ?? [{ opacity: '1' }, { opacity: '0' }], {
+      const exitTransition = prevSnapshot.image.animate(exitKeyframes ?? [{ opacity: 1 }, { opacity: 0 }], {
         duration: config.duration,
         easing: config.easing ?? 'ease',
       });
@@ -59,7 +60,7 @@ const playEnterExitTransition = async (
       viewTransitionRoot.append(nextSnapshot.image);
 
       const enterTransition = nextSnapshot.image.animate(
-        nextSnapshot.viewTransitionProperties.enterKeyframes ?? [{ opacity: '0' }, { opacity: '1' }],
+        nextSnapshot.viewTransitionProperties.enterKeyframes ?? [{ opacity: 0 }, { opacity: 1 }],
         {
           duration: config.duration,
           easing: config.easing ?? 'ease',
