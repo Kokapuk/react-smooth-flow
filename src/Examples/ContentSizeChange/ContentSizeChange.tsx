@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
 import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
@@ -26,11 +25,10 @@ const ContentSizeChange = () => {
             startViewTransition(
               ['size-button', 'size-container', ...[...list, newElement].map((i) => `size-button-${i}`).reverse()],
               { duration: 300 },
-              () =>
-                flushSync(() => {
-                  setLoading((prev) => !prev);
-                  setList((prev) => [...prev, newElement]);
-                })
+              () => {
+                setLoading((prev) => !prev);
+                setList((prev) => [...prev, newElement]);
+              }
             );
           }}
         >
@@ -50,7 +48,7 @@ const ContentSizeChange = () => {
               })}
               onClick={() =>
                 startViewTransition(['size-container', ...list.map((i) => `size-button-${i}`)], { duration: 300 }, () =>
-                  flushSync(() => setList((prev) => prev.filter((j) => j != i)))
+                  setList((prev) => prev.filter((j) => j != i))
                 )
               }
             >

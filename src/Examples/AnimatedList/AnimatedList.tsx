@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
-import styles from './AnimatedList.module.scss';
 import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
-import { flushSync } from 'react-dom';
 import startViewTransition from '../../utils/ViewTransition/startViewTransition';
+import styles from './AnimatedList.module.scss';
 
 const AnimatedList = () => {
   const [buttons, setButtons] = useState(
@@ -33,19 +32,17 @@ const AnimatedList = () => {
       buttons.map((i) => `button-${i}`),
       { duration: 300 },
       () => {
-        flushSync(() => {
-          setButtons((prev) => {
-            const copy = [...prev];
+        setButtons((prev) => {
+          const copy = [...prev];
 
-            for (let i = 0; i < copy.length; i++) {
-              const aIndex = Math.round(Math.random() * (copy.length - 1));
-              const bIndex = Math.round(Math.random() * (copy.length - 1));
+          for (let i = 0; i < copy.length; i++) {
+            const aIndex = Math.round(Math.random() * (copy.length - 1));
+            const bIndex = Math.round(Math.random() * (copy.length - 1));
 
-              [copy[aIndex], copy[bIndex]] = [copy[bIndex], copy[aIndex]];
-            }
+            [copy[aIndex], copy[bIndex]] = [copy[bIndex], copy[aIndex]];
+          }
 
-            return copy;
-          });
+          return copy;
         });
       }
     );
@@ -57,9 +54,7 @@ const AnimatedList = () => {
     startViewTransition(
       [...buttons, newButton].map((i) => `button-${i}`),
       { duration: 300 },
-      () => {
-        flushSync(() => setButtons((prev) => [...prev, newButton]));
-      }
+      () => setButtons((prev) => [...prev, newButton])
     );
   };
 
@@ -67,7 +62,7 @@ const AnimatedList = () => {
     startViewTransition(
       buttons.map((i) => `button-${i}`),
       { duration: 300 },
-      () => flushSync(() => setButtons((prev) => prev.filter((j) => j !== element)))
+      () => setButtons((prev) => prev.filter((j) => j !== element))
     );
   };
 

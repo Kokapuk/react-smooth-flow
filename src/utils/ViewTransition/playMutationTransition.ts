@@ -76,16 +76,12 @@ const playMutationTransition = async (
     onCancel: removeSnapshotsAndResetTarget,
   }));
 
-  try {
-    await prevTransition.finished;
-    await nextTransition.finished;
+  await prevTransition.finished;
+  await nextTransition.finished;
 
-    activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
+  activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
 
-    removeSnapshotsAndResetTarget();
-  } catch {
-    /* empty */
-  }
+  removeSnapshotsAndResetTarget();
 };
 
 export default playMutationTransition;

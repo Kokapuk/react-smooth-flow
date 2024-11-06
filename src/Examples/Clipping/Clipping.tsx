@@ -4,7 +4,6 @@ import Example from '../../components/Example';
 import styles from './Clipping.module.scss';
 import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
 import startViewTransition from '../../utils/ViewTransition/startViewTransition';
-import { flushSync } from 'react-dom';
 import constructViewTransitionRoot from '../../utils/ViewTransition/constructViewTransitionRoot';
 
 const Clipping = () => {
@@ -50,9 +49,7 @@ const Clipping = () => {
         </div>
         <Button
           onClick={() =>
-            startViewTransition(['nonClipped', 'clipped'], { duration: 600 }, () =>
-              flushSync(() => setToggled((prev) => !prev))
-            )
+            startViewTransition(['nonClipped', 'clipped'], { duration: 600 }, () => setToggled((prev) => !prev))
           }
         >
           Toggle

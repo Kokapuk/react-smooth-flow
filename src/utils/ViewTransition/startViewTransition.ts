@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom';
 import applyPositionToSnapshots from './applyPositionToSnapshot';
 import cancelViewTransition from './cancelViewTransition';
 import captureSnapshot from './captureSnapshot';
@@ -7,7 +8,11 @@ import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
 import { ViewTransitionConfig } from './types';
 
-const startViewTransition = async (tags: string[], config: ViewTransitionConfig, modifyDOM: () => void) => {
+const startViewTransition = async (
+  tags: string[],
+  config: ViewTransitionConfig,
+  modifyDOM: () => void | Promise<void>
+) => {
   cancelViewTransition(...tags);
 
   const prevSnapshots = tags.map((i) =>
@@ -17,7 +22,13 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
       config
     )
   );
-  await modifyDOM();
+
+  if (config.noFlushSync) {
+    await modifyDOM();
+  } else {
+    await flushSync(modifyDOM);
+  }
+
   const nextSnapshots = tags.map((i) =>
     captureSnapshot(
       getElementByViewTransitionTag(i) as HTMLElement | null,
@@ -30,21 +41,29 @@ const startViewTransition = async (tags: string[], config: ViewTransitionConfig,
   checkSnapshotPairsValidity(pairs, tags);
   applyPositionToSnapshots(pairs);
 
-  for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
-    const targetElement = (
-      nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.viewTransitionProperties.tag) : null
-    ) as HTMLElement | null;
+  try {
+    await Promise.all(
+      pairs.map(({ prev: prevSnapshot, next: nextSnapshot }) => {
+        const targetElement = (
+          nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.viewTransitionProperties.tag) : null
+        ) as HTMLElement | null;
 
-    if (
-      prevSnapshot &&
-      nextSnapshot &&
-      !prevSnapshot.viewTransitionProperties.avoidMutationTransition &&
-      !nextSnapshot.viewTransitionProperties.avoidMutationTransition
-    ) {
-      playMutationTransition(targetElement!, prevSnapshot, nextSnapshot, config);
-    } else {
-      playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot, config);
-    }
+        if (
+          prevSnapshot &&
+          nextSnapshot &&
+          !prevSnapshot.viewTransitionProperties.avoidMutationTransition &&
+          !nextSnapshot.viewTransitionProperties.avoidMutationTransition
+        ) {
+          return playMutationTransition(targetElement!, prevSnapshot, nextSnapshot, config);
+        } else {
+          return playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot, config);
+        }
+      })
+    );
+
+    config?.onFinish?.();
+  } catch {
+    config?.onCancel?.();
   }
 };
 

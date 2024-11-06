@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { flushSync } from 'react-dom';
 import Example from '../../components/Example';
 import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
 import startViewTransition from '../../utils/ViewTransition/startViewTransition';
@@ -18,9 +17,9 @@ const PreserveAspectRatio = () => {
             <button
               style={{ float: 'right', height: 22, width: 22 }}
               onClick={() =>
-                startViewTransition(['container', ...buttons.map((i) => `panel-${i}`)], { duration: 600 }, () => {
-                  flushSync(() => setActiveSection(null));
-                })
+                startViewTransition(['container', ...buttons.map((i) => `panel-${i}`)], { duration: 600 }, () =>
+                  setActiveSection(null)
+                )
               }
             >
               X
@@ -36,7 +35,7 @@ const PreserveAspectRatio = () => {
             <button
               onClick={() =>
                 startViewTransition(['container', ...buttons.map((i) => `panel-${i}`)], { duration: 600 }, () =>
-                  flushSync(() => setActiveSection(i))
+                  setActiveSection(i)
                 )
               }
               className={styles.button}

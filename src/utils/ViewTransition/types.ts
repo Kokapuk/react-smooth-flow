@@ -14,6 +14,9 @@ export interface ViewTransitionConfig {
   easing?: string;
   suppressHidingTags?: string[];
   forceFixedPosition?: boolean;
+  noFlushSync?: boolean;
+  onCancel?(): void;
+  onFinish?(): void;
 }
 
 export type ComputedStyle = Omit<CSSStyleDeclaration, 'item' | 'getPropertyPriority' | 'getPropertyValue'>;

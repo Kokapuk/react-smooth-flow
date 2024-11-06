@@ -1,6 +1,5 @@
 import cn from 'classnames';
 import { useState } from 'react';
-import { flushSync } from 'react-dom';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
 import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
@@ -13,26 +12,22 @@ const ViewTransition = () => {
   const [inSquare, setInSquare] = useState(false);
 
   const moveBtn = () => {
-    startViewTransition(['moveBtn'], { duration: 600 }, () => {
-      flushSync(() =>
-        setPos((prev) => {
-          switch (prev) {
-            case 'left':
-              return 'center';
-            case 'center':
-              return 'right';
-            case 'right':
-              return 'left';
-          }
-        })
-      );
-    });
+    startViewTransition(['moveBtn'], { duration: 600 }, () =>
+      setPos((prev) => {
+        switch (prev) {
+          case 'left':
+            return 'center';
+          case 'center':
+            return 'right';
+          case 'right':
+            return 'left';
+        }
+      })
+    );
   };
 
   const toggleSwitch = () => {
-    startViewTransition(['switchIndicator', 'switchBtn'], { duration: 600 }, () => {
-      flushSync(() => setOn((prev) => !prev));
-    });
+    startViewTransition(['switchIndicator', 'switchBtn'], { duration: 600 }, () => setOn((prev) => !prev));
   };
 
   return (
@@ -100,9 +95,9 @@ const ViewTransition = () => {
       </div>
       <Button
         onClick={() =>
-          startViewTransition(['switchContainer', 'switchSquare'], { duration: 600 }, () => {
-            flushSync(() => setInSquare((prev) => !prev));
-          })
+          startViewTransition(['switchContainer', 'switchSquare'], { duration: 600 }, () =>
+            setInSquare((prev) => !prev)
+          )
         }
       >
         Switch
