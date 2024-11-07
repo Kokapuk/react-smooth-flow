@@ -1,7 +1,8 @@
 .container {
   display: flex;
   gap: 15px;
-  background-color: green;
+  background-color: rgb(52, 52, 52);
+  border-radius: 50px;
   width: fit-content;
   padding: 15px;
   margin-left: auto;
@@ -19,15 +20,48 @@
   height: 48px;
   width: 48px;
   padding: 0;
-  background-color: purple;
   border-radius: 50%;
   border: 0;
   font-size: 22px;
   cursor: pointer;
+  color: black;
+
+  &:nth-child(1) {
+    background-color: #fe797b;
+  }
+
+  &:nth-child(2) {
+    background-color: #ffea56;
+  }
+
+  &:nth-child(3) {
+    background-color: #8fe968;
+  }
+
+  &:nth-child(4) {
+    background-color: #36cedc;
+  }
 }
 
-.expandedContent {
+.panel {
   max-width: 225px;
-  background-color: purple;
   padding: 15px;
+  color: black;
+  border-radius: 30px 7px 7px 30px;
+
+  &[data-panelnumber='1'] {
+    background-color: #fe797b;
+  }
+
+  &[data-panelnumber='2'] {
+    background-color: #ffea56;
+  }
+
+  &[data-panelnumber='3'] {
+    background-color: #8fe968;
+  }
+
+  &[data-panelnumber='4'] {
+    background-color: #36cedc;
+  }
 }

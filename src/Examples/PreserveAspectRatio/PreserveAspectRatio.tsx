@@ -10,26 +10,27 @@ const materialDesignEmphasizedEasing =
 // https://linear-easing-generator.netlify.app/?codeType=svg&code=M+0%2C0%0AC+0.05%2C+0%2C+0.133333%2C+0.06%2C+0.166666%2C+0.4%0AC+0.208333%2C+0.82%2C+0.25%2C+1%2C+1%2C+1&simplify=0.0017&round=3
 
 const PreserveAspectRatio = () => {
-  const [activeSection, setActiveSection] = useState<number | null>(null);
+  const [activePanel, setActivePanel] = useState<number | null>(null);
 
   return (
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
       <div className={styles.container} {...constructViewTransition({ tag: 'container', contentAlign: 'top right' })}>
-        {activeSection !== null && (
+        {activePanel !== null && (
           <p
-            className={styles.expandedContent}
-            {...constructViewTransition({ tag: `panel-${activeSection}`, mutationTransitionFadeType: 'sequential' })}
+            className={styles.panel}
+            data-panelnumber={activePanel}
+            {...constructViewTransition({ tag: `panel-${activePanel}`, mutationTransitionFadeType: 'sequential' })}
           >
             <button
               style={{ float: 'right', height: 22, width: 22 }}
               onClick={() =>
                 startViewTransition(
-                  ['container', `panel-${activeSection}`],
+                  ['container', `panel-${activePanel}`],
                   {
                     duration: 750,
                     easing: materialDesignEmphasizedEasing,
                   },
-                  () => setActiveSection(null)
+                  () => setActivePanel(null)
                 )
               }
             >
@@ -46,20 +47,18 @@ const PreserveAspectRatio = () => {
             <button
               onClick={() =>
                 startViewTransition(
-                  ['container', `panel-${i}`, activeSection ? `panel-${activeSection}` : null].filter(
-                    Boolean
-                  ) as string[],
+                  ['container', activePanel ? `panel-${activePanel}` : null, `panel-${i}`].filter(Boolean) as string[],
                   {
                     duration: 750,
                     easing: materialDesignEmphasizedEasing,
                   },
-                  () => setActiveSection(i)
+                  () => setActivePanel(i)
                 )
               }
               className={styles.button}
               key={i}
-              style={{ visibility: activeSection === i ? 'hidden' : undefined }}
-              {...(activeSection !== i
+              style={{ visibility: activePanel === i ? 'hidden' : undefined }}
+              {...(activePanel !== i
                 ? constructViewTransition({ tag: `panel-${i}`, mutationTransitionFadeType: 'sequential' })
                 : null)}
             >

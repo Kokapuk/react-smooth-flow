@@ -12,6 +12,10 @@ export interface ViewTransitionProperties {
   mutationTransitionFadeType?: MutationTransitionFadeType;
 }
 
+export interface ParsedViewTransitionProperties extends Omit<ViewTransitionProperties, 'mutationTransitionFadeType'> {
+  mutationTransitionFadeType: MutationTransitionFadeType;
+}
+
 export interface ViewTransitionConfig {
   duration: number;
   easing?: string;
@@ -28,7 +32,7 @@ export interface Snapshot {
   rect: Rect;
   image: SVGSVGElement;
   computedStyle: ComputedStyle;
-  viewTransitionProperties: ViewTransitionProperties;
+  viewTransitionProperties: ParsedViewTransitionProperties;
   hasFixedPosition: boolean;
   viewTransitionRoot?: HTMLElement | null;
 }

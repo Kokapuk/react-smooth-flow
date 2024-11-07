@@ -7,7 +7,7 @@ const consistentTransitionProperties: (keyof ViewTransitionProperties)[] = [
   'mutationTransitionFadeType',
 ];
 
-const checkSnapshotPairsValidity = (
+const validateSnapshotPairs = (
   pairs: {
     prev: Snapshot | null;
     next: Snapshot | null;
@@ -55,4 +55,4 @@ const checkSnapshotPairsValidity = (
   });
 };
 
-export default checkSnapshotPairsValidity;
+export default validateSnapshotPairs;

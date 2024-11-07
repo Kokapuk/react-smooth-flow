@@ -55,10 +55,7 @@ const playMutationTransition = async (
   };
   const transitions: Animation[] = [];
 
-  if (
-    prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === undefined ||
-    prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'overlap'
-  ) {
+  if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'overlap') {
     const prevTransition = prevSnapshot.image.animate(
       [{ opacity: 1, ...keyframes[0] }, { opacity: 1 }, { opacity: 0, ...keyframes[1] }],
       animationOptions
@@ -71,10 +68,7 @@ const playMutationTransition = async (
 
     transitions.push(prevTransition, nextTransition);
   } else if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'sequential') {
-    const prevTransition = prevSnapshot.image.animate([keyframes[0], keyframes[1]], {
-      duration: config.duration,
-      easing: config.easing ?? 'ease',
-    });
+    const prevTransition = prevSnapshot.image.animate([keyframes[0], keyframes[1]], animationOptions);
 
     const nextTransition = nextSnapshot.image.animate(
       [{ opacity: 0, ...keyframes[0] }, { opacity: 0 }, /*{ opacity: 0 },*/ { opacity: 1, ...keyframes[1] }],
@@ -89,7 +83,7 @@ const playMutationTransition = async (
     transitions.push(prevTransition, nextTransition, prevContentTransition);
   } else {
     throw Error(
-      `"${prevSnapshot.viewTransitionProperties.mutationTransitionFadeType}" is invalid  mutation transition fade type`
+      `"${prevSnapshot.viewTransitionProperties.mutationTransitionFadeType}" is invalid mutation transition fade type`
     );
   }
 

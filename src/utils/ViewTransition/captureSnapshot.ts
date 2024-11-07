@@ -6,7 +6,7 @@ import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
-import { Snapshot, ViewTransitionConfig, ViewTransitionProperties } from './types';
+import { ParsedViewTransitionProperties, Snapshot, ViewTransitionConfig } from './types';
 import unifyIds from './unifyIds';
 
 const captureSnapshot = (
@@ -18,7 +18,7 @@ const captureSnapshot = (
     return null;
   }
 
-  const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ViewTransitionProperties;
+  const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ParsedViewTransitionProperties;
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
   const hasFixedPosition = elementHasFixedPosition(targetElement) || !!config.forceFixedPosition;
