@@ -61,11 +61,11 @@ const startViewTransition = async (
       })
     );
 
-    config?.onFinish?.();
+    config.onFinish?.();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.name === 'AbortError') {
-      config?.onCancel?.();
+      config.onCancel?.();
       return;
     }
 

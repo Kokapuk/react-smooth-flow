@@ -24,8 +24,7 @@ const playMutationTransition = async (
   const keyframes = [prevSnapshot, nextSnapshot].map((i) => ({
     width: `${i.rect.width}px`,
     height: `${i.rect.height}px`,
-    left: `${i.rect.left}px`,
-    top: `${i.rect.top}px`,
+
     backgroundColor: getColorWithOpacity(i.computedStyle.backgroundColor, i.computedStyle.opacity),
 
     borderTopRightRadius: i.computedStyle.borderTopRightRadius,
@@ -49,6 +48,25 @@ const playMutationTransition = async (
     borderLeftStyle: i.computedStyle.borderLeftStyle,
   }));
 
+  const prevKeyframes = [
+    { ...keyframes[0], transform: 'translate(0, 0)' },
+    {
+      ...keyframes[1],
+      transform: `translate(${nextSnapshot.rect.left - prevSnapshot.rect.left}px, ${
+        nextSnapshot.rect.top - prevSnapshot.rect.top
+      }px)`,
+    },
+  ];
+  const nextKeyframes = [
+    {
+      ...keyframes[0],
+      transform: `translate(${prevSnapshot.rect.left - nextSnapshot.rect.left}px, ${
+        prevSnapshot.rect.top - nextSnapshot.rect.top
+      }px)`,
+    },
+    { ...keyframes[1], transform: 'translate(0, 0)' },
+  ];
+
   const animationOptions: KeyframeAnimationOptions = {
     duration: config.duration,
     easing: config.easing ?? 'ease',
@@ -57,21 +75,21 @@ const playMutationTransition = async (
 
   if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'overlap') {
     const prevTransition = prevSnapshot.image.animate(
-      [{ opacity: 1, ...keyframes[0] }, { opacity: 1 }, { opacity: 0, ...keyframes[1] }],
+      [{ opacity: 1, ...prevKeyframes[0] }, { opacity: 1 }, { opacity: 0, ...prevKeyframes[1] }],
       animationOptions
     );
 
     const nextTransition = nextSnapshot.image.animate(
-      [{ opacity: 0, ...keyframes[0] }, { opacity: 1 }, { opacity: 1, ...keyframes[1] }],
+      [{ opacity: 0, ...nextKeyframes[0] }, { opacity: 1 }, { opacity: 1, ...nextKeyframes[1] }],
       animationOptions
     );
 
     transitions.push(prevTransition, nextTransition);
   } else if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'sequential') {
-    const prevTransition = prevSnapshot.image.animate([keyframes[0], keyframes[1]], animationOptions);
+    const prevTransition = prevSnapshot.image.animate(prevKeyframes, animationOptions);
 
     const nextTransition = nextSnapshot.image.animate(
-      [{ opacity: 0, ...keyframes[0] }, { opacity: 0 }, /*{ opacity: 0 },*/ { opacity: 1, ...keyframes[1] }],
+      [{ opacity: 0, ...nextKeyframes[0] }, { opacity: 0 }, /*{ opacity: 0 },*/ { opacity: 1, ...nextKeyframes[1] }],
       animationOptions
     );
 
