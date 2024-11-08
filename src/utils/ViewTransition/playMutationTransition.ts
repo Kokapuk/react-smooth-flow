@@ -12,11 +12,7 @@ const playMutationTransition = async (
 ) => {
   const viewTransitionRoot = prevSnapshot.viewTransitionRoot ?? getViewTransitionRoot();
 
-  let resetTargetStyles: (() => void) | undefined = undefined;
-
-  if (!config.suppressHidingTags?.includes(prevSnapshot.viewTransitionProperties.tag)) {
-    resetTargetStyles = hideElementNoTransition(targetElement);
-  }
+  const resetTargetStyles = hideElementNoTransition(targetElement);
 
   viewTransitionRoot.append(prevSnapshot.image);
   viewTransitionRoot.append(nextSnapshot.image);
@@ -109,7 +105,7 @@ const playMutationTransition = async (
     prevSnapshot.image.remove();
     nextSnapshot.image.remove();
 
-    resetTargetStyles?.();
+    resetTargetStyles();
   };
 
   activeTransitions[prevSnapshot.viewTransitionProperties.tag] = transitions.map((i) => ({

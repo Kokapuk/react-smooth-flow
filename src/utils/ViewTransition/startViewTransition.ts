@@ -18,8 +18,7 @@ const startViewTransition = async (
   const prevSnapshots = tags.map((i) =>
     captureSnapshot(
       getElementByViewTransitionTag(i) as HTMLElement | null,
-      tags.filter((j) => j !== i),
-      config
+      tags.filter((j) => j !== i)
     )
   );
 
@@ -32,8 +31,7 @@ const startViewTransition = async (
   const nextSnapshots = tags.map((i) =>
     captureSnapshot(
       getElementByViewTransitionTag(i) as HTMLElement | null,
-      tags.filter((j) => j !== i),
-      config
+      tags.filter((j) => j !== i)
     )
   );
 

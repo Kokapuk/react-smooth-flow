@@ -6,14 +6,10 @@ import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
-import { ParsedViewTransitionProperties, Snapshot, ViewTransitionConfig } from './types';
+import { ParsedViewTransitionProperties, Snapshot } from './types';
 import unifyIds from './unifyIds';
 
-const captureSnapshot = (
-  targetElement: HTMLElement | null,
-  excludeTags: string[],
-  config: ViewTransitionConfig
-): Snapshot | null => {
+const captureSnapshot = (targetElement: HTMLElement | null, excludeTags: string[]): Snapshot | null => {
   if (!targetElement) {
     return null;
   }
@@ -21,7 +17,7 @@ const captureSnapshot = (
   const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ParsedViewTransitionProperties;
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
-  const hasFixedPosition = elementHasFixedPosition(targetElement) || !!config.forceFixedPosition;
+  const hasFixedPosition = elementHasFixedPosition(targetElement);
 
   const transitionRoot = viewTransitionProperties.viewTransitionRootTag
     ? (getElementByViewTransitionRootTag(viewTransitionProperties.viewTransitionRootTag) as HTMLElement | null)
@@ -42,7 +38,7 @@ const captureSnapshot = (
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
-  hideElementsWithTags(excludeTags, targetElementClone, config.suppressHidingTags);
+  hideElementsWithTags(excludeTags, targetElementClone);
   unifyIds(targetElementClone, excludeTags);
 
   targetElementClone.style.setProperty('background-color', 'transparent', 'important');

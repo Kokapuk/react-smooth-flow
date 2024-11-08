@@ -19,8 +19,6 @@ export interface ParsedViewTransitionProperties extends Omit<ViewTransitionPrope
 export interface ViewTransitionConfig {
   duration: number;
   easing?: string;
-  suppressHidingTags?: string[];
-  forceFixedPosition?: boolean;
   noFlushSync?: boolean;
   onCancel?(): void;
   onFinish?(): void;
