@@ -5,9 +5,9 @@ const hideElementNoTransition = (target: HTMLElement) => {
     pointerEvents: target.style.pointerEvents,
   };
 
-  target.style.opacity = '0';
-  target.style.transition = 'none';
-  target.style.pointerEvents = 'none';
+  target.style.setProperty('opacity', '0', 'important');
+  target.style.setProperty('transition', 'none', 'important');
+  target.style.setProperty('pointer-events', 'none', 'important');
 
   return () => {
     target.style.opacity = resetStyles.opacity;

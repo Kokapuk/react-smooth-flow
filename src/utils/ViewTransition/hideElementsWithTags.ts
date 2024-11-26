@@ -8,8 +8,8 @@ const hideElementsWithTags = (tags: string[], targetElement: HTMLElement) => {
       return;
     }
 
-    element.style.opacity = '0';
-    element.style.transition = 'none';
+    element.style.setProperty('opacity', '0', 'important');
+    element.style.setProperty('transition', 'none', 'important');
   });
 };
 

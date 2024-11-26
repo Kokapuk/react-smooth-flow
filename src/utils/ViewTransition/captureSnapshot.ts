@@ -58,6 +58,7 @@ const captureSnapshot = (targetElement: HTMLElement | null, excludeTags: string[
   image.style.height = `${rect.height}px`;
   image.style.backgroundColor = getColorWithOpacity(computedStyle.backgroundColor, computedStyle.opacity);
   image.style.opacity = computedStyle.opacity;
+  image.style.color = computedStyle.color;
 
   image.style.borderTopRightRadius = computedStyle.borderTopRightRadius;
   image.style.borderBottomRightRadius = computedStyle.borderBottomRightRadius;
