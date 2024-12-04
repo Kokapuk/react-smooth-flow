@@ -22,10 +22,11 @@ const Clipping = () => {
           style={isToggled ? undefined : { visibility: 'hidden' }}
           {...(isToggled
             ? constructViewTransition({
-                tag: 'nonClipped',
-                enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
-                exitKeyframes: 'reversedEnter',
-                viewTransitionRootTag: 'clippingContainer',
+                nonClipped: {
+                  enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
+                  exitKeyframes: 'reversedEnter',
+                  viewTransitionRootTag: 'clippingContainer',
+                },
               })
             : null)}
         >
@@ -36,12 +37,13 @@ const Clipping = () => {
           style={isToggled ? undefined : { visibility: 'hidden' }}
           {...(isToggled
             ? constructViewTransition({
-                tag: 'clipped',
-                enterKeyframes: [
-                  { transform: 'translateX(-100%)', clipPath: 'inset(0 0 0 100%)' },
-                  { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
-                ],
-                exitKeyframes: 'reversedEnter',
+                clipped: {
+                  enterKeyframes: [
+                    { transform: 'translateX(-100%)', clipPath: 'inset(0 0 0 100%)' },
+                    { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
+                  ],
+                  exitKeyframes: 'reversedEnter',
+                },
               })
             : null)}
         >

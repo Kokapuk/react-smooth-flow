@@ -18,7 +18,7 @@ const ContentSizeChange = () => {
     <Example title="Content size change">
       <div className={styles.container}>
         <Button
-          {...constructViewTransition({ tag: 'size-button' })}
+          {...constructViewTransition({ 'size-button': {} })}
           onClick={() => {
             const newElement = list.length ? Math.max(...list) + 1 : 1;
 
@@ -34,17 +34,18 @@ const ContentSizeChange = () => {
         >
           {isLoading ? 'Loading...' : 'Load'}
         </Button>
-        <div {...constructViewTransition({ tag: 'size-container' })} ref={listRef} className={styles.list}>
+        <div {...constructViewTransition({ 'size-container': {} })} ref={listRef} className={styles.list}>
           {list.map((i) => (
             <Button
               key={i}
               {...constructViewTransition({
-                tag: `size-button-${i}`,
-                enterKeyframes: [
-                  { transform: 'translateY(-50px)', opacity: '0' },
-                  { transform: 'translateY(0)', opacity: '1' },
-                ],
-                exitKeyframes: 'reversedEnter',
+                [`size-button-${i}`]: {
+                  enterKeyframes: [
+                    { transform: 'translateY(-50px)', opacity: '0' },
+                    { transform: 'translateY(0)', opacity: '1' },
+                  ],
+                  exitKeyframes: 'reversedEnter',
+                },
               })}
               onClick={() =>
                 startViewTransition(['size-container', ...list.map((i) => `size-button-${i}`)], { duration: 300 }, () =>

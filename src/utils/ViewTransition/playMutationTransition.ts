@@ -108,14 +108,14 @@ const playMutationTransition = async (
     resetTargetStyles();
   };
 
-  activeTransitions[prevSnapshot.viewTransitionProperties.tag] = transitions.map((i) => ({
+  activeTransitions[prevSnapshot.tag] = transitions.map((i) => ({
     transition: i,
     onCancel: removeSnapshotsAndResetTarget,
   }));
 
   await Promise.all(transitions.map((i) => i.finished));
 
-  activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
+  activeTransitions[prevSnapshot.tag] = [];
 
   removeSnapshotsAndResetTarget();
 };

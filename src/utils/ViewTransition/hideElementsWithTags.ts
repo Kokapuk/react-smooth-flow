@@ -2,7 +2,7 @@ import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 
 const hideElementsWithTags = (tags: string[], targetElement: HTMLElement) => {
   tags.forEach((tag) => {
-    const element = getElementByViewTransitionTag(tag, targetElement) as HTMLElement | null;
+    const element = getElementByViewTransitionTag(tag, targetElement);
 
     if (!element) {
       return;

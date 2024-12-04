@@ -3,7 +3,6 @@ import { Rect } from '../types';
 export type MutationTransitionFadeType = 'overlap' | 'sequential';
 
 export interface ViewTransitionProperties {
-  tag: string;
   enterKeyframes?: Keyframe[];
   exitKeyframes?: Keyframe[] | 'reversedEnter';
   contentAlign?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
@@ -16,6 +15,8 @@ export interface ParsedViewTransitionProperties extends Omit<ViewTransitionPrope
   mutationTransitionFadeType: MutationTransitionFadeType;
 }
 
+export type ViewTransitionMapping<T extends ViewTransitionProperties = ViewTransitionProperties> = Record<string, T>;
+
 export interface ViewTransitionConfig {
   duration: number;
   easing?: string;
@@ -27,6 +28,7 @@ export interface ViewTransitionConfig {
 export type ComputedStyle = Omit<CSSStyleDeclaration, 'item' | 'getPropertyPriority' | 'getPropertyValue'>;
 
 export interface Snapshot {
+  tag: string;
   rect: Rect;
   image: SVGSVGElement;
   computedStyle: ComputedStyle;

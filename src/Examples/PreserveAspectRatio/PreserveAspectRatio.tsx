@@ -14,12 +14,12 @@ const PreserveAspectRatio = () => {
 
   return (
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
-      <div className={styles.container} {...constructViewTransition({ tag: 'container', contentAlign: 'top right' })}>
+      <div className={styles.container} {...constructViewTransition({ container: { contentAlign: 'top right' } })}>
         {activePanel !== null && (
           <p
             className={styles.panel}
             data-panelnumber={activePanel}
-            {...constructViewTransition({ tag: `panel-${activePanel}`, mutationTransitionFadeType: 'sequential' })}
+            {...constructViewTransition({ [`panel-${activePanel}`]: { mutationTransitionFadeType: 'sequential' } })}
           >
             <button
               style={{ float: 'right', height: 22, width: 22 }}
@@ -59,7 +59,7 @@ const PreserveAspectRatio = () => {
               key={i}
               style={{ visibility: activePanel === i ? 'hidden' : undefined }}
               {...(activePanel !== i
-                ? constructViewTransition({ tag: `panel-${i}`, mutationTransitionFadeType: 'sequential' })
+                ? constructViewTransition({ [`panel-${i}`]: { mutationTransitionFadeType: 'sequential' } })
                 : null)}
             >
               {i}

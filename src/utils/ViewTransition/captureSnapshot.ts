@@ -4,20 +4,26 @@ import elementHasFixedPosition from './elementHasFixedPosition';
 import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
+import getElementViewTransitionMapping from './getElementViewTransitionMapping';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
-import { ParsedViewTransitionProperties, Snapshot } from './types';
+import { Snapshot } from './types';
 import unifyIds from './unifyIds';
 
-const captureSnapshot = (targetElement: HTMLElement | null, excludeTags: string[]): Snapshot | null => {
+const captureSnapshot = (
+  targetElement: HTMLElement | null,
+  targetTag: string,
+  excludeTags: string[]
+): Snapshot | null => {
   if (!targetElement) {
     return null;
   }
 
-  const viewTransitionProperties = JSON.parse(targetElement.dataset.viewtransition!) as ParsedViewTransitionProperties;
+  const viewTransitionMapping = getElementViewTransitionMapping(targetElement)!;
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
   const hasFixedPosition = elementHasFixedPosition(targetElement);
+  const viewTransitionProperties = viewTransitionMapping[targetTag];
 
   const transitionRoot = viewTransitionProperties.viewTransitionRootTag
     ? (getElementByViewTransitionRootTag(viewTransitionProperties.viewTransitionRootTag) as HTMLElement | null)
@@ -102,7 +108,15 @@ const captureSnapshot = (targetElement: HTMLElement | null, excludeTags: string[
       </div>
     </foreignObject>`;
 
-  return { rect, image, computedStyle, viewTransitionProperties, hasFixedPosition, viewTransitionRoot: transitionRoot };
+  return {
+    tag: targetTag,
+    rect,
+    image,
+    computedStyle,
+    viewTransitionProperties,
+    hasFixedPosition,
+    viewTransitionRoot: transitionRoot,
+  };
 };
 
 export default captureSnapshot;

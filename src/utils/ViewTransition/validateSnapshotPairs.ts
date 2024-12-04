@@ -19,7 +19,7 @@ const validateSnapshotPairs = (
       consistentTransitionProperties.forEach((i) => {
         if (prev.viewTransitionProperties[i] !== next.viewTransitionProperties[i]) {
           throw Error(
-            `"${i}" property differ for the previous and the next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.viewTransitionProperties.tag}`
+            `"${i}" property differ for the previous and the next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.tag}`
           );
         }
       });
@@ -48,7 +48,7 @@ const validateSnapshotPairs = (
 
       throw Error(
         `Snapshot with the tag "${
-          i!.viewTransitionProperties.tag
+          i!.tag
         }" has the custom view transition root, but either the root it self or one of its parents will also be transitioned`
       );
     });

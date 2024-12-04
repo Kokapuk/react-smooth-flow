@@ -7,17 +7,19 @@ import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
 import { ViewTransitionConfig } from './types';
+import getAllTags from './getAllTags';
 
 const startViewTransition = async (
   tags: string[],
   config: ViewTransitionConfig,
   modifyDOM: () => void | Promise<void>
 ) => {
-  cancelViewTransition(...tags);
+  cancelViewTransition(...getAllTags(tags));
 
   const prevSnapshots = tags.map((i) =>
     captureSnapshot(
-      getElementByViewTransitionTag(i) as HTMLElement | null,
+      getElementByViewTransitionTag(i),
+      i,
       tags.filter((j) => j !== i)
     )
   );
@@ -30,7 +32,8 @@ const startViewTransition = async (
 
   const nextSnapshots = tags.map((i) =>
     captureSnapshot(
-      getElementByViewTransitionTag(i) as HTMLElement | null,
+      getElementByViewTransitionTag(i),
+      i,
       tags.filter((j) => j !== i)
     )
   );
@@ -43,8 +46,8 @@ const startViewTransition = async (
     await Promise.all(
       pairs.map(({ prev: prevSnapshot, next: nextSnapshot }) => {
         const targetElement = (
-          nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.viewTransitionProperties.tag) : null
-        ) as HTMLElement | null;
+          nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.tag) : null
+        );
 
         if (
           prevSnapshot &&

@@ -76,12 +76,13 @@ const AnimatedList = () => {
         {buttons.map((i) => (
           <Button
             {...constructViewTransition({
-              tag: `button-${i}`,
-              enterKeyframes: [
-                { transform: 'translateY(-75px)', opacity: '0' },
-                { transform: 'translateY(0)', opacity: '1' },
-              ],
-              exitKeyframes: 'reversedEnter',
+              [`button-${i}`]: {
+                enterKeyframes: [
+                  { transform: 'translateY(-75px)', opacity: '0' },
+                  { transform: 'translateY(0)', opacity: '1' },
+                ],
+                exitKeyframes: 'reversedEnter',
+              },
             })}
             key={i}
             onClick={() => removeElement(i)}

@@ -34,7 +34,7 @@ const ViewTransition = () => {
     <Example title="View Transition" style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15 }}>
       <div>
         <Button
-          {...constructViewTransition({ tag: 'moveBtn' })}
+          {...constructViewTransition({ moveBtn: {} })}
           style={{
             display: 'block',
             marginInline: { left: 0, center: 'auto', right: 'auto 0' }[pos],
@@ -55,18 +55,19 @@ const ViewTransition = () => {
         {isOn && (
           <div
             {...constructViewTransition({
-              tag: 'switchIndicator',
-              enterKeyframes: [
-                { transform: 'scale(.8)', opacity: '0' },
-                { transform: 'scale(1)', opacity: '1' },
-              ],
-              exitKeyframes: 'reversedEnter',
+              switchIndicator: {
+                enterKeyframes: [
+                  { transform: 'scale(.8)', opacity: '0' },
+                  { transform: 'scale(1)', opacity: '1' },
+                ],
+                exitKeyframes: 'reversedEnter',
+              },
             })}
             className={cn(styles.indicator, !isOn && styles.inactive)}
           />
         )}
         <Button
-          {...constructViewTransition({ tag: 'switchBtn' })}
+          {...constructViewTransition({ switchBtn: {} })}
           onClick={toggleSwitch}
           style={{ display: 'block', marginInline: 'auto' }}
         >
@@ -77,17 +78,17 @@ const ViewTransition = () => {
       <div style={{ display: 'flex', gap: 15 }}>
         {!inSquare && (
           <div
-            {...constructViewTransition({ tag: 'switchSquare' })}
+            {...constructViewTransition({ switchSquare: {} })}
             style={{ background: 'red', width: '50%', height: 50 }}
           />
         )}
         <div
-          {...constructViewTransition({ tag: 'switchContainer' })}
+          {...constructViewTransition({ switchContainer: {} })}
           style={{ border: '1px solid white', width: '50%', minHeight: 20, height: 'min-content', marginLeft: 'auto' }}
         >
           {inSquare && (
             <div
-              {...constructViewTransition({ tag: 'switchSquare' })}
+              {...constructViewTransition({ switchSquare: {} })}
               style={{ background: 'red', width: '100%', height: 50 }}
             />
           )}

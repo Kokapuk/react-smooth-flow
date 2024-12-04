@@ -38,14 +38,14 @@ const playEnterExitTransition = async (
         easing: config.easing ?? 'ease',
       });
 
-      activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [
+      activeTransitions[prevSnapshot.tag] = [
         { transition: exitTransition, onCancel: () => prevSnapshot.image.remove() },
       ];
 
       try {
         await exitTransition.finished;
 
-        activeTransitions[prevSnapshot.viewTransitionProperties.tag] = [];
+        activeTransitions[prevSnapshot.tag] = [];
         prevSnapshot.image.remove();
       } catch {
         /* empty */
@@ -72,7 +72,7 @@ const playEnterExitTransition = async (
         resetTargetStyles?.();
       };
 
-      activeTransitions[nextSnapshot.viewTransitionProperties.tag] = [
+      activeTransitions[nextSnapshot.tag] = [
         {
           transition: enterTransition,
           onCancel: removeSnapshotAndResetTarget,
@@ -82,7 +82,7 @@ const playEnterExitTransition = async (
       try {
         await enterTransition.finished;
 
-        activeTransitions[nextSnapshot.viewTransitionProperties.tag] = [];
+        activeTransitions[nextSnapshot.tag] = [];
         removeSnapshotAndResetTarget();
       } catch {
         /* empty */
