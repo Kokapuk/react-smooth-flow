@@ -21,6 +21,7 @@ export interface ViewTransitionConfig {
   duration: number;
   easing?: string;
   noFlushSync?: boolean;
+  onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
 }

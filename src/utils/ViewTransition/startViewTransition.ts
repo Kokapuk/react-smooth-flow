@@ -42,6 +42,8 @@ const startViewTransition = async (
   validateSnapshotPairs(pairs, tags);
   applyPositionToSnapshots(pairs);
 
+  config.onBegin?.();
+
   try {
     await Promise.all(
       pairs.map(({ prev: prevSnapshot, next: nextSnapshot }) => {

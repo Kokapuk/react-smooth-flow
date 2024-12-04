@@ -13,22 +13,24 @@ const Gallery = () => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const toLeftConfig: [string[], ViewTransitionConfig] = [
     Array.from({ length: 4 }).map((_, index) => `slideToLeft-${index}`),
-    { duration: 500 },
+    { duration: 500, onBegin: () => setAnimationRunning(true), onFinish: () => setAnimationRunning(false) },
   ];
   const toRightConfig: [string[], ViewTransitionConfig] = [
     Array.from({ length: 4 }).map((_, index) => `slideToRight-${index}`),
-    { duration: 500 },
+    { duration: 500, onBegin: () => setAnimationRunning(true), onFinish: () => setAnimationRunning(false) },
   ];
+  const [isAnimationRunning, setAnimationRunning] = useState(false);
 
   return (
     <Example title="Gallery">
       <div className={styles.wrapper}>
         <Button
           onClick={() =>
-            startViewTransition(...toRightConfig, () =>
-              setActiveSlideIndex((prev) => (prev - 1 < 0 ? galleryLength - 1 : prev - 1))
-            )
+            startViewTransition(...toRightConfig, () => {
+              setActiveSlideIndex((prev) => (prev - 1 < 0 ? galleryLength - 1 : prev - 1));
+            })
           }
+          disabled={isAnimationRunning}
         >
           {'<-'}
         </Button>
@@ -54,10 +56,11 @@ const Gallery = () => {
         </div>
         <Button
           onClick={() =>
-            startViewTransition(...toLeftConfig, () =>
-              setActiveSlideIndex((prev) => (prev + 1 > galleryLength - 1 ? 0 : prev + 1))
-            )
+            startViewTransition(...toLeftConfig, () => {
+              setActiveSlideIndex((prev) => (prev + 1 > galleryLength - 1 ? 0 : prev + 1));
+            })
           }
+          disabled={isAnimationRunning}
         >
           {'->'}
         </Button>
