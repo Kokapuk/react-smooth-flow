@@ -86,6 +86,8 @@ const captureSnapshot = (
   image.style.borderBottomStyle = computedStyle.borderBottomStyle;
   image.style.borderLeftStyle = computedStyle.borderLeftStyle;
 
+  image.style.boxShadow = computedStyle.boxShadow;
+
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
     height: `${rect.height}px`,

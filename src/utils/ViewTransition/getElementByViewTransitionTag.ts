@@ -3,6 +3,8 @@ import getElementViewTransitionMapping from './getElementViewTransitionMapping';
 const getElementByViewTransitionTag = (tag: string, parent: Element | Document = document) => {
   const viewTransitionTargets = parent.querySelectorAll('[data-viewtransition]');
 
+  const matchedElements: HTMLElement[] = [];
+
   for (const viewTransitionTarget of viewTransitionTargets) {
     const viewTransitionsMapping = getElementViewTransitionMapping(viewTransitionTarget as HTMLElement);
 
@@ -11,11 +13,17 @@ const getElementByViewTransitionTag = (tag: string, parent: Element | Document =
     }
 
     if (Object.keys(viewTransitionsMapping).includes(tag)) {
-      return viewTransitionTarget as HTMLElement;
+      matchedElements.push(viewTransitionTarget as HTMLElement);
     }
   }
 
-  return null;
+  if (!matchedElements.length) {
+    return null;
+  } else if (matchedElements.length > 1) {
+    throw Error(`View transition tag must be unique. Found ${matchedElements.length} elements with the "${tag}" tag.`);
+  } else {
+    return matchedElements[0];
+  }
 };
 
 export default getElementByViewTransitionTag;
