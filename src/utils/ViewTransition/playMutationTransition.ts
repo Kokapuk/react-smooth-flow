@@ -42,6 +42,8 @@ const playMutationTransition = async (
     borderRightStyle: i.computedStyle.borderRightStyle,
     borderBottomStyle: i.computedStyle.borderBottomStyle,
     borderLeftStyle: i.computedStyle.borderLeftStyle,
+
+    boxShadow: i.computedStyle.boxShadow
   }));
 
   const prevKeyframes = [

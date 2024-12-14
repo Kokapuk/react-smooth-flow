@@ -43,6 +43,13 @@ const ViewTransition = () => {
             borderColor: { left: 'orange', center: 'green', right: 'red' }[pos],
             borderStyle: 'solid',
             borderWidth: { left: '10px', center: '5px', right: '3px' }[pos],
+            boxShadow: {
+              left: 'rgba(255,0,0,.4) -5px 5px, rgba(255,0,0,.3) -10px 10px, rgba(255,0,0,.2) -15px 15px, rgba(255,0,0,.1) -20px 20px, rgba(255,0,0,.05) -25px 25px',
+              center:
+                'rgba(255,165,0,.4) 0px 5px, rgba(255,165,0,.3) 0px 10px, rgba(255,165,0,.2) 0px 15px, rgba(255,165,0,.1) 0px 20px, rgba(255,165,0,.05) 0px 25px',
+              right:
+                'rgba(0,128,0,.4) 5px 5px, rgba(0,128,0,.3) 10px 10px, rgba(0,128,0,.2) 15px 15px, rgba(0,128,0,.1) 20px 20px, rgba(0,128,0,.05) 25px 25px',
+            }[pos],
           }}
           onClick={moveBtn}
         >

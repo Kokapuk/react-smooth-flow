@@ -53,6 +53,8 @@ const captureSnapshot = (
   targetElementClone.style.setProperty('position', 'static', 'important');
   targetElementClone.style.setProperty('margin', '0', 'important');
   targetElementClone.style.setProperty('pointer-events', 'none', 'important');
+  targetElementClone.style.setProperty('box-shadow', 'none', 'important');
+  targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
 
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
@@ -87,6 +89,8 @@ const captureSnapshot = (
   image.style.borderLeftStyle = computedStyle.borderLeftStyle;
 
   image.style.boxShadow = computedStyle.boxShadow;
+
+  image.style.backdropFilter = computedStyle.backdropFilter;
 
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
