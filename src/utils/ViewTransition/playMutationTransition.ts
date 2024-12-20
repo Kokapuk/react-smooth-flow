@@ -1,4 +1,5 @@
 import getColorWithOpacity from './getColorWithOpacity';
+import getPropertyWithOpacity from './getPropertyWithOpacity';
 import getViewTransitionRoot from './getViewTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
@@ -33,17 +34,17 @@ const playMutationTransition = async (
     borderBottomWidth: i.computedStyle.borderBottomWidth,
     borderLeftWidth: i.computedStyle.borderLeftWidth,
 
-    borderTopColor: i.computedStyle.borderTopColor,
-    borderRightColor: i.computedStyle.borderRightColor,
-    borderBottomColor: i.computedStyle.borderBottomColor,
-    borderLeftColor: i.computedStyle.borderLeftColor,
+    borderTopColor: getColorWithOpacity(i.computedStyle.borderTopColor, i.computedStyle.opacity),
+    borderRightColor: getColorWithOpacity(i.computedStyle.borderRightColor, i.computedStyle.opacity),
+    borderBottomColor: getColorWithOpacity(i.computedStyle.borderBottomColor, i.computedStyle.opacity),
+    borderLeftColor: getColorWithOpacity(i.computedStyle.borderLeftColor, i.computedStyle.opacity),
 
     borderTopStyle: i.computedStyle.borderTopStyle,
     borderRightStyle: i.computedStyle.borderRightStyle,
     borderBottomStyle: i.computedStyle.borderBottomStyle,
     borderLeftStyle: i.computedStyle.borderLeftStyle,
 
-    boxShadow: i.computedStyle.boxShadow
+    boxShadow: getPropertyWithOpacity(i.computedStyle.boxShadow, i.computedStyle.opacity),
   }));
 
   const prevKeyframes = [

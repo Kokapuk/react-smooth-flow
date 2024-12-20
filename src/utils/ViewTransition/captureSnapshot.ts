@@ -5,6 +5,7 @@ import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
 import getElementViewTransitionMapping from './getElementViewTransitionMapping';
+import getPropertyWithOpacity from './getPropertyWithOpacity';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import { Snapshot } from './types';
@@ -52,6 +53,7 @@ const captureSnapshot = (
   targetElementClone.style.setProperty('border-width', '0', 'important');
   targetElementClone.style.setProperty('position', 'static', 'important');
   targetElementClone.style.setProperty('margin', '0', 'important');
+  targetElementClone.style.setProperty('opacity', '1', 'important');
   targetElementClone.style.setProperty('pointer-events', 'none', 'important');
   targetElementClone.style.setProperty('box-shadow', 'none', 'important');
   targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
@@ -59,13 +61,13 @@ const captureSnapshot = (
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
   image.style.userSelect = 'none';
+  image.style.backgroundClip = 'padding-box'
   image.style.zIndex = `${getTotalZIndex(targetElement)}`;
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
   image.style.height = `${rect.height}px`;
   image.style.backgroundColor = getColorWithOpacity(computedStyle.backgroundColor, computedStyle.opacity);
-  image.style.opacity = computedStyle.opacity;
   image.style.color = computedStyle.color;
 
   image.style.borderTopRightRadius = computedStyle.borderTopRightRadius;
@@ -78,17 +80,17 @@ const captureSnapshot = (
   image.style.borderBottomWidth = computedStyle.borderBottomWidth;
   image.style.borderLeftWidth = computedStyle.borderLeftWidth;
 
-  image.style.borderTopColor = computedStyle.borderTopColor;
-  image.style.borderRightColor = computedStyle.borderRightColor;
-  image.style.borderBottomColor = computedStyle.borderBottomColor;
-  image.style.borderLeftColor = computedStyle.borderLeftColor;
+  image.style.borderTopColor = getColorWithOpacity(computedStyle.borderTopColor, computedStyle.opacity);
+  image.style.borderRightColor = getColorWithOpacity(computedStyle.borderRightColor, computedStyle.opacity);
+  image.style.borderBottomColor = getColorWithOpacity(computedStyle.borderBottomColor, computedStyle.opacity);
+  image.style.borderLeftColor = getColorWithOpacity(computedStyle.borderLeftColor, computedStyle.opacity);
 
   image.style.borderTopStyle = computedStyle.borderTopStyle;
   image.style.borderRightStyle = computedStyle.borderRightStyle;
   image.style.borderBottomStyle = computedStyle.borderBottomStyle;
   image.style.borderLeftStyle = computedStyle.borderLeftStyle;
 
-  image.style.boxShadow = computedStyle.boxShadow;
+  image.style.boxShadow = getPropertyWithOpacity(computedStyle.boxShadow, computedStyle.opacity);
 
   image.style.backdropFilter = computedStyle.backdropFilter;
 
