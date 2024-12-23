@@ -1,5 +1,3 @@
-import getColorWithOpacity from './getColorWithOpacity';
-import getPropertyWithOpacity from './getPropertyWithOpacity';
 import getViewTransitionRoot from './getViewTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
@@ -22,7 +20,7 @@ const playMutationTransition = async (
     width: `${i.rect.width}px`,
     height: `${i.rect.height}px`,
 
-    backgroundColor: getColorWithOpacity(i.computedStyle.backgroundColor, i.computedStyle.opacity),
+    backgroundColor: i.computedStyle.backgroundColor,
 
     borderTopRightRadius: i.computedStyle.borderTopRightRadius,
     borderBottomRightRadius: i.computedStyle.borderBottomRightRadius,
@@ -34,17 +32,17 @@ const playMutationTransition = async (
     borderBottomWidth: i.computedStyle.borderBottomWidth,
     borderLeftWidth: i.computedStyle.borderLeftWidth,
 
-    borderTopColor: getColorWithOpacity(i.computedStyle.borderTopColor, i.computedStyle.opacity),
-    borderRightColor: getColorWithOpacity(i.computedStyle.borderRightColor, i.computedStyle.opacity),
-    borderBottomColor: getColorWithOpacity(i.computedStyle.borderBottomColor, i.computedStyle.opacity),
-    borderLeftColor: getColorWithOpacity(i.computedStyle.borderLeftColor, i.computedStyle.opacity),
+    borderTopColor: i.computedStyle.borderTopColor,
+    borderRightColor: i.computedStyle.borderRightColor,
+    borderBottomColor: i.computedStyle.borderBottomColor,
+    borderLeftColor: i.computedStyle.borderLeftColor,
 
     borderTopStyle: i.computedStyle.borderTopStyle,
     borderRightStyle: i.computedStyle.borderRightStyle,
     borderBottomStyle: i.computedStyle.borderBottomStyle,
     borderLeftStyle: i.computedStyle.borderLeftStyle,
 
-    boxShadow: getPropertyWithOpacity(i.computedStyle.boxShadow, i.computedStyle.opacity),
+    boxShadow: i.computedStyle.boxShadow,
   }));
 
   const prevKeyframes = [
@@ -74,30 +72,54 @@ const playMutationTransition = async (
 
   if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'overlap') {
     const prevTransition = prevSnapshot.image.animate(
-      [{ opacity: 1, ...prevKeyframes[0] }, { opacity: 1 }, { opacity: 0, ...prevKeyframes[1] }],
+      [
+        { opacity: prevSnapshot.computedStyle.opacity, ...prevKeyframes[0] },
+        { opacity: prevSnapshot.computedStyle.opacity },
+        { opacity: 0, ...prevKeyframes[1] },
+      ],
       animationOptions
     );
 
     const nextTransition = nextSnapshot.image.animate(
-      [{ opacity: 0, ...nextKeyframes[0] }, { opacity: 1 }, { opacity: 1, ...nextKeyframes[1] }],
+      [
+        { opacity: 0, ...nextKeyframes[0] },
+        { opacity: nextSnapshot.computedStyle.opacity },
+        { opacity: nextSnapshot.computedStyle.opacity, ...nextKeyframes[1] },
+      ],
       animationOptions
     );
 
     transitions.push(prevTransition, nextTransition);
   } else if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'sequential') {
-    const prevTransition = prevSnapshot.image.animate(prevKeyframes, animationOptions);
+    const prevTransition = prevSnapshot.image.animate(
+      [
+        { opacity: prevSnapshot.computedStyle.opacity, ...prevKeyframes[0] },
+        { opacity: prevSnapshot.computedStyle.opacity },
+        { opacity: 0, ...prevKeyframes[1] },
+      ],
+      animationOptions
+    );
 
     const nextTransition = nextSnapshot.image.animate(
-      [{ opacity: 0, ...nextKeyframes[0] }, { opacity: 0 }, /*{ opacity: 0 },*/ { opacity: 1, ...nextKeyframes[1] }],
+      [
+        { opacity: 0, ...nextKeyframes[0] },
+        { opacity: nextSnapshot.computedStyle.opacity },
+        { opacity: nextSnapshot.computedStyle.opacity, ...nextKeyframes[1] },
+      ],
       animationOptions
     );
 
     const prevContentTransition = prevSnapshot.image.children[0].animate(
-      [{ opacity: 1 }, /*{ opacity: 0 },*/ { opacity: 0 }, { opacity: 0 }],
+      [{ opacity: 1 }, { opacity: 0 }, { opacity: 0 }],
       animationOptions
     );
 
-    transitions.push(prevTransition, nextTransition, prevContentTransition);
+    const nextContentTransition = nextSnapshot.image.children[0].animate(
+      [{ opacity: 0 }, { opacity: 0 }, { opacity: 1 }],
+      animationOptions
+    );
+
+    transitions.push(prevTransition, nextTransition, prevContentTransition, nextContentTransition);
   } else {
     throw Error(
       `"${prevSnapshot.viewTransitionProperties.mutationTransitionFadeType}" is invalid mutation transition fade type`

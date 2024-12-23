@@ -1,11 +1,9 @@
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
 import elementHasFixedPosition from './elementHasFixedPosition';
-import getColorWithOpacity from './getColorWithOpacity';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
 import getElementViewTransitionMapping from './getElementViewTransitionMapping';
-import getPropertyWithOpacity from './getPropertyWithOpacity';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import { Snapshot } from './types';
@@ -67,7 +65,8 @@ const captureSnapshot = (
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
   image.style.height = `${rect.height}px`;
-  image.style.backgroundColor = getColorWithOpacity(computedStyle.backgroundColor, computedStyle.opacity);
+  image.style.opacity = computedStyle.opacity;
+  image.style.backgroundColor = computedStyle.backgroundColor;
   image.style.color = computedStyle.color;
 
   image.style.borderTopRightRadius = computedStyle.borderTopRightRadius;
@@ -80,21 +79,19 @@ const captureSnapshot = (
   image.style.borderBottomWidth = computedStyle.borderBottomWidth;
   image.style.borderLeftWidth = computedStyle.borderLeftWidth;
 
-  image.style.borderTopColor = getColorWithOpacity(computedStyle.borderTopColor, computedStyle.opacity);
-  image.style.borderRightColor = getColorWithOpacity(computedStyle.borderRightColor, computedStyle.opacity);
-  image.style.borderBottomColor = getColorWithOpacity(computedStyle.borderBottomColor, computedStyle.opacity);
-  image.style.borderLeftColor = getColorWithOpacity(computedStyle.borderLeftColor, computedStyle.opacity);
+  image.style.borderTopColor = computedStyle.borderTopColor;
+  image.style.borderRightColor = computedStyle.borderRightColor;
+  image.style.borderBottomColor = computedStyle.borderBottomColor;
+  image.style.borderLeftColor = computedStyle.borderLeftColor;
 
   image.style.borderTopStyle = computedStyle.borderTopStyle;
   image.style.borderRightStyle = computedStyle.borderRightStyle;
   image.style.borderBottomStyle = computedStyle.borderBottomStyle;
   image.style.borderLeftStyle = computedStyle.borderLeftStyle;
 
-  image.style.boxShadow = getPropertyWithOpacity(computedStyle.boxShadow, computedStyle.opacity);
+  image.style.boxShadow = computedStyle.boxShadow, computedStyle.opacity;
 
-  image.style.backdropFilter = computedStyle.backdropFilter
-    ? `${computedStyle.backdropFilter} opacity(${computedStyle.opacity})`
-    : '';
+  image.style.backdropFilter = computedStyle.backdropFilter;
 
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
