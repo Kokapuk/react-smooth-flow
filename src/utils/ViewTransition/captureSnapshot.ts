@@ -61,8 +61,8 @@ const captureSnapshot = (
   const image = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   image.style.pointerEvents = 'none';
   image.style.userSelect = 'none';
-  image.style.backgroundClip = 'padding-box'
-  image.style.zIndex = `${getTotalZIndex(targetElement)}`;
+  image.style.backgroundClip = 'padding-box';
+  image.style.zIndex = `${getTotalZIndex(targetElement, transitionRoot ?? undefined)}`;
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
@@ -92,7 +92,9 @@ const captureSnapshot = (
 
   image.style.boxShadow = getPropertyWithOpacity(computedStyle.boxShadow, computedStyle.opacity);
 
-  image.style.backdropFilter = computedStyle.backdropFilter;
+  image.style.backdropFilter = computedStyle.backdropFilter
+    ? `${computedStyle.backdropFilter} opacity(${computedStyle.opacity})`
+    : '';
 
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,

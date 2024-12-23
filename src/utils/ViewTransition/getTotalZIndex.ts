@@ -1,8 +1,8 @@
-const getTotalZIndex = (element: HTMLElement) => {
+const getTotalZIndex = (element: HTMLElement, upToElement: HTMLElement = document.body) => {
   let target: HTMLElement | null = element;
   let zIndex = 0;
 
-  while (target && target !== document.body) {
+  while (target && target !== upToElement) {
     const computedStyles = window.getComputedStyle(target);
     const parsedZIndex = parseInt(computedStyles.zIndex);
 
