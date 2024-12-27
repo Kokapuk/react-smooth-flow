@@ -1,2 +1,2 @@
 # Known issues
-- Box shadows with multiple layers have transparency issues
+- Content overflow gets clipped on transition

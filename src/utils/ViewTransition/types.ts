@@ -2,16 +2,20 @@ import { Rect } from '../types';
 
 export type MutationTransitionFadeType = 'overlap' | 'sequential';
 
+export type ContentAlign = 'top left' | 'top right' | 'bottom right' | 'bottom left';
+
 export interface ViewTransitionProperties {
   enterKeyframes?: Keyframe[];
   exitKeyframes?: Keyframe[] | 'reversedEnter';
-  contentAlign?: 'top left' | 'top right' | 'bottom right' | 'bottom left';
+  contentAlign?: ContentAlign;
   avoidMutationTransition?: boolean;
   viewTransitionRootTag?: string;
   mutationTransitionFadeType?: MutationTransitionFadeType;
 }
 
-export interface ParsedViewTransitionProperties extends Omit<ViewTransitionProperties, 'mutationTransitionFadeType'> {
+export interface ParsedViewTransitionProperties
+  extends Omit<ViewTransitionProperties, 'contentAlign' | 'mutationTransitionFadeType'> {
+  contentAlign: ContentAlign;
   mutationTransitionFadeType: MutationTransitionFadeType;
 }
 
@@ -42,3 +46,5 @@ export interface TransitionSnapshot {
   transition: Animation;
   onCancel(): void;
 }
+
+export type MutableStyleProperty = Exclude<keyof CSSStyleDeclaration, 'length' | 'parentRule' | number | typeof Symbol.iterator>

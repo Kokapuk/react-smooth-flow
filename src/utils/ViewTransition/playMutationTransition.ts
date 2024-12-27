@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { computedStylePropertiesToAnimate } from './config';
 import getViewTransitionRoot from './getViewTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
@@ -16,39 +18,23 @@ const playMutationTransition = async (
   viewTransitionRoot.append(prevSnapshot.image);
   viewTransitionRoot.append(nextSnapshot.image);
 
-  const keyframes = [prevSnapshot, nextSnapshot].map((i) => ({
-    width: `${i.rect.width}px`,
-    height: `${i.rect.height}px`,
+  const generalKeyframes = [prevSnapshot, nextSnapshot].map((i) => {
+    const keyframes: Record<string, string> = {
+      width: `${i.rect.width}px`,
+      height: `${i.rect.height}px`,
+    };
 
-    backgroundColor: i.computedStyle.backgroundColor,
+    computedStylePropertiesToAnimate.forEach(
+      (property) => (keyframes[property] = i.computedStyle[property as any] as any)
+    );
 
-    borderTopRightRadius: i.computedStyle.borderTopRightRadius,
-    borderBottomRightRadius: i.computedStyle.borderBottomRightRadius,
-    borderBottomLeftRadius: i.computedStyle.borderBottomLeftRadius,
-    borderTopLeftRadius: i.computedStyle.borderTopLeftRadius,
-
-    borderTopWidth: i.computedStyle.borderTopWidth,
-    borderRightWidth: i.computedStyle.borderRightWidth,
-    borderBottomWidth: i.computedStyle.borderBottomWidth,
-    borderLeftWidth: i.computedStyle.borderLeftWidth,
-
-    borderTopColor: i.computedStyle.borderTopColor,
-    borderRightColor: i.computedStyle.borderRightColor,
-    borderBottomColor: i.computedStyle.borderBottomColor,
-    borderLeftColor: i.computedStyle.borderLeftColor,
-
-    borderTopStyle: i.computedStyle.borderTopStyle,
-    borderRightStyle: i.computedStyle.borderRightStyle,
-    borderBottomStyle: i.computedStyle.borderBottomStyle,
-    borderLeftStyle: i.computedStyle.borderLeftStyle,
-
-    boxShadow: i.computedStyle.boxShadow,
-  }));
+    return keyframes;
+  });
 
   const prevKeyframes = [
-    { ...keyframes[0], transform: 'translate(0, 0)' },
+    { ...generalKeyframes[0], transform: 'translate(0, 0)' },
     {
-      ...keyframes[1],
+      ...generalKeyframes[1],
       transform: `translate(${nextSnapshot.rect.left - prevSnapshot.rect.left}px, ${
         nextSnapshot.rect.top - prevSnapshot.rect.top
       }px)`,
@@ -56,12 +42,12 @@ const playMutationTransition = async (
   ];
   const nextKeyframes = [
     {
-      ...keyframes[0],
+      ...generalKeyframes[0],
       transform: `translate(${prevSnapshot.rect.left - nextSnapshot.rect.left}px, ${
         prevSnapshot.rect.top - nextSnapshot.rect.top
       }px)`,
     },
-    { ...keyframes[1], transform: 'translate(0, 0)' },
+    { ...generalKeyframes[1], transform: 'translate(0, 0)' },
   ];
 
   const animationOptions: KeyframeAnimationOptions = {

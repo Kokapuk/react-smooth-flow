@@ -6,6 +6,7 @@ const constructViewTransition = (mapping: ViewTransitionMapping) => {
       key,
       {
         ...record,
+        contentAlign: record.contentAlign ?? 'top left',
         mutationTransitionFadeType: record.mutationTransitionFadeType ?? 'overlap',
       } as ParsedViewTransitionProperties,
     ])

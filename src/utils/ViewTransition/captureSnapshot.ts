@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Rect } from '../types';
 import styles from './Snapshot.module.css';
+import { computedStylePropertiesToCapture } from './config';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
@@ -65,33 +67,10 @@ const captureSnapshot = (
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
   image.style.height = `${rect.height}px`;
-  image.style.opacity = computedStyle.opacity;
-  image.style.backgroundColor = computedStyle.backgroundColor;
-  image.style.color = computedStyle.color;
 
-  image.style.borderTopRightRadius = computedStyle.borderTopRightRadius;
-  image.style.borderBottomRightRadius = computedStyle.borderBottomRightRadius;
-  image.style.borderBottomLeftRadius = computedStyle.borderBottomLeftRadius;
-  image.style.borderTopLeftRadius = computedStyle.borderTopLeftRadius;
-
-  image.style.borderTopWidth = computedStyle.borderTopWidth;
-  image.style.borderRightWidth = computedStyle.borderRightWidth;
-  image.style.borderBottomWidth = computedStyle.borderBottomWidth;
-  image.style.borderLeftWidth = computedStyle.borderLeftWidth;
-
-  image.style.borderTopColor = computedStyle.borderTopColor;
-  image.style.borderRightColor = computedStyle.borderRightColor;
-  image.style.borderBottomColor = computedStyle.borderBottomColor;
-  image.style.borderLeftColor = computedStyle.borderLeftColor;
-
-  image.style.borderTopStyle = computedStyle.borderTopStyle;
-  image.style.borderRightStyle = computedStyle.borderRightStyle;
-  image.style.borderBottomStyle = computedStyle.borderBottomStyle;
-  image.style.borderLeftStyle = computedStyle.borderLeftStyle;
-
-  image.style.boxShadow = computedStyle.boxShadow, computedStyle.opacity;
-
-  image.style.backdropFilter = computedStyle.backdropFilter;
+  computedStylePropertiesToCapture.forEach(
+    (property) => (image.style[property] = computedStyle[property as any] as any)
+  );
 
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
@@ -103,9 +82,7 @@ const captureSnapshot = (
 
   const snapshotContainerClasses = [
     styles.snapshotContainer,
-    ...(viewTransitionProperties.contentAlign
-      ? viewTransitionProperties.contentAlign.split(' ').map((i) => styles[i])
-      : [styles.top, styles.left]),
+    ...viewTransitionProperties.contentAlign.split(' ').map((i) => styles[i]),
   ].join(' ');
 
   image.innerHTML = `
