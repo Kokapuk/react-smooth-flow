@@ -1,7 +1,6 @@
+import { constructViewTransition, startViewTransition } from '@lib/main';
 import { useState } from 'react';
 import Example from '../../components/Example';
-import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
-import startViewTransition from '../../utils/ViewTransition/startViewTransition';
 import styles from './PreserveAspectRatio.module.scss';
 
 const buttons = [1, 2, 3, 4];

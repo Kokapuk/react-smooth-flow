@@ -1,10 +1,8 @@
+import { constructViewTransition, constructViewTransitionRoot, startViewTransition } from '@lib/main';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
 import styles from './Clipping.module.scss';
-import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
-import startViewTransition from '../../utils/ViewTransition/startViewTransition';
-import constructViewTransitionRoot from '../../utils/ViewTransition/constructViewTransitionRoot';
 
 const Clipping = () => {
   const [isToggled, setToggled] = useState(true);

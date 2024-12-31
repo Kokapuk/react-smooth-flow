@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Rect } from '../types';
 import styles from './Snapshot.module.css';
 import { computedStylePropertiesToCapture } from './config';
 import elementHasFixedPosition from './elementHasFixedPosition';
@@ -8,7 +7,7 @@ import getElementByViewTransitionRootTag from './getElementByViewTransitionRootT
 import getElementViewTransitionMapping from './getElementViewTransitionMapping';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
-import { Snapshot } from './types';
+import { Rect, Snapshot } from './types';
 import unifyIds from './unifyIds';
 
 const captureSnapshot = (
@@ -69,7 +68,7 @@ const captureSnapshot = (
   image.style.height = `${rect.height}px`;
 
   computedStylePropertiesToCapture.forEach(
-    (property) => (image.style[property] = computedStyle[property as any] as any)
+    (property) => (image.style[property] = computedStyle[property])
   );
 
   const snapshotContainerStyles = Object.entries({

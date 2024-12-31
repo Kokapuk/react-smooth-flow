@@ -1,4 +1,14 @@
-import { Rect } from '../types';
+export interface Position {
+  left: number;
+  top: number;
+}
+
+export interface Size {
+  width: number;
+  height: number;
+}
+
+export type Rect = Position & Size;
 
 export type MutationTransitionFadeType = 'overlap' | 'sequential';
 
@@ -30,7 +40,20 @@ export interface ViewTransitionConfig {
   onFinish?(): void;
 }
 
-export type ComputedStyle = Omit<CSSStyleDeclaration, 'item' | 'getPropertyPriority' | 'getPropertyValue'>;
+export type ComputedStyle = Omit<
+  CSSStyleDeclaration,
+  | 'item'
+  | 'getPropertyPriority'
+  | 'getPropertyValue'
+  | 'removeProperty'
+  | 'setProperty'
+  | 'cssProperty'
+  | 'cssText'
+  | 'length'
+  | 'parentRule'
+  | number
+  | typeof Symbol.iterator
+>;
 
 export interface Snapshot {
   tag: string;
@@ -47,4 +70,4 @@ export interface TransitionSnapshot {
   onCancel(): void;
 }
 
-export type MutableStyleProperty = Exclude<keyof CSSStyleDeclaration, 'length' | 'parentRule' | number | typeof Symbol.iterator>
+export type MutableStyleProperty = keyof ComputedStyle;

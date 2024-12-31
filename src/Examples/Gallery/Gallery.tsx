@@ -1,11 +1,13 @@
+import {
+  ViewTransitionConfig,
+  constructViewTransition,
+  constructViewTransitionRoot,
+  startViewTransition,
+} from '@lib/main';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
 import styles from './Gallery.module.scss';
-import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
-import constructViewTransitionRoot from '../../utils/ViewTransition/constructViewTransitionRoot';
-import startViewTransition from '../../utils/ViewTransition/startViewTransition';
-import { ViewTransitionConfig } from '../../utils/ViewTransition/types';
 
 const galleryLength = 4;
 

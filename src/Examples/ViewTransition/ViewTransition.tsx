@@ -1,9 +1,8 @@
+import { constructViewTransition, startViewTransition } from '@lib/main';
 import cn from 'classnames';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
-import constructViewTransition from '../../utils/ViewTransition/constructViewTransition';
-import startViewTransition from '../../utils/ViewTransition/startViewTransition';
 import styles from './ViewTransition.module.scss';
 
 const ViewTransition = () => {
