@@ -44,8 +44,8 @@ const playEnterExitTransition = async (
 
       try {
         await exitTransition.finished;
-
-        activeTransitions[prevSnapshot.tag] = [];
+        delete activeTransitions[prevSnapshot.tag];
+        
         prevSnapshot.image.remove();
       } catch {
         /* empty */
@@ -81,8 +81,8 @@ const playEnterExitTransition = async (
 
       try {
         await enterTransition.finished;
-
-        activeTransitions[nextSnapshot.tag] = [];
+        delete activeTransitions[nextSnapshot.tag];
+        
         removeSnapshotAndResetTarget();
       } catch {
         /* empty */

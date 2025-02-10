@@ -63,6 +63,7 @@ export interface Snapshot {
   viewTransitionProperties: ParsedViewTransitionProperties;
   hasFixedPosition: boolean;
   viewTransitionRoot?: HTMLElement | null;
+  targetElement: HTMLElement;
 }
 
 export interface TransitionSnapshot {

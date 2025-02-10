@@ -2,12 +2,12 @@ import { flushSync } from 'react-dom';
 import applyPositionToSnapshots from './applyPositionToSnapshot';
 import cancelViewTransition from './cancelViewTransition';
 import captureSnapshot from './captureSnapshot';
-import validateSnapshotPairs from './validateSnapshotPairs';
+import getAllTags from './getAllTags';
 import getElementByViewTransitionTag from './getElementByViewTransitionTag';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
 import { ViewTransitionConfig } from './types';
-import getAllTags from './getAllTags';
+import validateSnapshotPairs from './validateSnapshotPairs';
 
 const startViewTransition = async (
   tags: string[],
@@ -47,9 +47,7 @@ const startViewTransition = async (
   try {
     await Promise.all(
       pairs.map(({ prev: prevSnapshot, next: nextSnapshot }) => {
-        const targetElement = (
-          nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.tag) : null
-        );
+        const targetElement = nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.tag) : null;
 
         if (
           prevSnapshot &&

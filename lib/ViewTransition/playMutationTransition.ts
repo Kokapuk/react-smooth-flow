@@ -125,8 +125,7 @@ const playMutationTransition = async (
   }));
 
   await Promise.all(transitions.map((i) => i.finished));
-
-  activeTransitions[prevSnapshot.tag] = [];
+  delete activeTransitions[prevSnapshot.tag];
 
   removeSnapshotsAndResetTarget();
 };

@@ -29,9 +29,17 @@ const captureSnapshot = (
     ? (getElementByViewTransitionRootTag(viewTransitionProperties.viewTransitionRootTag) as HTMLElement | null)
     : null;
 
-  if (!transitionRoot && viewTransitionProperties.viewTransitionRootTag) {
+  if (viewTransitionProperties.viewTransitionRootTag && !transitionRoot) {
     throw Error(
       `Failed to get element with view transition root tag "${viewTransitionProperties.viewTransitionRootTag}"`
+    );
+  }
+
+  const transitionRootComputedStyle = transitionRoot ? getComputedStyle(transitionRoot) : null;
+
+  if (transitionRootComputedStyle?.position === 'static') {
+    console.warn(
+      `View transition root with the tag "${viewTransitionProperties.viewTransitionRootTag}" has the position property set to "static". This may cause visual transition issues`
     );
   }
 
@@ -67,9 +75,7 @@ const captureSnapshot = (
   image.style.width = `${rect.width}px`;
   image.style.height = `${rect.height}px`;
 
-  computedStylePropertiesToCapture.forEach(
-    (property) => (image.style[property] = computedStyle[property])
-  );
+  computedStylePropertiesToCapture.forEach((property) => (image.style[property] = computedStyle[property]));
 
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
@@ -87,7 +93,9 @@ const captureSnapshot = (
   image.innerHTML = `
     <foreignObject class="${styles.snapshotWrapper}" width="100%" height="100%">
       <div xmlns="http://www.w3.org/1999/xhtml" class="${snapshotContainerClasses}" style="${snapshotContainerStyles}">
-        ${targetElementClone.outerHTML.replace(/\sdata-viewtransition=".+?"/gm, '')}
+        ${targetElementClone.outerHTML
+          .replace(/\sdata-viewtransition=".+?"/gm, '')
+          .replace(/\sdata-viewtransitionroot=".+?"/gm, '')}
       </div>
     </foreignObject>`;
 
@@ -99,6 +107,7 @@ const captureSnapshot = (
     viewTransitionProperties,
     hasFixedPosition,
     viewTransitionRoot: transitionRoot,
+    targetElement,
   };
 };
 
