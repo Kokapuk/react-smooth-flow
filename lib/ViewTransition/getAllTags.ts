@@ -12,12 +12,13 @@ const getAllTags = (tags: string[]) => {
     }
 
     const viewTransitionMapping = getElementViewTransitionMapping(element);
-
+    
     if (!viewTransitionMapping) {
       return;
     }
 
-    allTags.push(...Object.keys(viewTransitionMapping));
+    const allElementTags = Object.keys(viewTransitionMapping);
+    allTags.push(...allElementTags);
   });
 
   return allTags;

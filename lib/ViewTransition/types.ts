@@ -23,8 +23,7 @@ export interface ViewTransitionProperties {
   mutationTransitionFadeType?: MutationTransitionFadeType;
 }
 
-export interface ParsedViewTransitionProperties
-  extends Omit<ViewTransitionProperties, 'contentAlign' | 'mutationTransitionFadeType'> {
+export interface ParsedViewTransitionProperties extends ViewTransitionProperties {
   contentAlign: ContentAlign;
   mutationTransitionFadeType: MutationTransitionFadeType;
 }

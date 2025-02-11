@@ -1,13 +1,13 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 
-const unifyIds = (targetElement: Element, excludeTags: string[]) => {
-  const elements: Element[] = [];
+const unifyIds = (targetElement: HTMLElement, excludeTags: string[]) => {
+  const elements: HTMLElement[] = [];
 
   if (targetElement.matches('[id]')) {
     elements.push(targetElement);
   }
 
-  elements.push(...Array.from(targetElement.querySelectorAll('[id]')));
+  elements.push(...Array.from(targetElement.querySelectorAll('[id]')) as HTMLElement[]);
 
   const idMap: { [key: string]: string } = {};
 
