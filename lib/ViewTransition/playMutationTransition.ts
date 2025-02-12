@@ -24,9 +24,7 @@ const playMutationTransition = async (
       height: `${i.rect.height}px`,
     };
 
-    computedStylePropertiesToAnimate.forEach(
-      (property) => (keyframes[property] = i.computedStyle[property])
-    );
+    computedStylePropertiesToAnimate.forEach((property) => (keyframes[property] = i.computedStyle[property]));
 
     return keyframes;
   });

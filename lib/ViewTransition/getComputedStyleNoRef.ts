@@ -1,9 +1,11 @@
+import detectBrowser from './detectBrowser';
 import { ComputedStyle } from './types';
 
 const getComputedStyleNoRef = (element: HTMLElement) => {
   const computedStyleWithRef = window.getComputedStyle(element);
+  const detectedBrowser = detectBrowser();
 
-  if (!navigator.userAgent.includes('Firefox')) {
+  if (detectedBrowser === 'chromium') {
     return { ...computedStyleWithRef } as ComputedStyle;
   }
 

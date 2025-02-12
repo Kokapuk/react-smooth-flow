@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from './Snapshot.module.css';
 import { computedStylePropertiesToCapture } from './config';
+import detectBrowser from './detectBrowser';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
@@ -19,6 +20,7 @@ const captureSnapshot = (
     return null;
   }
 
+  const detectedBrowser = detectBrowser();
   const viewTransitionMapping = getElementViewTransitionMapping(targetElement)!;
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
@@ -74,14 +76,19 @@ const captureSnapshot = (
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
   image.style.height = `${rect.height}px`;
+  image.style.clipPath = detectedBrowser === 'webkit' ? 'inset(0 0 0 0)' : '';
 
   computedStylePropertiesToCapture.forEach((property) => (image.style[property] = computedStyle[property]));
 
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
     height: `${rect.height}px`,
-    transform: `translate(-${computedStyle.borderLeftWidth}, -${computedStyle.borderTopWidth})`,
+    transform:
+      detectedBrowser !== 'webkit'
+        ? `translate(-${computedStyle.borderLeftWidth}, -${computedStyle.borderTopWidth})`
+        : null,
   })
+    .filter(([_, value]) => Boolean(value))
     .map(([key, value]) => `${key}: ${value}`)
     .join('; ');
 
