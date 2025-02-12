@@ -76,7 +76,10 @@ const captureSnapshot = (
   image.style.top = `${rect.top}px`;
   image.style.width = `${rect.width}px`;
   image.style.height = `${rect.height}px`;
-  image.style.clipPath = detectedBrowser === 'webkit' ? 'inset(0 0 0 0)' : '';
+  image.style.clipPath =
+    detectedBrowser === 'webkit'
+      ? `inset(0 0 0 0 round ${computedStyle.borderTopLeftRadius} ${computedStyle.borderTopRightRadius} ${computedStyle.borderBottomRightRadius} ${computedStyle.borderBottomLeftRadius})`
+      : '';
 
   computedStylePropertiesToCapture.forEach((property) => (image.style[property] = computedStyle[property]));
 
