@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import styles from './Snapshot.module.css';
 import { computedStylePropertiesToCapture } from './config';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
@@ -64,7 +63,7 @@ const captureSnapshot = (
   targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
 
   const image = document.createElement('div');
-  image.className = styles.image;
+  image.className = 'rsf-image';
   image.style.zIndex = `${getTotalZIndex(targetElement, transitionRoot ?? undefined)}`;
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;
@@ -83,8 +82,8 @@ const captureSnapshot = (
     .join('; ');
 
   const snapshotContainerClasses = [
-    styles.snapshotContainer,
-    ...transitionProperties.contentAlign.split(' ').map((i) => styles[i]),
+    'rsf-snapshotContainer',
+    ...transitionProperties.contentAlign.split(' ').map((i) => `rsf-${i}`),
   ].join(' ');
 
   image.innerHTML = `

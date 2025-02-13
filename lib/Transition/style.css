@@ -1,4 +1,4 @@
-.image {
+.rsf-image {
   position: relative;
   pointer-events: none;
   user-select: none;
@@ -6,28 +6,28 @@
   overflow: hidden;
 }
 
-.snapshotContainer {
+.rsf-snapshotContainer {
   display: flex;
   position: absolute;
 }
 
-.snapshotContainer.top {
+.rsf-snapshotContainer.rsf-top {
   top: 0;
 }
 
-.snapshotContainer.right {
+.rsf-snapshotContainer.rsf-right {
   right: 0;
 }
 
-.snapshotContainer.bottom {
+.rsf-snapshotContainer.rsf-bottom {
   bottom: 0;
 }
 
-.snapshotContainer.left {
+.rsf-snapshotContainer.rsf-left {
   left: 0;
 }
 
-.snapshotContainer > * {
+.rsf-snapshotContainer > * {
   width: 100%;
   height: 100%;
 }

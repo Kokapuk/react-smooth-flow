@@ -14,7 +14,7 @@
       "import": "./dist/index.js",
       "require": "./dist/index.umd.cjs"
     },
-    "./style.css": "./dist/my-lib.css"
+    "./style.css": "./dist/index.css"
   },
   "scripts": {
     "dev": "vite",

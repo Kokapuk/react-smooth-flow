@@ -2,6 +2,7 @@ import cancelTransition from './Transition/cancelTransition';
 import constructTransition from './Transition/constructTransition';
 import constructTransitionRoot from './Transition/constructTransitionRoot';
 import startTransition from './Transition/startTransition';
+import './Transition/style.css';
 
 import {
   ParsedTransitionProperties,
