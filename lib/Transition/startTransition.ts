@@ -1,24 +1,20 @@
 import { flushSync } from 'react-dom';
 import applyPositionToSnapshots from './applyPositionToSnapshot';
-import cancelViewTransition from './cancelViewTransition';
+import cancelTransition from './cancelTransition';
 import captureSnapshot from './captureSnapshot';
 import getAllTags from './getAllTags';
-import getElementByViewTransitionTag from './getElementByViewTransitionTag';
+import getElementByTransitionTag from './getElementByTransitionTag';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
-import { ViewTransitionConfig } from './types';
+import { TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
-const startViewTransition = async (
-  tags: string[],
-  config: ViewTransitionConfig,
-  modifyDOM: () => void | Promise<void>
-) => {
-  cancelViewTransition(...getAllTags(tags));
+const startTransition = async (tags: string[], config: TransitionConfig, modifyDOM: () => void | Promise<void>) => {
+  cancelTransition(...getAllTags(tags));
 
   const prevSnapshots = tags.map((i) =>
     captureSnapshot(
-      getElementByViewTransitionTag(i),
+      getElementByTransitionTag(i),
       i,
       tags.filter((j) => j !== i)
     )
@@ -32,7 +28,7 @@ const startViewTransition = async (
 
   const nextSnapshots = tags.map((i) =>
     captureSnapshot(
-      getElementByViewTransitionTag(i),
+      getElementByTransitionTag(i),
       i,
       tags.filter((j) => j !== i)
     )
@@ -47,13 +43,13 @@ const startViewTransition = async (
   try {
     await Promise.all(
       pairs.map(({ prev: prevSnapshot, next: nextSnapshot }) => {
-        const targetElement = nextSnapshot ? getElementByViewTransitionTag(nextSnapshot.tag) : null;
+        const targetElement = nextSnapshot ? getElementByTransitionTag(nextSnapshot.tag) : null;
 
         if (
           prevSnapshot &&
           nextSnapshot &&
-          !prevSnapshot.viewTransitionProperties.avoidMutationTransition &&
-          !nextSnapshot.viewTransitionProperties.avoidMutationTransition
+          !prevSnapshot.transitionProperties.avoidMutationTransition &&
+          !nextSnapshot.transitionProperties.avoidMutationTransition
         ) {
           return playMutationTransition(targetElement!, prevSnapshot, nextSnapshot, config);
         } else {
@@ -74,4 +70,4 @@ const startViewTransition = async (
   }
 };
 
-export default startViewTransition;
+export default startTransition;

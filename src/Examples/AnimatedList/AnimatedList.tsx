@@ -1,4 +1,4 @@
-import { constructViewTransition, startViewTransition } from '@lib/main';
+import { constructTransition, startTransition } from '@lib/main';
 import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
@@ -27,7 +27,7 @@ const AnimatedList = () => {
   }, [buttons.length]);
 
   const shuffle = () => {
-    startViewTransition(
+    startTransition(
       buttons.map((i) => `button-${i}`),
       { duration: 300 },
       () => {
@@ -50,7 +50,7 @@ const AnimatedList = () => {
   const addElement = () => {
     const newButton = buttons.length ? Math.max(...buttons) + 1 : 1;
 
-    startViewTransition(
+    startTransition(
       [...buttons, newButton].map((i) => `button-${i}`),
       { duration: 300 },
       () => setButtons((prev) => [...prev, newButton])
@@ -58,7 +58,7 @@ const AnimatedList = () => {
   };
 
   const removeElement = (element: number) => {
-    startViewTransition(
+    startTransition(
       buttons.map((i) => `button-${i}`),
       { duration: 300 },
       () => setButtons((prev) => prev.filter((j) => j !== element))
@@ -74,7 +74,7 @@ const AnimatedList = () => {
       <div className={styles.grid}>
         {buttons.map((i) => (
           <Button
-            {...constructViewTransition({
+            {...constructTransition({
               [`button-${i}`]: {
                 enterKeyframes: [
                   { transform: 'translateY(-75px)', opacity: '0' },

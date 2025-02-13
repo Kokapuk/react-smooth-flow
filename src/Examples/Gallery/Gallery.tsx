@@ -1,9 +1,4 @@
-import {
-  ViewTransitionConfig,
-  constructViewTransition,
-  constructViewTransitionRoot,
-  startViewTransition,
-} from '@lib/main';
+import { constructTransition, constructTransitionRoot, startTransition, TransitionConfig } from '@lib/main';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
@@ -13,11 +8,11 @@ const galleryLength = 4;
 
 const Gallery = () => {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
-  const toLeftConfig: [string[], ViewTransitionConfig] = [
+  const toLeftConfig: [string[], TransitionConfig] = [
     Array.from({ length: 4 }).map((_, index) => `slideToLeft-${index}`),
     { duration: 500, onBegin: () => setAnimationRunning(true), onFinish: () => setAnimationRunning(false) },
   ];
-  const toRightConfig: [string[], ViewTransitionConfig] = [
+  const toRightConfig: [string[], TransitionConfig] = [
     Array.from({ length: 4 }).map((_, index) => `slideToRight-${index}`),
     { duration: 500, onBegin: () => setAnimationRunning(true), onFinish: () => setAnimationRunning(false) },
   ];
@@ -28,7 +23,7 @@ const Gallery = () => {
       <div className={styles.wrapper}>
         <Button
           onClick={() =>
-            startViewTransition(...toRightConfig, () => {
+            startTransition(...toRightConfig, () => {
               setActiveSlideIndex((prev) => (prev - 1 < 0 ? galleryLength - 1 : prev - 1));
             })
           }
@@ -36,20 +31,20 @@ const Gallery = () => {
         >
           {'<-'}
         </Button>
-        <div className={styles.slideContainer} {...constructViewTransitionRoot('slideContainer')}>
+        <div className={styles.slideContainer} {...constructTransitionRoot('slideContainer')}>
           <div
             className={styles.slide}
             data-index={activeSlideIndex}
-            {...constructViewTransition({
+            {...constructTransition({
               [`slideToLeft-${activeSlideIndex}`]: {
                 enterKeyframes: [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
                 exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }],
-                viewTransitionRootTag: 'slideContainer',
+                transitionRootTag: 'slideContainer',
               },
               [`slideToRight-${activeSlideIndex}`]: {
                 enterKeyframes: [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
                 exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
-                viewTransitionRootTag: 'slideContainer',
+                transitionRootTag: 'slideContainer',
               },
             })}
           >
@@ -58,7 +53,7 @@ const Gallery = () => {
         </div>
         <Button
           onClick={() =>
-            startViewTransition(...toLeftConfig, () => {
+            startTransition(...toLeftConfig, () => {
               setActiveSlideIndex((prev) => (prev + 1 > galleryLength - 1 ? 0 : prev + 1));
             })
           }

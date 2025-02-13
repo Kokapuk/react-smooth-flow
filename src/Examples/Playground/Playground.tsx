@@ -1,17 +1,17 @@
-import { constructViewTransition, startViewTransition } from '@lib/main';
+import { constructTransition, startTransition } from '@lib/main';
 import cn from 'classnames';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
-import styles from './ViewTransition.module.scss';
+import styles from './Playground.module.scss';
 
-const ViewTransition = () => {
+const Playground = () => {
   const [pos, setPos] = useState<'left' | 'center' | 'right'>('center');
   const [isOn, setOn] = useState(true);
   const [inSquare, setInSquare] = useState(false);
 
   const moveBtn = () => {
-    startViewTransition(['moveBtn'], { duration: 600 }, () =>
+    startTransition(['moveBtn'], { duration: 600 }, () =>
       setPos((prev) => {
         switch (prev) {
           case 'left':
@@ -26,14 +26,14 @@ const ViewTransition = () => {
   };
 
   const toggleSwitch = () => {
-    startViewTransition(['switchIndicator', 'switchBtn'], { duration: 600 }, () => setOn((prev) => !prev));
+    startTransition(['switchIndicator', 'switchBtn'], { duration: 600 }, () => setOn((prev) => !prev));
   };
 
   return (
-    <Example title="View Transition" style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15 }}>
+    <Example title="Playground" style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15 }}>
       <div>
         <Button
-          {...constructViewTransition({ moveBtn: {} })}
+          {...constructTransition({ moveBtn: {} })}
           style={{
             display: 'block',
             marginInline: { left: 0, center: 'auto', right: 'auto 0' }[pos],
@@ -54,7 +54,7 @@ const ViewTransition = () => {
       <div>
         {isOn && (
           <div
-            {...constructViewTransition({
+            {...constructTransition({
               switchIndicator: {
                 enterKeyframes: [
                   { transform: 'scale(.8)', opacity: '0' },
@@ -67,7 +67,7 @@ const ViewTransition = () => {
           />
         )}
         <Button
-          {...constructViewTransition({ switchBtn: {} })}
+          {...constructTransition({ switchBtn: {} })}
           onClick={toggleSwitch}
           style={{ display: 'block', marginInline: 'auto' }}
         >
@@ -77,18 +77,15 @@ const ViewTransition = () => {
 
       <div style={{ display: 'flex', gap: 15 }}>
         {!inSquare && (
-          <div
-            {...constructViewTransition({ switchSquare: {} })}
-            style={{ background: 'red', width: '50%', height: 50 }}
-          />
+          <div {...constructTransition({ switchSquare: {} })} style={{ background: 'red', width: '50%', height: 50 }} />
         )}
         <div
-          {...constructViewTransition({ switchContainer: {} })}
+          {...constructTransition({ switchContainer: {} })}
           style={{ border: '1px solid white', width: '50%', minHeight: 20, height: 'min-content', marginLeft: 'auto' }}
         >
           {inSquare && (
             <div
-              {...constructViewTransition({ switchSquare: {} })}
+              {...constructTransition({ switchSquare: {} })}
               style={{ background: 'red', width: '100%', height: 50 }}
             />
           )}
@@ -96,9 +93,7 @@ const ViewTransition = () => {
       </div>
       <Button
         onClick={() =>
-          startViewTransition(['switchContainer', 'switchSquare'], { duration: 600 }, () =>
-            setInSquare((prev) => !prev)
-          )
+          startTransition(['switchContainer', 'switchSquare'], { duration: 600 }, () => setInSquare((prev) => !prev))
         }
       >
         Switch
@@ -107,4 +102,4 @@ const ViewTransition = () => {
   );
 };
 
-export default ViewTransition;
+export default Playground;

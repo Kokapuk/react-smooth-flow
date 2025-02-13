@@ -1,20 +1,15 @@
-import cancelViewTransition from './ViewTransition/cancelViewTransition';
-import constructViewTransition from './ViewTransition/constructViewTransition';
-import constructViewTransitionRoot from './ViewTransition/constructViewTransitionRoot';
-import startViewTransition from './ViewTransition/startViewTransition';
+import cancelTransition from './Transition/cancelTransition';
+import constructTransition from './Transition/constructTransition';
+import constructTransitionRoot from './Transition/constructTransitionRoot';
+import startTransition from './Transition/startTransition';
 
 import {
-  ParsedViewTransitionProperties,
-  ViewTransitionConfig,
-  ViewTransitionMapping,
-  ViewTransitionProperties,
-} from './ViewTransition/types';
+  ParsedTransitionProperties,
+  TransitionConfig,
+  TransitionMapping,
+  TransitionProperties,
+} from './Transition/types';
 
-export {
-  cancelViewTransition,
-  constructViewTransition,
-  constructViewTransitionRoot,
-  startViewTransition,
-};
+export { cancelTransition, constructTransition, constructTransitionRoot, startTransition };
 
-export type { ParsedViewTransitionProperties, ViewTransitionConfig, ViewTransitionMapping, ViewTransitionProperties };
+export type { ParsedTransitionProperties, TransitionConfig, TransitionMapping, TransitionProperties };

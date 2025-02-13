@@ -4,8 +4,8 @@ import { computedStylePropertiesToCapture } from './config';
 import detectBrowser from './detectBrowser';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
-import getElementByViewTransitionRootTag from './getElementByViewTransitionRootTag';
-import getElementViewTransitionMapping from './getElementViewTransitionMapping';
+import getElementByTransitionRootTag from './getElementByTransitionRootTag';
+import getElementTransitionMapping from './getElementTransitionMapping';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import { Rect, Snapshot } from './types';
@@ -21,27 +21,25 @@ const captureSnapshot = (
   }
 
   const detectedBrowser = detectBrowser();
-  const viewTransitionMapping = getElementViewTransitionMapping(targetElement)!;
+  const transitionMapping = getElementTransitionMapping(targetElement)!;
   const computedStyle = getComputedStyleNoRef(targetElement);
   const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
   const hasFixedPosition = elementHasFixedPosition(targetElement);
-  const viewTransitionProperties = viewTransitionMapping[targetTag];
+  const transitionProperties = transitionMapping[targetTag];
 
-  const transitionRoot = viewTransitionProperties.viewTransitionRootTag
-    ? (getElementByViewTransitionRootTag(viewTransitionProperties.viewTransitionRootTag) as HTMLElement | null)
+  const transitionRoot = transitionProperties.transitionRootTag
+    ? (getElementByTransitionRootTag(transitionProperties.transitionRootTag) as HTMLElement | null)
     : null;
 
-  if (viewTransitionProperties.viewTransitionRootTag && !transitionRoot) {
-    throw Error(
-      `Failed to get element with view transition root tag "${viewTransitionProperties.viewTransitionRootTag}"`
-    );
+  if (transitionProperties.transitionRootTag && !transitionRoot) {
+    throw Error(`Failed to find transition root with tag "${transitionProperties.transitionRootTag}"`);
   }
 
   const transitionRootComputedStyle = transitionRoot ? getComputedStyle(transitionRoot) : null;
 
   if (transitionRootComputedStyle?.position === 'static') {
     console.warn(
-      `View transition root with the tag "${viewTransitionProperties.viewTransitionRootTag}" has the position property set to "static". This may cause visual transition issues`
+      `Transition root with tag "${transitionProperties.transitionRootTag}" has position property set to "static". This may cause visual transition issues`
     );
   }
 
@@ -97,15 +95,15 @@ const captureSnapshot = (
 
   const snapshotContainerClasses = [
     styles.snapshotContainer,
-    ...viewTransitionProperties.contentAlign.split(' ').map((i) => styles[i]),
+    ...transitionProperties.contentAlign.split(' ').map((i) => styles[i]),
   ].join(' ');
 
   image.innerHTML = `
     <foreignObject class="${styles.snapshotWrapper}" width="100%" height="100%">
       <div xmlns="http://www.w3.org/1999/xhtml" class="${snapshotContainerClasses}" style="${snapshotContainerStyles}">
         ${targetElementClone.outerHTML
-          .replace(/\sdata-viewtransition=".+?"/gm, '')
-          .replace(/\sdata-viewtransitionroot=".+?"/gm, '')}
+          .replace(/\sdata-transition=".+?"/gm, '')
+          .replace(/\sdata-transitionroot=".+?"/gm, '')}
       </div>
     </foreignObject>`;
 
@@ -114,9 +112,9 @@ const captureSnapshot = (
     rect,
     image,
     computedStyle,
-    viewTransitionProperties,
+    transitionProperties,
     hasFixedPosition,
-    viewTransitionRoot: transitionRoot,
+    transitionRoot,
     targetElement,
   };
 };

@@ -1,12 +1,12 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
-import getElementByViewTransitionTag from './getElementByViewTransitionTag';
+import getElementByTransitionTag from './getElementByTransitionTag';
 import { activeTransitions } from './store';
-import { Snapshot, ViewTransitionProperties } from './types';
+import { Snapshot, TransitionProperties } from './types';
 
-const consistentTransitionProperties: (keyof ViewTransitionProperties)[] = [
-  'viewTransitionRootTag',
+const consistentTransitionProperties: (keyof TransitionProperties)[] = [
+  'transitionRootTag',
   'avoidMutationTransition',
-  'mutationTransitionFadeType',
+  'mutationTransitionType',
 ];
 
 const anyParentMatchesAnyTag = (element: HTMLElement, tags: string[]) => {
@@ -31,9 +31,9 @@ const validateSnapshotPairs = (
   pairs.forEach(({ prev, next }) => {
     if (prev && next) {
       consistentTransitionProperties.forEach((i) => {
-        if (prev.viewTransitionProperties[i] !== next.viewTransitionProperties[i]) {
+        if (prev.transitionProperties[i] !== next.transitionProperties[i]) {
           throw Error(
-            `"${i}" property differ for the previous and the next snapshots. It should never update while snapshots are being captured. View transition tag: ${prev.tag}`
+            `"${i}" property differ for previous and next snapshots. It should never update while snapshots are being captured. Transition tag: ${prev.tag}`
           );
         }
       });
@@ -42,32 +42,32 @@ const validateSnapshotPairs = (
     const pair = [prev, next].filter(Boolean) as Snapshot[];
 
     pair.forEach((i) => {
-      if (!i.viewTransitionRoot) {
+      if (!i.transitionRoot) {
         return;
       }
 
-      if (!anyParentMatchesAnyTag(i.viewTransitionRoot, tags)) {
+      if (!anyParentMatchesAnyTag(i.transitionRoot, tags)) {
         return;
       }
 
       throw Error(
-        `Snapshot with the tag "${i.tag}" has the custom view transition root, but either the root it self or one of its parents will also be transitioned`
+        `Snapshot with tag "${i.tag}" has custom transition root, but either root it self or one of its parents will also be transitioned`
       );
     });
 
     pair.forEach((i) => {
-      if (!i.viewTransitionRoot) {
+      if (!i.transitionRoot) {
         return;
       }
 
       const activeTransitionTags = Object.keys(activeTransitions);
 
-      if (!anyParentMatchesAnyTag(i.viewTransitionRoot, activeTransitionTags)) {
+      if (!anyParentMatchesAnyTag(i.transitionRoot, activeTransitionTags)) {
         return;
       }
 
       throw Error(
-        `Snapshot with the tag "${i.tag}" has the custom view transition root, but either the root it self or one of its parents are being transitioned`
+        `Snapshot with tag "${i.tag}" has custom transition root, but either root it self or one of its parents are being transitioned`
       );
     });
 
@@ -75,11 +75,11 @@ const validateSnapshotPairs = (
       const activeTransitionTags = Object.keys(activeTransitions);
 
       activeTransitionTags.forEach((tag) => {
-        const viewTransitionTarget = getElementByViewTransitionTag(tag, i.targetElement);
+        const transitionTarget = getElementByTransitionTag(tag, i.targetElement);
 
-        if (viewTransitionTarget) {
+        if (transitionTarget) {
           throw Error(
-            `Snapshot with the tag "${i.tag}" has ongoing transition inside for element with the view transition tag "${tag}"`
+            `Snapshot with tag "${i.tag}" has ongoing transition inside for element with transition tag "${tag}"`
           );
         }
       });

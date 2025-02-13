@@ -1,4 +1,4 @@
-import { constructViewTransition, startViewTransition } from '@lib/main';
+import { constructTransition, startTransition } from '@lib/main';
 import { useRef, useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
@@ -17,11 +17,11 @@ const ContentSizeChange = () => {
     <Example title="Content size change">
       <div className={styles.container}>
         <Button
-          {...constructViewTransition({ 'size-button': {} })}
+          {...constructTransition({ 'size-button': {} })}
           onClick={() => {
             const newElement = list.length ? Math.max(...list) + 1 : 1;
 
-            startViewTransition(
+            startTransition(
               ['size-button', 'size-container', ...[...list, newElement].map((i) => `size-button-${i}`).reverse()],
               { duration: 300 },
               () => {
@@ -33,11 +33,11 @@ const ContentSizeChange = () => {
         >
           {isLoading ? 'Loading...' : 'Load'}
         </Button>
-        <div {...constructViewTransition({ 'size-container': {} })} ref={listRef} className={styles.list}>
+        <div {...constructTransition({ 'size-container': {} })} ref={listRef} className={styles.list}>
           {list.map((i) => (
             <Button
               key={i}
-              {...constructViewTransition({
+              {...constructTransition({
                 [`size-button-${i}`]: {
                   enterKeyframes: [
                     { transform: 'translateY(-50px)', opacity: '0' },
@@ -47,7 +47,7 @@ const ContentSizeChange = () => {
                 },
               })}
               onClick={() =>
-                startViewTransition(['size-container', ...list.map((i) => `size-button-${i}`)], { duration: 300 }, () =>
+                startTransition(['size-container', ...list.map((i) => `size-button-${i}`)], { duration: 300 }, () =>
                   setList((prev) => prev.filter((j) => j != i))
                 )
               }

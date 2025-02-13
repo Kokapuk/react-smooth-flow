@@ -1,16 +1,15 @@
-import getViewTransitionRoot from './getViewTransitionRoot';
+import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Snapshot, ViewTransitionConfig } from './types';
+import { Snapshot, TransitionConfig } from './types';
 
 const playEnterExitTransition = async (
   targetElement: HTMLElement | null,
   prevSnapshot: Snapshot | null,
   nextSnapshot: Snapshot | null,
-  config: ViewTransitionConfig
+  config: TransitionConfig
 ) => {
-  const viewTransitionRoot =
-    prevSnapshot?.viewTransitionRoot ?? nextSnapshot?.viewTransitionRoot ?? getViewTransitionRoot();
+  const transitionRoot = prevSnapshot?.transitionRoot ?? nextSnapshot?.transitionRoot ?? getTransitionRoot();
 
   const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
 
@@ -20,17 +19,17 @@ const playEnterExitTransition = async (
         return;
       }
 
-      viewTransitionRoot.append(prevSnapshot.image);
+      transitionRoot.append(prevSnapshot.image);
 
       let exitKeyframes: Keyframe[] | undefined = undefined;
 
       if (
-        prevSnapshot.viewTransitionProperties.exitKeyframes === 'reversedEnter' &&
-        prevSnapshot.viewTransitionProperties.enterKeyframes
+        prevSnapshot.transitionProperties.exitKeyframes === 'reversedEnter' &&
+        prevSnapshot.transitionProperties.enterKeyframes
       ) {
-        exitKeyframes = [...prevSnapshot.viewTransitionProperties.enterKeyframes].reverse();
-      } else if (prevSnapshot.viewTransitionProperties.exitKeyframes !== 'reversedEnter') {
-        exitKeyframes = prevSnapshot.viewTransitionProperties.exitKeyframes;
+        exitKeyframes = [...prevSnapshot.transitionProperties.enterKeyframes].reverse();
+      } else if (prevSnapshot.transitionProperties.exitKeyframes !== 'reversedEnter') {
+        exitKeyframes = prevSnapshot.transitionProperties.exitKeyframes;
       }
 
       const exitTransition = prevSnapshot.image.animate(exitKeyframes ?? [{ opacity: 1 }, { opacity: 0 }], {
@@ -45,7 +44,7 @@ const playEnterExitTransition = async (
       try {
         await exitTransition.finished;
         delete activeTransitions[prevSnapshot.tag];
-        
+
         prevSnapshot.image.remove();
       } catch {
         /* empty */
@@ -57,10 +56,10 @@ const playEnterExitTransition = async (
         return;
       }
 
-      viewTransitionRoot.append(nextSnapshot.image);
+      transitionRoot.append(nextSnapshot.image);
 
       const enterTransition = nextSnapshot.image.animate(
-        nextSnapshot.viewTransitionProperties.enterKeyframes ?? [{ opacity: 0 }, { opacity: 1 }],
+        nextSnapshot.transitionProperties.enterKeyframes ?? [{ opacity: 0 }, { opacity: 1 }],
         {
           duration: config.duration,
           easing: config.easing ?? 'ease',
@@ -82,7 +81,7 @@ const playEnterExitTransition = async (
       try {
         await enterTransition.finished;
         delete activeTransitions[nextSnapshot.tag];
-        
+
         removeSnapshotAndResetTarget();
       } catch {
         /* empty */

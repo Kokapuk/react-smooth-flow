@@ -3,7 +3,7 @@ import { Snapshot } from './types';
 const setSnapshotPosition = (snapshot: Snapshot, position: 'absolute' | 'fixed') => {
   snapshot.image.style.position = position;
 
-  if (position === 'absolute' && !snapshot.viewTransitionProperties.viewTransitionRootTag) {
+  if (position === 'absolute' && !snapshot.transitionProperties.transitionRootTag) {
     snapshot.rect.left += window.scrollX;
     snapshot.rect.top += window.scrollY;
     snapshot.image.style.left = `${snapshot.rect.left}px`;
@@ -17,7 +17,7 @@ const applyPositionToSnapshot = (pairs: { prev: Snapshot | null; next: Snapshot 
       ([prevSnapshot, nextSnapshot].filter(Boolean) as Snapshot[]).forEach((i) => {
         setSnapshotPosition(
           i,
-          i.hasFixedPosition && !i.viewTransitionProperties.viewTransitionRootTag ? 'fixed' : 'absolute'
+          i.hasFixedPosition && !i.transitionProperties.transitionRootTag ? 'fixed' : 'absolute'
         );
       });
 
@@ -27,7 +27,7 @@ const applyPositionToSnapshot = (pairs: { prev: Snapshot | null; next: Snapshot 
     [prevSnapshot, nextSnapshot].forEach((i) =>
       setSnapshotPosition(
         i,
-        nextSnapshot.hasFixedPosition && !i.viewTransitionProperties.viewTransitionRootTag ? 'fixed' : 'absolute'
+        nextSnapshot.hasFixedPosition && !i.transitionProperties.transitionRootTag ? 'fixed' : 'absolute'
       )
     );
   }

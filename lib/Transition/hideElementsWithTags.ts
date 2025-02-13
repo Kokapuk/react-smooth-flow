@@ -1,8 +1,8 @@
-import getElementByViewTransitionTag from './getElementByViewTransitionTag';
+import getElementByTransitionTag from './getElementByTransitionTag';
 
 const hideElementsWithTags = (tags: string[], targetElement: HTMLElement) => {
   tags.forEach((tag) => {
-    const element = getElementByViewTransitionTag(tag, targetElement);
+    const element = getElementByTransitionTag(tag, targetElement);
 
     if (!element) {
       return;
