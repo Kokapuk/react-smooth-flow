@@ -1,10 +1,8 @@
-import getComputedStyleNoRef from './getComputedStyleNoRef';
-
 const elementHasFixedPosition = (element: HTMLElement) => {
   let target: HTMLElement | null = element;
 
   while (target && target !== document.body) {
-    const computedStyles = getComputedStyleNoRef(target);
+    const computedStyles = window.getComputedStyle(target);
 
     if (computedStyles.position === 'fixed') {
       return true;

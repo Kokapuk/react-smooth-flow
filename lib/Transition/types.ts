@@ -57,7 +57,7 @@ export type ComputedStyle = Omit<
 export interface Snapshot {
   tag: string;
   rect: Rect;
-  image: SVGSVGElement;
+  image: HTMLDivElement;
   computedStyle: ComputedStyle;
   transitionProperties: ParsedTransitionProperties;
   hasFixedPosition: boolean;

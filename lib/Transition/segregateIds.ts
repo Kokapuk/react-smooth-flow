@@ -1,6 +1,6 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 
-const unifyIds = (targetElement: HTMLElement, excludeTags: string[]) => {
+const segregateIds = (targetElement: HTMLElement, excludeTags: string[]) => {
   const elements: HTMLElement[] = [];
 
   if (targetElement.matches('[id]')) {
@@ -57,4 +57,4 @@ const unifyIds = (targetElement: HTMLElement, excludeTags: string[]) => {
   });
 };
 
-export default unifyIds;
+export default segregateIds;

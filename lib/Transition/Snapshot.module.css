@@ -1,5 +1,9 @@
-.snapshotWrapper {
+.image {
   position: relative;
+  pointer-events: none;
+  user-select: none;
+  background-clip: padding-box;
+  overflow: hidden;
 }
 
 .snapshotContainer {

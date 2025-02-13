@@ -1,11 +1,9 @@
-import getComputedStyleNoRef from './getComputedStyleNoRef';
-
 const getTotalZIndex = (element: HTMLElement, upToElement: HTMLElement = document.body) => {
   let target: HTMLElement | null = element;
   let zIndex = 0;
 
   while (target && target !== upToElement) {
-    const computedStyles = getComputedStyleNoRef(target);
+    const computedStyles = window.getComputedStyle(target);
     const parsedZIndex = parseInt(computedStyles.zIndex);
 
     if (!Number.isNaN(parsedZIndex)) {
