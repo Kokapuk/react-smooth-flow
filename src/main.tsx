@@ -1,3 +1,4 @@
+import '@lib/Transition/style.css';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.scss';

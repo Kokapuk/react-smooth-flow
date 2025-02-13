@@ -1,0 +1,33 @@
+.rsf-image {
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+.rsf-snapshotContainer {
+  display: flex;
+  position: absolute;
+}
+
+.rsf-snapshotContainer.rsf-top {
+  top: 0;
+}
+
+.rsf-snapshotContainer.rsf-right {
+  right: 0;
+}
+
+.rsf-snapshotContainer.rsf-bottom {
+  bottom: 0;
+}
+
+.rsf-snapshotContainer.rsf-left {
+  left: 0;
+}
+
+.rsf-snapshotContainer > * {
+  width: 100%;
+  height: 100%;
+}

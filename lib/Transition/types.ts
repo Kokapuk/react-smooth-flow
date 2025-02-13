@@ -10,27 +10,27 @@ export interface Size {
 
 export type Rect = Position & Size;
 
-export type MutationTransitionFadeType = 'overlap' | 'sequential';
+export type MutationTransitionType = 'overlap' | 'sequential';
 
 export type ContentAlign = 'top left' | 'top right' | 'bottom right' | 'bottom left';
 
-export interface ViewTransitionProperties {
+export interface TransitionProperties {
   enterKeyframes?: Keyframe[];
   exitKeyframes?: Keyframe[] | 'reversedEnter';
   contentAlign?: ContentAlign;
   avoidMutationTransition?: boolean;
-  viewTransitionRootTag?: string;
-  mutationTransitionFadeType?: MutationTransitionFadeType;
+  transitionRootTag?: string;
+  mutationTransitionType?: MutationTransitionType;
 }
 
-export interface ParsedViewTransitionProperties extends ViewTransitionProperties {
+export interface ParsedTransitionProperties extends TransitionProperties {
   contentAlign: ContentAlign;
-  mutationTransitionFadeType: MutationTransitionFadeType;
+  mutationTransitionType: MutationTransitionType;
 }
 
-export type ViewTransitionMapping<T extends ViewTransitionProperties = ViewTransitionProperties> = Record<string, T>;
+export type TransitionMapping<T extends TransitionProperties = TransitionProperties> = Record<string, T>;
 
-export interface ViewTransitionConfig {
+export interface TransitionConfig {
   duration: number;
   easing?: string;
   noFlushSync?: boolean;
@@ -57,11 +57,11 @@ export type ComputedStyle = Omit<
 export interface Snapshot {
   tag: string;
   rect: Rect;
-  image: SVGSVGElement;
+  image: HTMLDivElement;
   computedStyle: ComputedStyle;
-  viewTransitionProperties: ParsedViewTransitionProperties;
+  transitionProperties: ParsedTransitionProperties;
   hasFixedPosition: boolean;
-  viewTransitionRoot?: HTMLElement | null;
+  transitionRoot?: HTMLElement | null;
   targetElement: HTMLElement;
 }
 

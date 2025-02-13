@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { computedStylePropertiesToAnimate } from './config';
-import getViewTransitionRoot from './getViewTransitionRoot';
+import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Snapshot, ViewTransitionConfig } from './types';
+import { Snapshot, TransitionConfig } from './types';
 
 const playMutationTransition = async (
   targetElement: HTMLElement,
   prevSnapshot: Snapshot,
   nextSnapshot: Snapshot,
-  config: ViewTransitionConfig
+  config: TransitionConfig
 ) => {
-  const viewTransitionRoot = prevSnapshot.viewTransitionRoot ?? getViewTransitionRoot();
+  const transitionRoot = prevSnapshot.transitionRoot ?? getTransitionRoot();
 
   const resetTargetStyles = hideElementNoTransition(targetElement);
 
-  viewTransitionRoot.append(prevSnapshot.image);
-  viewTransitionRoot.append(nextSnapshot.image);
+  transitionRoot.append(prevSnapshot.image);
+  transitionRoot.append(nextSnapshot.image);
 
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((i) => {
     const keyframes: Record<string, string> = {
@@ -54,7 +54,7 @@ const playMutationTransition = async (
   };
   const transitions: Animation[] = [];
 
-  if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'overlap') {
+  if (prevSnapshot.transitionProperties.mutationTransitionType === 'overlap') {
     const prevTransition = prevSnapshot.image.animate(
       [
         { opacity: prevSnapshot.computedStyle.opacity, ...prevKeyframes[0] },
@@ -74,7 +74,7 @@ const playMutationTransition = async (
     );
 
     transitions.push(prevTransition, nextTransition);
-  } else if (prevSnapshot.viewTransitionProperties.mutationTransitionFadeType === 'sequential') {
+  } else if (prevSnapshot.transitionProperties.mutationTransitionType === 'sequential') {
     const prevTransition = prevSnapshot.image.animate(
       [
         { opacity: prevSnapshot.computedStyle.opacity, ...prevKeyframes[0] },
@@ -106,7 +106,7 @@ const playMutationTransition = async (
     transitions.push(prevTransition, nextTransition, prevContentTransition, nextContentTransition);
   } else {
     throw Error(
-      `"${prevSnapshot.viewTransitionProperties.mutationTransitionFadeType}" is invalid mutation transition fade type`
+      `"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition fade type`
     );
   }
 

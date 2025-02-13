@@ -1,6 +1,6 @@
 import { activeTransitions } from './store';
 
-const cancelViewTransition = (...tags: string[]) => {
+const cancelTransition = (...tags: string[]) => {
   tags.forEach((i) => {
     activeTransitions[i]?.forEach((i) => {
       i.transition.cancel();
@@ -9,4 +9,4 @@ const cancelViewTransition = (...tags: string[]) => {
   });
 };
 
-export default cancelViewTransition;
+export default cancelTransition;

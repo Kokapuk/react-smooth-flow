@@ -1,6 +1,6 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 
-const unifyIds = (targetElement: HTMLElement, excludeTags: string[]) => {
+const segregateIds = (targetElement: HTMLElement, excludeTags: string[]) => {
   const elements: HTMLElement[] = [];
 
   if (targetElement.matches('[id]')) {
@@ -20,7 +20,7 @@ const unifyIds = (targetElement: HTMLElement, excludeTags: string[]) => {
       return;
     }
 
-    const newId = `vt-${Math.random().toString(16).split('.')[1]}`;
+    const newId = `rsf-${Math.random().toString(16).split('.')[1]}`;
 
     idMap[i.id] = newId;
     i.id = newId;
@@ -57,4 +57,4 @@ const unifyIds = (targetElement: HTMLElement, excludeTags: string[]) => {
   });
 };
 
-export default unifyIds;
+export default segregateIds;

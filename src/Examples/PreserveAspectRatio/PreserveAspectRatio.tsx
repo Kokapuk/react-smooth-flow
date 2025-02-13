@@ -1,4 +1,4 @@
-import { constructViewTransition, startViewTransition } from '@lib/main';
+import { constructTransition, startTransition } from '@lib/main';
 import { useState } from 'react';
 import Example from '../../components/Example';
 import styles from './PreserveAspectRatio.module.scss';
@@ -13,17 +13,17 @@ const PreserveAspectRatio = () => {
 
   return (
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
-      <div className={styles.container} {...constructViewTransition({ container: { contentAlign: 'top right' } })}>
+      <div className={styles.container} {...constructTransition({ container: { contentAlign: 'top right' } })}>
         {activePanel !== null && (
           <p
             className={styles.panel}
             data-panelnumber={activePanel}
-            {...constructViewTransition({ [`panel-${activePanel}`]: { mutationTransitionFadeType: 'sequential' } })}
+            {...constructTransition({ [`panel-${activePanel}`]: { mutationTransitionType: 'sequential' } })}
           >
             <button
               style={{ float: 'right', height: 22, width: 22 }}
               onClick={() =>
-                startViewTransition(
+                startTransition(
                   ['container', `panel-${activePanel}`],
                   {
                     duration: 750,
@@ -45,7 +45,7 @@ const PreserveAspectRatio = () => {
           {buttons.map((i) => (
             <button
               onClick={() =>
-                startViewTransition(
+                startTransition(
                   ['container', activePanel ? `panel-${activePanel}` : null, `panel-${i}`].filter(Boolean) as string[],
                   {
                     duration: 750,
@@ -58,7 +58,7 @@ const PreserveAspectRatio = () => {
               key={i}
               style={{ visibility: activePanel === i ? 'hidden' : undefined }}
               {...(activePanel !== i
-                ? constructViewTransition({ [`panel-${i}`]: { mutationTransitionFadeType: 'sequential' } })
+                ? constructTransition({ [`panel-${i}`]: { mutationTransitionType: 'sequential' } })
                 : null)}
             >
               {i}
