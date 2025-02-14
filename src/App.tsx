@@ -1,3 +1,4 @@
+import ReducedMotionAlert from './components/ReducedMotionAlert';
 import AnimatedList from './Examples/AnimatedList';
 import Clipping from './Examples/Clipping';
 import ContentSizeChange from './Examples/ContentSizeChange';
@@ -8,6 +9,7 @@ import PreserveAspectRatio from './Examples/PreserveAspectRatio';
 const App = () => {
   return (
     <>
+      <ReducedMotionAlert />
       <AnimatedList />
       <ContentSizeChange />
       <Playground />

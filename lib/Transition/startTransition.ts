@@ -4,6 +4,7 @@ import cancelTransition from './cancelTransition';
 import captureSnapshot from './captureSnapshot';
 import getAllTags from './getAllTags';
 import getElementByTransitionTag from './getElementByTransitionTag';
+import isMotionReduced from './isMotionReduced';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
 import { TransitionConfig } from './types';
@@ -11,6 +12,11 @@ import validateSnapshotPairs from './validateSnapshotPairs';
 
 const startTransition = async (tags: string[], config: TransitionConfig, modifyDOM: () => void | Promise<void>) => {
   cancelTransition(...getAllTags(tags));
+
+  if (!config.ignoreReducedMotion && isMotionReduced()) {
+    modifyDOM();
+    return;
+  }
 
   const prevSnapshots = tags.map((i) =>
     captureSnapshot(

@@ -9,7 +9,7 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: string[]) => {
 
   elements.push(...Array.from(targetElement.querySelectorAll('[id]')) as HTMLElement[]);
 
-  const idMap: { [key: string]: string } = {};
+  const idMap: Record<string, string> = {};
 
   elements.forEach((i) => {
     if (!i.id) {

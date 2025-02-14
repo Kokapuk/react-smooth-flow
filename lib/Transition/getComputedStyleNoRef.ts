@@ -11,7 +11,7 @@ const getComputedStyleNoRef = (element: HTMLElement) => {
 
   const computedStyleParsed = JSON.parse(JSON.stringify(computedStyleWithRef));
   const properties = Object.values(computedStyleParsed) as string[];
-  const computedStyle: { [key: string]: string } = {};
+  const computedStyle: Record<string, string> = {};
 
   properties.forEach(
     (i) => (computedStyle[i.replace(/-./g, (i) => i[1].toUpperCase())] = computedStyleWithRef.getPropertyValue(i))

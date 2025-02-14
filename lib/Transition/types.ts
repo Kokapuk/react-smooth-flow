@@ -34,6 +34,7 @@ export interface TransitionConfig {
   duration: number;
   easing?: string;
   noFlushSync?: boolean;
+  ignoreReducedMotion?: boolean;
   onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
