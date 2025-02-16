@@ -106,7 +106,7 @@ const playMutationTransition = async (
     transitions.push(prevTransition, nextTransition, prevContentTransition, nextContentTransition);
   } else {
     throw Error(
-      `"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition fade type`
+      `"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition type`
     );
   }
 

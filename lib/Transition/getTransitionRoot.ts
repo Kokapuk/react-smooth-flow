@@ -5,7 +5,9 @@ const getTransitionRoot = () => {
   if (!transitionRoot) {
     transitionRoot = document.createElement('div');
     transitionRoot.id = transitionRootId;
+
     document.body.append(transitionRoot);
+    document.documentElement.style.position = 'relative';
   }
 
   return transitionRoot;

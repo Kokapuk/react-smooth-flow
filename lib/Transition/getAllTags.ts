@@ -12,7 +12,7 @@ const getAllTags = (tags: string[]) => {
     }
 
     const transitionMapping = getElementTransitionMapping(element);
-    
+
     if (!transitionMapping) {
       return;
     }
