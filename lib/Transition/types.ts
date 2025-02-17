@@ -23,6 +23,8 @@ export type ContentAlign =
   | 'centerRight'
   | 'center';
 
+export type ImageOverflow = 'hidden' | 'visible';
+
 export interface TransitionProperties {
   enterKeyframes?: Keyframe[];
   exitKeyframes?: Keyframe[] | 'reversedEnter';
@@ -30,11 +32,13 @@ export interface TransitionProperties {
   avoidMutationTransition?: boolean;
   transitionRootTag?: string;
   mutationTransitionType?: MutationTransitionType;
+  overflow?: ImageOverflow;
 }
 
 export interface ParsedTransitionProperties extends TransitionProperties {
   contentAlign: ContentAlign;
   mutationTransitionType: MutationTransitionType;
+  overflow: ImageOverflow;
 }
 
 export type TransitionMapping<T extends TransitionProperties = TransitionProperties> = Record<string, T>;

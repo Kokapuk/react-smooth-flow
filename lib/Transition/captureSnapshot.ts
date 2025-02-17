@@ -64,6 +64,7 @@ const captureSnapshot = (
 
   const image = document.createElement('div');
   image.className = 'rsf-image';
+  image.style.overflow = transitionProperties.overflow;
   image.style.zIndex = `${getTotalZIndex(targetElement, transitionRoot ?? undefined)}`;
   image.style.left = `${rect.left}px`;
   image.style.top = `${rect.top}px`;

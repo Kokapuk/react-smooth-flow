@@ -1,9 +1,9 @@
+import { constructTransition, startTransition } from '@lib/main';
+import cn from 'classnames';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
 import styles from './ContentAlignment.module.scss';
-import cn from 'classnames';
-import { constructTransition, startTransition } from '@lib/main';
 
 const ContentAlignment = () => {
   const [isExpanded, setExpanded] = useState(false);
@@ -13,7 +13,7 @@ const ContentAlignment = () => {
       <div className={styles.container}>
         <div
           className={cn(styles.panel, isExpanded && styles.expanded)}
-          {...constructTransition({ contentAlignmentPanel: { contentAlign: 'topCenter' } })}
+          {...constructTransition({ contentAlignmentPanel: { contentAlign: 'centerRight' } })}
         >
           {isExpanded && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
