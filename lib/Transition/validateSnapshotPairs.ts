@@ -1,5 +1,4 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
-import getElementByTransitionTag from './getElementByTransitionTag';
 import { activeTransitions } from './store';
 import { Snapshot, TransitionProperties } from './types';
 
@@ -71,19 +70,19 @@ const validateSnapshotPairs = (
       );
     });
 
-    pair.forEach((i) => {
-      const activeTransitionTags = Object.keys(activeTransitions);
+    // pair.forEach((i) => {
+    //   const activeTransitionTags = Object.keys(activeTransitions);
 
-      activeTransitionTags.forEach((tag) => {
-        const transitionTarget = getElementByTransitionTag(tag, i.targetElement);
+    //   activeTransitionTags.forEach((tag) => {
+    //     const transitionTarget = getElementByTransitionTag(tag, i.targetElement);
 
-        if (transitionTarget) {
-          throw Error(
-            `Snapshot with tag "${i.tag}" has ongoing transition inside for element with transition tag "${tag}"`
-          );
-        }
-      });
-    });
+    //     if (transitionTarget) {
+    //       throw Error(
+    //         `Snapshot with tag "${i.tag}" has ongoing transition inside for element with transition tag "${tag}"`
+    //       );
+    //     }
+    //   });
+    // });
   });
 };
 

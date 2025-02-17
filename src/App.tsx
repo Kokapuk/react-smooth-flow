@@ -1,6 +1,7 @@
 import ReducedMotionAlert from './components/ReducedMotionAlert';
 import AnimatedList from './Examples/AnimatedList';
 import Clipping from './Examples/Clipping';
+import ContentAlignment from './Examples/ContentAlignment';
 import ContentSizeChange from './Examples/ContentSizeChange';
 import Gallery from './Examples/Gallery';
 import Playground from './Examples/Playground';
@@ -16,6 +17,7 @@ const App = () => {
       <PreserveAspectRatio />
       <Clipping />
       <Gallery />
+      <ContentAlignment />
     </>
   );
 };

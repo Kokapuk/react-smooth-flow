@@ -105,9 +105,7 @@ const playMutationTransition = async (
 
     transitions.push(prevTransition, nextTransition, prevContentTransition, nextContentTransition);
   } else {
-    throw Error(
-      `"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition type`
-    );
+    throw Error(`"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition type`);
   }
 
   const removeSnapshotsAndResetTarget = () => {

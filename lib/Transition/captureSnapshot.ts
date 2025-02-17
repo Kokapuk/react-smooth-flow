@@ -75,16 +75,15 @@ const captureSnapshot = (
   const snapshotContainerStyles = Object.entries({
     width: `${rect.width}px`,
     height: `${rect.height}px`,
-    transform: `translate(-${computedStyle.borderLeftWidth}, -${computedStyle.borderTopWidth})`,
+    '--borderLeftWidth': computedStyle.borderLeftWidth,
+    '--borderTopWidth': computedStyle.borderTopWidth,
+    padding: `${computedStyle.borderTopWidth} ${computedStyle.borderRightWidth} ${computedStyle.borderBottomWidth} ${computedStyle.borderLeftWidth}`,
   })
     .filter(([_, value]) => Boolean(value))
     .map(([key, value]) => `${key}: ${value}`)
     .join('; ');
 
-  const snapshotContainerClasses = [
-    'rsf-snapshotContainer',
-    ...transitionProperties.contentAlign.split(' ').map((i) => `rsf-${i}`),
-  ].join(' ');
+  const snapshotContainerClasses = ['rsf-snapshotContainer', `rsf-${transitionProperties.contentAlign}`].join(' ');
 
   image.innerHTML = `
     <div class="${snapshotContainerClasses}" style="${snapshotContainerStyles}">

@@ -7,7 +7,7 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: string[]) => {
     elements.push(targetElement);
   }
 
-  elements.push(...Array.from(targetElement.querySelectorAll('[id]')) as HTMLElement[]);
+  elements.push(...(Array.from(targetElement.querySelectorAll('[id]')) as HTMLElement[]));
 
   const idMap: Record<string, string> = {};
 

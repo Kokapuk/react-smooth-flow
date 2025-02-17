@@ -1,0 +1,23 @@
+.container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 125px;
+  display: flex;
+  justify-content: center;
+}
+
+.panel {
+  background-color: grey;
+  padding: 10px;
+  border-radius: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 5px solid red;
+
+  &.expanded {
+    padding: 25px;
+    height: 225px;
+  }
+}

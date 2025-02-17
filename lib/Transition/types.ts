@@ -12,7 +12,16 @@ export type Rect = Position & Size;
 
 export type MutationTransitionType = 'overlap' | 'sequential';
 
-export type ContentAlign = 'top left' | 'top right' | 'bottom right' | 'bottom left';
+export type ContentAlign =
+  | 'topLeft'
+  | 'topRight'
+  | 'bottomLeft'
+  | 'bottomRight'
+  | 'topCenter'
+  | 'bottomCenter'
+  | 'centerLeft'
+  | 'centerRight'
+  | 'center';
 
 export interface TransitionProperties {
   enterKeyframes?: Keyframe[];

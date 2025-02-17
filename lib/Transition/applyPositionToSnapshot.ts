@@ -15,10 +15,7 @@ const applyPositionToSnapshot = (pairs: { prev: Snapshot | null; next: Snapshot 
   for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
     if (!prevSnapshot || !nextSnapshot) {
       ([prevSnapshot, nextSnapshot].filter(Boolean) as Snapshot[]).forEach((i) => {
-        setSnapshotPosition(
-          i,
-          i.hasFixedPosition && !i.transitionProperties.transitionRootTag ? 'fixed' : 'absolute'
-        );
+        setSnapshotPosition(i, i.hasFixedPosition && !i.transitionProperties.transitionRootTag ? 'fixed' : 'absolute');
       });
 
       continue;

@@ -13,7 +13,7 @@ const PreserveAspectRatio = () => {
 
   return (
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
-      <div className={styles.container} {...constructTransition({ container: { contentAlign: 'top right' } })}>
+      <div className={styles.container} {...constructTransition({ container: { contentAlign: 'topRight' } })}>
         {activePanel !== null && (
           <p
             className={styles.panel}

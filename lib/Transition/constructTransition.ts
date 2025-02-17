@@ -6,7 +6,7 @@ const constructTransition = (mapping: TransitionMapping) => {
       key,
       {
         ...record,
-        contentAlign: record.contentAlign ?? 'top left',
+        contentAlign: record.contentAlign ?? 'topLeft',
         mutationTransitionType: record.mutationTransitionType ?? 'overlap',
       } as ParsedTransitionProperties,
     ])
