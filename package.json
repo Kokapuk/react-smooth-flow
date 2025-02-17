@@ -6,7 +6,6 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
   "exports": {
     ".": {
