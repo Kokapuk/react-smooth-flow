@@ -1,4 +1,4 @@
-import { computedStylePropertiesToCapture } from './config';
+import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementByTransitionRootTag from './getElementByTransitionRootTag';
@@ -6,7 +6,7 @@ import getElementTransitionMapping from './getElementTransitionMapping';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import segregateIds from './segregateIds';
-import { Rect, Snapshot } from './types';
+import { BoundingBox, Snapshot } from './types';
 
 const captureSnapshot = (
   targetElement: HTMLElement | null,
@@ -19,7 +19,7 @@ const captureSnapshot = (
 
   const transitionMapping = getElementTransitionMapping(targetElement)!;
   const computedStyle = getComputedStyleNoRef(targetElement);
-  const rect = targetElement.getBoundingClientRect().toJSON() as Rect;
+  const boundingBox = targetElement.getBoundingClientRect().toJSON() as BoundingBox;
   const hasFixedPosition = elementHasFixedPosition(targetElement);
   const transitionProperties = transitionMapping[targetTag];
 
@@ -39,11 +39,11 @@ const captureSnapshot = (
     );
   }
 
-  const transitionRootRect = transitionRoot?.getBoundingClientRect().toJSON() as Rect | null;
+  const transitionRootBoundingBox = transitionRoot?.getBoundingClientRect().toJSON() as BoundingBox | null;
 
-  if (transitionRootRect) {
-    rect.top -= transitionRootRect.top;
-    rect.left -= transitionRootRect.left;
+  if (transitionRootBoundingBox) {
+    boundingBox.top -= transitionRootBoundingBox.top;
+    boundingBox.left -= transitionRootBoundingBox.left;
   }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
@@ -65,16 +65,16 @@ const captureSnapshot = (
   image.className = 'rsf-image';
   image.style.overflow = transitionProperties.overflow;
   image.style.zIndex = `${getTotalZIndex(targetElement, transitionRoot ?? undefined)}`;
-  image.style.left = `${rect.left}px`;
-  image.style.top = `${rect.top}px`;
-  image.style.width = `${rect.width}px`;
-  image.style.height = `${rect.height}px`;
+  image.style.left = `${boundingBox.left}px`;
+  image.style.top = `${boundingBox.top}px`;
+  image.style.width = `${boundingBox.width}px`;
+  image.style.height = `${boundingBox.height}px`;
 
-  computedStylePropertiesToCapture.forEach((property) => (image.style[property] = computedStyle[property]));
+  STYLE_PROPERTIES_TO_CAPTURE.forEach((property) => (image.style[property] = computedStyle[property]));
 
   const snapshotContainerStyles = Object.entries({
-    width: `${rect.width}px`,
-    height: `${rect.height}px`,
+    width: `${boundingBox.width}px`,
+    height: `${boundingBox.height}px`,
     '--borderLeftWidth': computedStyle.borderLeftWidth,
     '--borderTopWidth': computedStyle.borderTopWidth,
     padding: `${computedStyle.borderTopWidth} ${computedStyle.borderRightWidth} ${computedStyle.borderBottomWidth} ${computedStyle.borderLeftWidth}`,
@@ -94,7 +94,7 @@ const captureSnapshot = (
 
   return {
     tag: targetTag,
-    rect,
+    boundingBox,
     image,
     computedStyle,
     transitionProperties,

@@ -1,14 +1,9 @@
-export interface Position {
+export interface BoundingBox {
   left: number;
   top: number;
-}
-
-export interface Size {
   width: number;
   height: number;
 }
-
-export type Rect = Position & Size;
 
 export type MutationTransitionType = 'overlap' | 'sequential';
 
@@ -46,6 +41,8 @@ export interface TransitionProperties {
 }
 
 export interface ParsedTransitionProperties extends TransitionProperties {
+  enterKeyframes: Keyframes;
+  exitKeyframes: Keyframes;
   contentAlign: ContentAlign;
   mutationTransitionType: MutationTransitionType;
   overflow: ImageOverflow;
@@ -80,7 +77,7 @@ export type ComputedStyle = Omit<
 
 export interface Snapshot {
   tag: string;
-  rect: Rect;
+  boundingBox: BoundingBox;
   image: HTMLDivElement;
   computedStyle: ComputedStyle;
   transitionProperties: ParsedTransitionProperties;
@@ -93,5 +90,3 @@ export interface TransitionSnapshot {
   transition: Animation;
   onCancel(): void;
 }
-
-export type MutableStyleProperty = keyof ComputedStyle;

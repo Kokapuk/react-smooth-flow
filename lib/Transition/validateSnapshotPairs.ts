@@ -1,12 +1,7 @@
+import { CONSISTENT_TRANSITION_PROPERTIES } from './config';
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 import { activeTransitions } from './store';
-import { Snapshot, TransitionProperties } from './types';
-
-const consistentTransitionProperties: (keyof TransitionProperties)[] = [
-  'transitionRootTag',
-  'avoidMutationTransition',
-  'mutationTransitionType',
-];
+import { Snapshot } from './types';
 
 const anyParentMatchesAnyTag = (element: HTMLElement, tags: string[]) => {
   if (elementMatchesAnyTag(element, tags)) {
@@ -29,7 +24,7 @@ const validateSnapshotPairs = (
 ) => {
   pairs.forEach(({ prev, next }) => {
     if (prev && next) {
-      consistentTransitionProperties.forEach((i) => {
+      CONSISTENT_TRANSITION_PROPERTIES.forEach((i) => {
         if (prev.transitionProperties[i] !== next.transitionProperties[i]) {
           throw Error(
             `"${i}" property differ for previous and next snapshots. It should never update while snapshots are being captured. Transition tag: ${prev.tag}`

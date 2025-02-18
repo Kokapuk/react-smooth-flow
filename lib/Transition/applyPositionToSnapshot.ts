@@ -4,10 +4,10 @@ const setSnapshotPosition = (snapshot: Snapshot, position: 'absolute' | 'fixed')
   snapshot.image.style.position = position;
 
   if (position === 'absolute' && !snapshot.transitionProperties.transitionRootTag) {
-    snapshot.rect.left += window.scrollX;
-    snapshot.rect.top += window.scrollY;
-    snapshot.image.style.left = `${snapshot.rect.left}px`;
-    snapshot.image.style.top = `${snapshot.rect.top}px`;
+    snapshot.boundingBox.left += window.scrollX;
+    snapshot.boundingBox.top += window.scrollY;
+    snapshot.image.style.left = `${snapshot.boundingBox.left}px`;
+    snapshot.image.style.top = `${snapshot.boundingBox.top}px`;
   }
 };
 

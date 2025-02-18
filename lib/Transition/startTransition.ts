@@ -65,7 +65,6 @@ const startTransition = async (tags: string[], config: TransitionConfig, modifyD
     );
 
     config.onFinish?.();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.name === 'AbortError') {
       config.onCancel?.();

@@ -17,7 +17,7 @@ const getComputedStyleNoRef = (element: HTMLElement) => {
     (i) => (computedStyle[i.replace(/-./g, (i) => i[1].toUpperCase())] = computedStyleWithRef.getPropertyValue(i))
   );
 
-  return computedStyle as unknown as ComputedStyle;
+  return computedStyle as ComputedStyle;
 };
 
 export default getComputedStyleNoRef;

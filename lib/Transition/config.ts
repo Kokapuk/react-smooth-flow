@@ -1,6 +1,6 @@
-import { MutableStyleProperty } from './types';
+import { ComputedStyle, ParsedTransitionProperties, TransitionProperties } from './types';
 
-export const computedStylePropertiesToCapture: Readonly<MutableStyleProperty[]> = [
+export const STYLE_PROPERTIES_TO_CAPTURE: Readonly<(keyof ComputedStyle)[]> = [
   'opacity',
   'backgroundColor',
   'color',
@@ -29,7 +29,7 @@ export const computedStylePropertiesToCapture: Readonly<MutableStyleProperty[]> 
   'borderLeftStyle',
 ];
 
-export const computedStylePropertiesToAnimate: Readonly<MutableStyleProperty[]> = [
+export const STYLE_PROPERTIES_TO_ANIMATE: Readonly<(keyof ComputedStyle)[]> = [
   'backgroundColor',
   'boxShadow',
 
@@ -53,3 +53,22 @@ export const computedStylePropertiesToAnimate: Readonly<MutableStyleProperty[]> 
   'borderBottomStyle',
   'borderLeftStyle',
 ];
+
+export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionProperties)[]> = [
+  'transitionRootTag',
+  'avoidMutationTransition',
+  'mutationTransitionType',
+];
+
+export const DEFAULT_TRANSITION_PROPERTIES: Readonly<
+  Pick<
+    ParsedTransitionProperties,
+    'enterKeyframes' | 'exitKeyframes' | 'contentAlign' | 'mutationTransitionType' | 'overflow'
+  >
+> = {
+  enterKeyframes: { opacity: [0, 1] },
+  exitKeyframes: { opacity: [1, 0] },
+  contentAlign: 'topLeft',
+  mutationTransitionType: 'overlap',
+  overflow: 'hidden',
+};

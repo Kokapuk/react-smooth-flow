@@ -1,4 +1,4 @@
-import { computedStylePropertiesToAnimate } from './config';
+import { STYLE_PROPERTIES_TO_ANIMATE } from './config';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
@@ -19,11 +19,11 @@ const playMutationTransition = async (
 
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((i) => {
     const keyframe: Record<string, string> = {
-      width: `${i.rect.width}px`,
-      height: `${i.rect.height}px`,
+      width: `${i.boundingBox.width}px`,
+      height: `${i.boundingBox.height}px`,
     };
 
-    computedStylePropertiesToAnimate.forEach((property) => (keyframe[property] = i.computedStyle[property]));
+    STYLE_PROPERTIES_TO_ANIMATE.forEach((property) => (keyframe[property] = i.computedStyle[property]));
 
     return keyframe;
   });
@@ -32,16 +32,16 @@ const playMutationTransition = async (
     { ...generalKeyframes[0], transform: 'translate(0, 0)' },
     {
       ...generalKeyframes[1],
-      transform: `translate(${nextSnapshot.rect.left - prevSnapshot.rect.left}px, ${
-        nextSnapshot.rect.top - prevSnapshot.rect.top
+      transform: `translate(${nextSnapshot.boundingBox.left - prevSnapshot.boundingBox.left}px, ${
+        nextSnapshot.boundingBox.top - prevSnapshot.boundingBox.top
       }px)`,
     },
   ];
   const nextKeyframes = [
     {
       ...generalKeyframes[0],
-      transform: `translate(${prevSnapshot.rect.left - nextSnapshot.rect.left}px, ${
-        prevSnapshot.rect.top - nextSnapshot.rect.top
+      transform: `translate(${prevSnapshot.boundingBox.left - nextSnapshot.boundingBox.left}px, ${
+        prevSnapshot.boundingBox.top - nextSnapshot.boundingBox.top
       }px)`,
     },
     { ...generalKeyframes[1], transform: 'translate(0, 0)' },
