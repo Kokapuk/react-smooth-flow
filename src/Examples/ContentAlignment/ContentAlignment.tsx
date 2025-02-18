@@ -13,7 +13,7 @@ const ContentAlignment = () => {
       <div className={styles.container}>
         <div
           className={cn(styles.panel, isExpanded && styles.expanded)}
-          {...constructTransition({ contentAlignmentPanel: { contentAlign: 'centerRight' } })}
+          {...constructTransition({ contentAlignmentPanel: { contentAlign: 'topCenter' } })}
         >
           {isExpanded && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>

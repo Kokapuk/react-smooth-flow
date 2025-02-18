@@ -25,9 +25,19 @@ export type ContentAlign =
 
 export type ImageOverflow = 'hidden' | 'visible';
 
+export type Keyframes =
+  | {
+      offset?: number;
+      [key: string]: string | number | undefined;
+    }[]
+  | {
+      offset?: number[];
+      [key: string]: string[] | number[] | undefined;
+    };
+
 export interface TransitionProperties {
-  enterKeyframes?: Keyframe[];
-  exitKeyframes?: Keyframe[] | 'reversedEnter';
+  enterKeyframes?: Keyframes;
+  exitKeyframes?: Keyframes | 'reversedEnter';
   contentAlign?: ContentAlign;
   avoidMutationTransition?: boolean;
   transitionRootTag?: string;

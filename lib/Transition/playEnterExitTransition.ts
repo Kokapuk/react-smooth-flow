@@ -1,7 +1,8 @@
+import getReversedKeyframes from './getReversedKeyframes';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Snapshot, TransitionConfig } from './types';
+import { Keyframes, Snapshot, TransitionConfig } from './types';
 
 const playEnterExitTransition = async (
   targetElement: HTMLElement | null,
@@ -21,13 +22,13 @@ const playEnterExitTransition = async (
 
       transitionRoot.append(prevSnapshot.image);
 
-      let exitKeyframes: Keyframe[] | undefined = undefined;
+      let exitKeyframes: Keyframes | undefined = undefined;
 
       if (
         prevSnapshot.transitionProperties.exitKeyframes === 'reversedEnter' &&
         prevSnapshot.transitionProperties.enterKeyframes
       ) {
-        exitKeyframes = [...prevSnapshot.transitionProperties.enterKeyframes].reverse();
+        exitKeyframes = getReversedKeyframes(prevSnapshot.transitionProperties.enterKeyframes);
       } else if (prevSnapshot.transitionProperties.exitKeyframes !== 'reversedEnter') {
         exitKeyframes = prevSnapshot.transitionProperties.exitKeyframes;
       }

@@ -18,14 +18,14 @@ const playMutationTransition = async (
   transitionRoot.append(nextSnapshot.image);
 
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((i) => {
-    const keyframes: Record<string, string> = {
+    const keyframe: Record<string, string> = {
       width: `${i.rect.width}px`,
       height: `${i.rect.height}px`,
     };
 
-    computedStylePropertiesToAnimate.forEach((property) => (keyframes[property] = i.computedStyle[property]));
+    computedStylePropertiesToAnimate.forEach((property) => (keyframe[property] = i.computedStyle[property]));
 
-    return keyframes;
+    return keyframe;
   });
 
   const prevKeyframes = [
