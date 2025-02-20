@@ -26,7 +26,6 @@ export const STYLE_PROPERTIES_TO_CAPTURE: Readonly<(keyof ComputedStyle)[]> = [
   'borderRightStyle',
   'borderBottomStyle',
   'borderLeftStyle',
-  'borderLeftStyle',
 ];
 
 export const STYLE_PROPERTIES_TO_ANIMATE: Readonly<(keyof ComputedStyle)[]> = [

@@ -42,8 +42,8 @@ const captureSnapshot = (
   const transitionRootBoundingBox = transitionRoot?.getBoundingClientRect().toJSON() as BoundingBox | null;
 
   if (transitionRootBoundingBox) {
-    boundingBox.top -= transitionRootBoundingBox.top;
-    boundingBox.left -= transitionRootBoundingBox.left;
+    boundingBox.top -= transitionRootBoundingBox.top - transitionRoot!.scrollTop;
+    boundingBox.left -= transitionRootBoundingBox.left - transitionRoot!.scrollLeft;
   }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
@@ -75,8 +75,10 @@ const captureSnapshot = (
   const snapshotContainerStyles = Object.entries({
     width: `${boundingBox.width}px`,
     height: `${boundingBox.height}px`,
-    '--borderLeftWidth': computedStyle.borderLeftWidth,
     '--borderTopWidth': computedStyle.borderTopWidth,
+    '--borderRightWidth': computedStyle.borderRightWidth,
+    '--borderBottomWidth': computedStyle.borderBottomWidth,
+    '--borderLeftWidth': computedStyle.borderLeftWidth,
     padding: `${computedStyle.borderTopWidth} ${computedStyle.borderRightWidth} ${computedStyle.borderBottomWidth} ${computedStyle.borderLeftWidth}`,
   })
     .filter(([_, value]) => Boolean(value))

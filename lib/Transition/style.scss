@@ -18,57 +18,62 @@
   display: flex;
   position: absolute;
 
+  $horizontalCenterTop: calc(50% + (var(--borderBottomWidth) - var(--borderTopWidth)) / 2);
+  $verticalCenterLeft: calc(50% + (var(--borderRightWidth) - var(--borderLeftWidth)) / 2);
+  $leftXOffset: calc(var(--borderLeftWidth) * -1);
+  $topYOffset: calc(var(--borderTopWidth) * -1);
+
   &.rsf-topLeft {
     top: 0;
     left: 0;
-    transform: translate(calc(var(--borderLeftWidth) * -1), calc(var(--borderTopWidth) * -1));
+    transform: translate($leftXOffset, $topYOffset);
+  }
+
+  &.rsf-topCenter {
+    top: 0;
+    left: $verticalCenterLeft;
+    transform: translate(-50%, $topYOffset);
   }
 
   &.rsf-topRight {
     top: 0;
     right: 0;
-    transform: translate(var(--borderLeftWidth), calc(var(--borderTopWidth) * -1));
+    transform: translate(var(--borderRightWidth), $topYOffset);
   }
 
-  &.rsf-bottomLeft {
-    bottom: 0;
-    left: 0;
-    transform: translate(calc(var(--borderLeftWidth) * -1), var(--borderTopWidth));
+  &.rsf-centerRight {
+    top: $horizontalCenterTop;
+    right: 0;
+    transform: translate(var(--borderRightWidth), -50%);
   }
 
   &.rsf-bottomRight {
     right: 0;
     bottom: 0;
-    transform: translate(var(--borderLeftWidth), var(--borderTopWidth));
-  }
-
-  &.rsf-topCenter {
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, calc(var(--borderTopWidth) * -1));
+    transform: translate(var(--borderRightWidth), var(--borderBottomWidth));
   }
 
   &.rsf-bottomCenter {
     bottom: 0;
-    left: 50%;
-    transform: translate(-50%, var(--borderTopWidth));
+    left: $verticalCenterLeft;
+    transform: translate(-50%, var(--borderBottomWidth));
+  }
+
+  &.rsf-bottomLeft {
+    bottom: 0;
+    left: 0;
+    transform: translate($leftXOffset, var(--borderBottomWidth));
   }
 
   &.rsf-centerLeft {
-    top: 50%;
+    top: $horizontalCenterTop;
     left: 0;
-    transform: translate(calc(var(--borderLeftWidth) * -1), -50%);
-  }
-
-  &.rsf-centerRight {
-    top: 50%;
-    right: 0;
-    transform: translate(var(--borderLeftWidth), -50%);
+    transform: translate($leftXOffset, -50%);
   }
 
   &.rsf-center {
-    top: 50%;
-    left: 50%;
+    top: $horizontalCenterTop;
+    left: $verticalCenterLeft;
     transform: translate(-50%, -50%);
   }
 

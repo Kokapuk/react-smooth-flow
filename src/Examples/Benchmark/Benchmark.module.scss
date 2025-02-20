@@ -1,0 +1,21 @@
+.wrapper {
+  max-height: 350px;
+  width: 300px;
+  overflow: auto;
+  padding-right: 5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  position: relative;
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  height: 25px;
+  width: 100%;
+  background-color: green;
+}

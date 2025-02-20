@@ -6,7 +6,7 @@ const getComputedStyleNoRef = (element: HTMLElement) => {
   const detectedBrowser = detectBrowser();
 
   if (detectedBrowser === 'chromium') {
-    return { ...computedStyleWithRef } as ComputedStyle;
+    return JSON.parse(JSON.stringify(computedStyleWithRef)) as ComputedStyle
   }
 
   const computedStyleParsed = JSON.parse(JSON.stringify(computedStyleWithRef));

@@ -1,5 +1,6 @@
 import ReducedMotionAlert from './components/ReducedMotionAlert';
 import AnimatedList from './Examples/AnimatedList';
+import Benchmark from './Examples/Benchmark';
 import Clipping from './Examples/Clipping';
 import ContentAlignment from './Examples/ContentAlignment';
 import ContentSizeChange from './Examples/ContentSizeChange';
@@ -18,6 +19,7 @@ const App = () => {
       <Clipping />
       <Gallery />
       <ContentAlignment />
+      <Benchmark />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { Keyframes } from './types';
+import { Keyframes, PropertyIndexedKeyframes } from './types';
 
 const getReversedKeyframes = (keyframes: Keyframes) => {
   if (Array.isArray(keyframes)) {
@@ -7,7 +7,7 @@ const getReversedKeyframes = (keyframes: Keyframes) => {
 
     return reversedKeyframes;
   } else {
-    const reversedKeyframes = keyframes;
+    const reversedKeyframes = JSON.parse(JSON.stringify(keyframes)) as PropertyIndexedKeyframes;
     Object.keys(reversedKeyframes).forEach((key) => reversedKeyframes[key]!.reverse());
     reversedKeyframes.offset = reversedKeyframes.offset?.map((i) => 1 - i);
 

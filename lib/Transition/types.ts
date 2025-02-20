@@ -9,26 +9,28 @@ export type MutationTransitionType = 'overlap' | 'sequential';
 
 export type ContentAlign =
   | 'topLeft'
-  | 'topRight'
-  | 'bottomLeft'
-  | 'bottomRight'
   | 'topCenter'
-  | 'bottomCenter'
-  | 'centerLeft'
+  | 'topRight'
   | 'centerRight'
+  | 'bottomRight'
+  | 'bottomCenter'
+  | 'bottomLeft'
+  | 'centerLeft'
   | 'center';
 
 export type ImageOverflow = 'hidden' | 'visible';
 
-export type Keyframes =
-  | {
-      offset?: number;
-      [key: string]: string | number | undefined;
-    }[]
-  | {
-      offset?: number[];
-      [key: string]: string[] | number[] | undefined;
-    };
+export interface Keyframe {
+  offset?: number;
+  [key: string]: string | number | undefined;
+}
+
+export interface PropertyIndexedKeyframes {
+  offset?: number[];
+  [key: string]: string[] | number[] | undefined;
+}
+
+export type Keyframes = Keyframe[] | PropertyIndexedKeyframes;
 
 export interface TransitionProperties {
   enterKeyframes?: Keyframes;
