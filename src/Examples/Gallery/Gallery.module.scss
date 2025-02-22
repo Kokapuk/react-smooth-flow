@@ -7,30 +7,30 @@
 .slideContainer {
   overflow: hidden;
   position: relative;
-}
 
-.slide {
-  width: 250px;
-  height: 250px;
-  display: grid;
-  place-items: center;
-  font-size: 58px;
-  color: black;
-  font-weight: 700;
+  .slide {
+    width: 250px;
+    height: 250px;
+    display: grid;
+    place-items: center;
+    font-size: 58px;
+    color: black;
+    font-weight: 700;
 
-  &[data-index='0'] {
-    background-color: #fe797b;
-  }
+    &[data-index='0'] {
+      background-color: #fe797b;
+    }
 
-  &[data-index='1'] {
-    background-color: #ffea56;
-  }
+    &[data-index='1'] {
+      background-color: #ffea56;
+    }
 
-  &[data-index='2'] {
-    background-color: #8fe968;
-  }
+    &[data-index='2'] {
+      background-color: #8fe968;
+    }
 
-  &[data-index='3'] {
-    background-color: #36cedc;
+    &[data-index='3'] {
+      background-color: #36cedc;
+    }
   }
 }

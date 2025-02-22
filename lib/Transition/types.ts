@@ -1,8 +1,12 @@
-export interface BoundingBox {
-  left: number;
+export interface Bounds {
   top: number;
+  right: number;
+  bottom: number;
+  left: number;
   width: number;
   height: number;
+  scrollBarWidth: number;
+  scrollBarHeight: number;
 }
 
 export type MutationTransitionType = 'overlap' | 'sequential';
@@ -17,6 +21,8 @@ export type ContentAlign =
   | 'bottomLeft'
   | 'centerLeft'
   | 'center';
+
+export type Origin = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
 
 export type ImageOverflow = 'hidden' | 'visible';
 
@@ -33,30 +39,28 @@ export interface PropertyIndexedKeyframes {
 export type Keyframes = Keyframe[] | PropertyIndexedKeyframes;
 
 export interface TransitionProperties {
+  duration: number;
+  easing?: string;
+  delay?: number;
+  ignoreReducedMotion?: boolean;
   enterKeyframes?: Keyframes;
   exitKeyframes?: Keyframes | 'reversedEnter';
   contentAlign?: ContentAlign;
+  origin?: Origin;
   avoidMutationTransition?: boolean;
   transitionRootTag?: string;
   mutationTransitionType?: MutationTransitionType;
   overflow?: ImageOverflow;
 }
 
-export interface ParsedTransitionProperties extends TransitionProperties {
-  enterKeyframes: Keyframes;
+export interface ParsedTransitionProperties extends Required<TransitionProperties> {
   exitKeyframes: Keyframes;
-  contentAlign: ContentAlign;
-  mutationTransitionType: MutationTransitionType;
-  overflow: ImageOverflow;
 }
 
 export type TransitionMapping<T extends TransitionProperties = TransitionProperties> = Record<string, T>;
 
 export interface TransitionConfig {
-  duration: number;
-  easing?: string;
   noFlushSync?: boolean;
-  ignoreReducedMotion?: boolean;
   onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
@@ -79,7 +83,7 @@ export type ComputedStyle = Omit<
 
 export interface Snapshot {
   tag: string;
-  boundingBox: BoundingBox;
+  bounds: Bounds;
   image: HTMLDivElement;
   computedStyle: ComputedStyle;
   transitionProperties: ParsedTransitionProperties;

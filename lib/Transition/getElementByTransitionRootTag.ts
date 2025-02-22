@@ -8,7 +8,7 @@ const getElementByTransitionRootTag = (tag: string, parent: Element | Document =
       `Transition root tag must be unique. Found ${matchedElements.length} elements with the "${tag}" root tag.`
     );
   } else {
-    return matchedElements[0];
+    return matchedElements[0] as HTMLElement;
   }
 };
 

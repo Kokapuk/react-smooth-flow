@@ -13,25 +13,33 @@ const PreserveAspectRatio = () => {
 
   return (
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
-      <div className={styles.container} {...constructTransition({ container: { contentAlign: 'topRight' } })}>
+      <div
+        className={styles.container}
+        {...constructTransition({
+          container: {
+            contentAlign: 'topRight',
+            duration: 675,
+            delay: 75,
+            easing: materialDesignEmphasizedEasing,
+            origin: 'topRight',
+          },
+        })}
+      >
         {activePanel !== null && (
           <p
             className={styles.panel}
             data-panelnumber={activePanel}
-            {...constructTransition({ [`panel-${activePanel}`]: { mutationTransitionType: 'sequential' } })}
+            {...constructTransition({
+              [`panel-${activePanel}`]: {
+                mutationTransitionType: 'sequential',
+                duration: 750,
+                easing: materialDesignEmphasizedEasing,
+              },
+            })}
           >
             <button
               style={{ float: 'right', height: 22, width: 22 }}
-              onClick={() =>
-                startTransition(
-                  ['container', `panel-${activePanel}`],
-                  {
-                    duration: 750,
-                    easing: materialDesignEmphasizedEasing,
-                  },
-                  () => setActivePanel(null)
-                )
-              }
+              onClick={() => startTransition(['container', `panel-${activePanel}`], () => setActivePanel(null))}
             >
               X
             </button>
@@ -47,10 +55,6 @@ const PreserveAspectRatio = () => {
               onClick={() =>
                 startTransition(
                   ['container', activePanel ? `panel-${activePanel}` : null, `panel-${i}`].filter(Boolean) as string[],
-                  {
-                    duration: 750,
-                    easing: materialDesignEmphasizedEasing,
-                  },
                   () => setActivePanel(i)
                 )
               }
@@ -58,7 +62,13 @@ const PreserveAspectRatio = () => {
               key={i}
               style={{ visibility: activePanel === i ? 'hidden' : undefined }}
               {...(activePanel !== i
-                ? constructTransition({ [`panel-${i}`]: { mutationTransitionType: 'sequential' } })
+                ? constructTransition({
+                    [`panel-${i}`]: {
+                      mutationTransitionType: 'sequential',
+                      duration: 750,
+                      easing: materialDesignEmphasizedEasing,
+                    },
+                  })
                 : null)}
             >
               {i}

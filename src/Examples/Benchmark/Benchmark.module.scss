@@ -10,12 +10,12 @@
   grid-template-columns: repeat(6, 1fr);
   gap: 5px;
   position: relative;
-}
 
-.cell {
-  display: grid;
-  place-items: center;
-  height: 25px;
-  width: 100%;
-  background-color: green;
+  .cell {
+    display: grid;
+    place-items: center;
+    height: 25px;
+    width: 100%;
+    background-color: green;
+  }
 }

@@ -1,12 +1,14 @@
 import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
+import copyRelevantStyles from './copyRelevantStyles';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
+import getElementBounds from './getElementBounds';
 import getElementByTransitionRootTag from './getElementByTransitionRootTag';
 import getElementTransitionMapping from './getElementTransitionMapping';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import segregateIds from './segregateIds';
-import { BoundingBox, Snapshot } from './types';
+import { Bounds, Snapshot } from './types';
 
 const captureSnapshot = (
   targetElement: HTMLElement | null,
@@ -19,12 +21,12 @@ const captureSnapshot = (
 
   const transitionMapping = getElementTransitionMapping(targetElement)!;
   const computedStyle = getComputedStyleNoRef(targetElement);
-  const boundingBox = targetElement.getBoundingClientRect().toJSON() as BoundingBox;
+  const bounds = getElementBounds(targetElement) as Bounds;
   const hasFixedPosition = elementHasFixedPosition(targetElement);
   const transitionProperties = transitionMapping[targetTag];
 
   const transitionRoot = transitionProperties.transitionRootTag
-    ? (getElementByTransitionRootTag(transitionProperties.transitionRootTag) as HTMLElement | null)
+    ? getElementByTransitionRootTag(transitionProperties.transitionRootTag)
     : null;
 
   if (transitionProperties.transitionRootTag && !transitionRoot) {
@@ -39,11 +41,13 @@ const captureSnapshot = (
     );
   }
 
-  const transitionRootBoundingBox = transitionRoot?.getBoundingClientRect().toJSON() as BoundingBox | null;
+  const transitionRootBounds = transitionRoot ? getElementBounds(transitionRoot) : null;
 
-  if (transitionRootBoundingBox) {
-    boundingBox.top -= transitionRootBoundingBox.top - transitionRoot!.scrollTop;
-    boundingBox.left -= transitionRootBoundingBox.left - transitionRoot!.scrollLeft;
+  if (transitionRootBounds) {
+    bounds.top -= transitionRootBounds.top - transitionRoot!.scrollTop;
+    bounds.right -= transitionRootBounds.right + transitionRootBounds.scrollBarWidth + transitionRoot!.scrollLeft;
+    bounds.left -= transitionRootBounds.left - transitionRoot!.scrollLeft;
+    bounds.bottom -= transitionRootBounds.bottom + transitionRootBounds.scrollBarHeight + transitionRoot!.scrollTop;
   }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
@@ -65,16 +69,14 @@ const captureSnapshot = (
   image.className = 'rsf-image';
   image.style.overflow = transitionProperties.overflow;
   image.style.zIndex = `${getTotalZIndex(targetElement, transitionRoot ?? undefined)}`;
-  image.style.left = `${boundingBox.left}px`;
-  image.style.top = `${boundingBox.top}px`;
-  image.style.width = `${boundingBox.width}px`;
-  image.style.height = `${boundingBox.height}px`;
+  image.style.width = `${bounds.width}px`;
+  image.style.height = `${bounds.height}px`;
 
   STYLE_PROPERTIES_TO_CAPTURE.forEach((property) => (image.style[property] = computedStyle[property]));
 
   const snapshotContainerStyles = Object.entries({
-    width: `${boundingBox.width}px`,
-    height: `${boundingBox.height}px`,
+    width: `${bounds.width}px`,
+    height: `${bounds.height}px`,
     '--borderTopWidth': computedStyle.borderTopWidth,
     '--borderRightWidth': computedStyle.borderRightWidth,
     '--borderBottomWidth': computedStyle.borderBottomWidth,
@@ -94,9 +96,11 @@ const captureSnapshot = (
         .replace(/\sdata-transitionroot=".+?"/gm, '')}
     </div>`;
 
+  copyRelevantStyles(targetElement, image);
+
   return {
     tag: targetTag,
-    boundingBox,
+    bounds,
     image,
     computedStyle,
     transitionProperties,

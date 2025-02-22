@@ -12,7 +12,7 @@ const Benchmark = () => {
 
   const startBenchmark = () => {
     const startTime = Date.now();
-    startTransition(tags, { duration: 2000 }, () => {});
+    startTransition(tags, () => {});
     setResult(Date.now() - startTime);
   };
 
@@ -30,6 +30,7 @@ const Benchmark = () => {
                   enterKeyframes: { opacity: [0, 0, 1], scale: [0.5, 0.5, 1] },
                   exitKeyframes: 'reversedEnter',
                   transitionRootTag: 'benchmarkRoot',
+                  duration: 2000,
                 },
               })}
             >

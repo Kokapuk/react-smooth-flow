@@ -1,17 +1,21 @@
+import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Snapshot, TransitionConfig } from './types';
+import { Snapshot } from './types';
 
 const playEnterExitTransition = async (
   targetElement: HTMLElement | null,
   prevSnapshot: Snapshot | null,
-  nextSnapshot: Snapshot | null,
-  config: TransitionConfig
+  nextSnapshot: Snapshot | null
 ) => {
   const transitionRoot = prevSnapshot?.transitionRoot ?? nextSnapshot?.transitionRoot ?? getTransitionRoot();
 
   const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
+
+  if (prevSnapshot || nextSnapshot) {
+    activeTransitions[(prevSnapshot?.tag ?? nextSnapshot?.tag) as string] = [];
+  }
 
   await Promise.all([
     (async () => {
@@ -21,23 +25,25 @@ const playEnterExitTransition = async (
 
       transitionRoot.append(prevSnapshot.image);
 
+      if (prevSnapshot.transitionProperties.delay) {
+        prevSnapshot.image.animate(getInitialKeyframe(prevSnapshot.transitionProperties.exitKeyframes), {
+          fill: 'forwards',
+        });
+      }
+
       const exitTransition = prevSnapshot.image.animate(prevSnapshot.transitionProperties.exitKeyframes, {
-        duration: config.duration,
-        easing: config.easing ?? 'ease',
+        duration: prevSnapshot.transitionProperties.duration,
+        easing: prevSnapshot.transitionProperties.easing,
+        delay: prevSnapshot.transitionProperties.delay,
+        fill: 'forwards',
       });
 
-      activeTransitions[prevSnapshot.tag] = [
-        { transition: exitTransition, onCancel: () => prevSnapshot.image.remove() },
-      ];
+      activeTransitions[prevSnapshot.tag].push({
+        transition: exitTransition,
+        onCancel: () => prevSnapshot.image.remove(),
+      });
 
-      try {
-        await exitTransition.finished;
-        delete activeTransitions[prevSnapshot.tag];
-
-        prevSnapshot.image.remove();
-      } catch {
-        /* empty */
-      }
+      await exitTransition.finished;
     })(),
 
     (async () => {
@@ -47,35 +53,30 @@ const playEnterExitTransition = async (
 
       transitionRoot.append(nextSnapshot.image);
 
+      if (nextSnapshot.transitionProperties.delay) {
+        nextSnapshot.image.animate(getInitialKeyframe(nextSnapshot.transitionProperties.enterKeyframes), {
+          fill: 'forwards',
+        });
+      }
+
       const enterTransition = nextSnapshot.image.animate(nextSnapshot.transitionProperties.enterKeyframes, {
-        duration: config.duration,
-        easing: config.easing ?? 'ease',
+        duration: nextSnapshot.transitionProperties.duration,
+        easing: nextSnapshot.transitionProperties.easing,
+        delay: nextSnapshot.transitionProperties.delay,
+        fill: 'forwards',
       });
 
-      const removeSnapshotAndResetTarget = () => {
-        nextSnapshot.image.remove();
-        resetTargetStyles?.();
-      };
-
-      activeTransitions[nextSnapshot.tag] = [
-        {
-          transition: enterTransition,
-          onCancel: removeSnapshotAndResetTarget,
+      activeTransitions[nextSnapshot.tag].push({
+        transition: enterTransition,
+        onCancel: () => {
+          nextSnapshot.image.remove();
+          resetTargetStyles?.();
         },
-      ];
+      });
 
-      try {
-        await enterTransition.finished;
-        delete activeTransitions[nextSnapshot.tag];
-
-        removeSnapshotAndResetTarget();
-      } catch {
-        /* empty */
-      }
+      await enterTransition.finished;
     })(),
   ]);
-
-  resetTargetStyles?.();
 };
 
 export default playEnterExitTransition;

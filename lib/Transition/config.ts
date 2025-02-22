@@ -3,14 +3,13 @@ import { ComputedStyle, ParsedTransitionProperties, TransitionProperties } from 
 export const STYLE_PROPERTIES_TO_CAPTURE: Readonly<(keyof ComputedStyle)[]> = [
   'opacity',
   'backgroundColor',
-  'color',
   'boxShadow',
   'backdropFilter',
 
+  'borderTopLeftRadius',
   'borderTopRightRadius',
   'borderBottomRightRadius',
   'borderBottomLeftRadius',
-  'borderTopLeftRadius',
 
   'borderTopWidth',
   'borderRightWidth',
@@ -32,10 +31,10 @@ export const STYLE_PROPERTIES_TO_ANIMATE: Readonly<(keyof ComputedStyle)[]> = [
   'backgroundColor',
   'boxShadow',
 
+  'borderTopLeftRadius',
   'borderTopRightRadius',
   'borderBottomRightRadius',
   'borderBottomLeftRadius',
-  'borderTopLeftRadius',
 
   'borderTopWidth',
   'borderRightWidth',
@@ -54,6 +53,11 @@ export const STYLE_PROPERTIES_TO_ANIMATE: Readonly<(keyof ComputedStyle)[]> = [
 ];
 
 export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionProperties)[]> = [
+  'duration',
+  'easing',
+  'delay',
+  'ignoreReducedMotion',
+  'origin',
   'transitionRootTag',
   'avoidMutationTransition',
   'mutationTransitionType',
@@ -62,12 +66,22 @@ export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionPropert
 export const DEFAULT_TRANSITION_PROPERTIES: Readonly<
   Pick<
     ParsedTransitionProperties,
-    'enterKeyframes' | 'exitKeyframes' | 'contentAlign' | 'mutationTransitionType' | 'overflow'
+    | 'easing'
+    | 'ignoreReducedMotion'
+    | 'enterKeyframes'
+    | 'exitKeyframes'
+    | 'contentAlign'
+    | 'origin'
+    | 'mutationTransitionType'
+    | 'overflow'
   >
 > = {
+  easing: 'ease',
+  ignoreReducedMotion: false,
   enterKeyframes: { opacity: [0, 1] },
   exitKeyframes: { opacity: [1, 0] },
   contentAlign: 'topLeft',
+  origin: 'topLeft',
   mutationTransitionType: 'overlap',
   overflow: 'hidden',
 };

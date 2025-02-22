@@ -17,13 +17,12 @@ const ContentSizeChange = () => {
     <Example title="Content size change">
       <div className={styles.container}>
         <Button
-          {...constructTransition({ 'size-button': {} })}
+          {...constructTransition({ 'size-button': { duration: 300 } })}
           onClick={() => {
             const newElement = list.length ? Math.max(...list) + 1 : 1;
 
             startTransition(
               ['size-button', 'size-container', ...[...list, newElement].map((i) => `size-button-${i}`).reverse()],
-              { duration: 300 },
               () => {
                 setLoading((prev) => !prev);
                 setList((prev) => [...prev, newElement]);
@@ -33,7 +32,7 @@ const ContentSizeChange = () => {
         >
           {isLoading ? 'Loading...' : 'Load'}
         </Button>
-        <div {...constructTransition({ 'size-container': {} })} ref={listRef} className={styles.list}>
+        <div {...constructTransition({ 'size-container': { duration: 300 } })} ref={listRef} className={styles.list}>
           {list.map((i) => (
             <Button
               key={i}
@@ -44,10 +43,11 @@ const ContentSizeChange = () => {
                     { transform: 'translateY(0)', opacity: '1' },
                   ],
                   exitKeyframes: 'reversedEnter',
+                  duration: 300,
                 },
               })}
               onClick={() =>
-                startTransition(['size-container', ...list.map((i) => `size-button-${i}`)], { duration: 300 }, () =>
+                startTransition(['size-container', ...list.map((i) => `size-button-${i}`)], () =>
                   setList((prev) => prev.filter((j) => j != i))
                 )
               }

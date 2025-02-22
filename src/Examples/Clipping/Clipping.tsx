@@ -24,6 +24,7 @@ const Clipping = () => {
                   enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
                   exitKeyframes: 'reversedEnter',
                   transitionRootTag: 'clippingContainer',
+                  duration: 600,
                 },
               })
             : null)}
@@ -41,17 +42,14 @@ const Clipping = () => {
                     { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
                   ],
                   exitKeyframes: 'reversedEnter',
+                  duration: 600,
                 },
               })
             : null)}
         >
           Clipped
         </div>
-        <Button
-          onClick={() =>
-            startTransition(['nonClipped', 'clipped'], { duration: 600 }, () => setToggled((prev) => !prev))
-          }
-        >
+        <Button onClick={() => startTransition(['nonClipped', 'clipped'], () => setToggled((prev) => !prev))}>
           Toggle
         </Button>
       </div>

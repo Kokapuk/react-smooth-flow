@@ -1,7 +1,8 @@
 import { flushSync } from 'react-dom';
-import applyPositionToSnapshots from './applyPositionToSnapshot';
+import applyPositionToSnapshots from './applyPositionToSnapshots';
 import cancelTransition from './cancelTransition';
 import captureSnapshot from './captureSnapshot';
+import finishTransitions from './finishTransitions';
 import getAllTags from './getAllTags';
 import getElementByTransitionTag from './getElementByTransitionTag';
 import isMotionReduced from './isMotionReduced';
@@ -10,13 +11,8 @@ import playMutationTransition from './playMutationTransition';
 import { TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
-const startTransition = async (tags: string[], config: TransitionConfig, modifyDOM: () => void | Promise<void>) => {
+const startTransition = async (tags: string[], modifyDOM: () => void | Promise<void>, config?: TransitionConfig) => {
   cancelTransition(...getAllTags(tags));
-
-  if (!config.ignoreReducedMotion && isMotionReduced()) {
-    modifyDOM();
-    return;
-  }
 
   const prevSnapshots = tags.map((i) =>
     captureSnapshot(
@@ -26,7 +22,7 @@ const startTransition = async (tags: string[], config: TransitionConfig, modifyD
     )
   );
 
-  if (config.noFlushSync) {
+  if (config?.noFlushSync) {
     await modifyDOM();
   } else {
     await flushSync(modifyDOM);
@@ -40,11 +36,18 @@ const startTransition = async (tags: string[], config: TransitionConfig, modifyD
     )
   );
 
-  const pairs = prevSnapshots.map((i, index) => ({ prev: i, next: nextSnapshots[index] }));
+  const pairs = prevSnapshots
+    .map((i, index) => ({ prev: i, next: nextSnapshots[index] }))
+    .filter(
+      (i) =>
+        i.prev?.transitionProperties.ignoreReducedMotion ||
+        i.next?.transitionProperties.ignoreReducedMotion ||
+        !isMotionReduced()
+    );
   validateSnapshotPairs(pairs, tags);
   applyPositionToSnapshots(pairs);
 
-  config.onBegin?.();
+  config?.onBegin?.();
 
   try {
     await Promise.all(
@@ -57,17 +60,18 @@ const startTransition = async (tags: string[], config: TransitionConfig, modifyD
           !prevSnapshot.transitionProperties.avoidMutationTransition &&
           !nextSnapshot.transitionProperties.avoidMutationTransition
         ) {
-          return playMutationTransition(targetElement!, prevSnapshot, nextSnapshot, config);
+          return playMutationTransition(targetElement!, prevSnapshot, nextSnapshot);
         } else {
-          return playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot, config);
+          return playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot);
         }
       })
     );
 
-    config.onFinish?.();
+    finishTransitions(...tags);
+    config?.onFinish?.();
   } catch (err: any) {
     if (err.name === 'AbortError') {
-      config.onCancel?.();
+      config?.onCancel?.();
       return;
     }
 

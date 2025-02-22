@@ -29,7 +29,6 @@ const AnimatedList = () => {
   const shuffle = () => {
     startTransition(
       buttons.map((i) => `button-${i}`),
-      { duration: 300 },
       () => {
         setButtons((prev) => {
           const copy = [...prev];
@@ -52,7 +51,6 @@ const AnimatedList = () => {
 
     startTransition(
       [...buttons, newButton].map((i) => `button-${i}`),
-      { duration: 300 },
       () => setButtons((prev) => [...prev, newButton])
     );
   };
@@ -60,7 +58,6 @@ const AnimatedList = () => {
   const removeElement = (element: number) => {
     startTransition(
       buttons.map((i) => `button-${i}`),
-      { duration: 300 },
       () => setButtons((prev) => prev.filter((j) => j !== element))
     );
   };
@@ -81,6 +78,8 @@ const AnimatedList = () => {
                   { transform: 'translateY(0)', opacity: '1' },
                 ],
                 exitKeyframes: 'reversedEnter',
+                duration: 300,
+                contentAlign: 'center',
               },
             })}
             key={i}

@@ -8,12 +8,14 @@ const getAllTags = (tags: string[]) => {
     const element = getElementByTransitionTag(i);
 
     if (!element) {
+      allTags.push(i);
       return;
     }
 
     const transitionMapping = getElementTransitionMapping(element);
 
     if (!transitionMapping) {
+      allTags.push(i);
       return;
     }
 

@@ -11,7 +11,7 @@ const Playground = () => {
   const [inSquare, setInSquare] = useState(false);
 
   const moveBtn = () => {
-    startTransition(['moveBtn'], { duration: 600 }, () =>
+    startTransition(['moveBtn'], () =>
       setPos((prev) => {
         switch (prev) {
           case 'left':
@@ -26,14 +26,14 @@ const Playground = () => {
   };
 
   const toggleSwitch = () => {
-    startTransition(['switchIndicator', 'switchBtn'], { duration: 600 }, () => setOn((prev) => !prev));
+    startTransition(['switchIndicator', 'switchBtn'], () => setOn((prev) => !prev));
   };
 
   return (
     <Example title="Playground" style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15 }}>
       <div>
         <Button
-          {...constructTransition({ moveBtn: {} })}
+          {...constructTransition({ moveBtn: { duration: 600 } })}
           style={{
             display: 'block',
             marginInline: { left: 0, center: 'auto', right: 'auto 0' }[pos],
@@ -61,13 +61,14 @@ const Playground = () => {
                   { transform: 'scale(1)', opacity: '1' },
                 ],
                 exitKeyframes: 'reversedEnter',
+                duration: 600,
               },
             })}
             className={cn(styles.indicator, !isOn && styles.inactive)}
           />
         )}
         <Button
-          {...constructTransition({ switchBtn: {} })}
+          {...constructTransition({ switchBtn: { duration: 600 } })}
           onClick={toggleSwitch}
           style={{ display: 'block', marginInline: 'auto' }}
         >
@@ -77,25 +78,24 @@ const Playground = () => {
 
       <div style={{ display: 'flex', gap: 15 }}>
         {!inSquare && (
-          <div {...constructTransition({ switchSquare: {} })} style={{ background: 'red', width: '50%', height: 50 }} />
+          <div
+            {...constructTransition({ switchSquare: { duration: 600 } })}
+            style={{ background: 'red', width: '50%', height: 50 }}
+          />
         )}
         <div
-          {...constructTransition({ switchContainer: {} })}
+          {...constructTransition({ switchContainer: { duration: 600 } })}
           style={{ border: '1px solid white', width: '50%', minHeight: 20, height: 'min-content', marginLeft: 'auto' }}
         >
           {inSquare && (
             <div
-              {...constructTransition({ switchSquare: {} })}
+              {...constructTransition({ switchSquare: { duration: 600 } })}
               style={{ background: 'red', width: '100%', height: 50 }}
             />
           )}
         </div>
       </div>
-      <Button
-        onClick={() =>
-          startTransition(['switchContainer', 'switchSquare'], { duration: 600 }, () => setInSquare((prev) => !prev))
-        }
-      >
+      <Button onClick={() => startTransition(['switchContainer', 'switchSquare'], () => setInSquare((prev) => !prev))}>
         Switch
       </Button>
     </Example>

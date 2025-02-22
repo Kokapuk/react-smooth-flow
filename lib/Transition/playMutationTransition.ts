@@ -1,15 +1,11 @@
 import { STYLE_PROPERTIES_TO_ANIMATE } from './config';
+import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Snapshot, TransitionConfig } from './types';
+import { Keyframes, Snapshot } from './types';
 
-const playMutationTransition = async (
-  targetElement: HTMLElement,
-  prevSnapshot: Snapshot,
-  nextSnapshot: Snapshot,
-  config: TransitionConfig
-) => {
+const playMutationTransition = async (targetElement: HTMLElement, prevSnapshot: Snapshot, nextSnapshot: Snapshot) => {
   const transitionRoot = prevSnapshot.transitionRoot ?? getTransitionRoot();
 
   const resetTargetStyles = hideElementNoTransition(targetElement);
@@ -19,8 +15,8 @@ const playMutationTransition = async (
 
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((i) => {
     const keyframe: Record<string, string> = {
-      width: `${i.boundingBox.width}px`,
-      height: `${i.boundingBox.height}px`,
+      width: `${i.bounds.width}px`,
+      height: `${i.bounds.height}px`,
     };
 
     STYLE_PROPERTIES_TO_ANIMATE.forEach((property) => (keyframe[property] = i.computedStyle[property]));
@@ -28,82 +24,79 @@ const playMutationTransition = async (
     return keyframe;
   });
 
-  const prevKeyframes = [
-    { ...generalKeyframes[0], transform: 'translate(0, 0)' },
-    {
-      ...generalKeyframes[1],
-      transform: `translate(${nextSnapshot.boundingBox.left - prevSnapshot.boundingBox.left}px, ${
-        nextSnapshot.boundingBox.top - prevSnapshot.boundingBox.top
-      }px)`,
-    },
+  let prevTransform = '';
+  let nextTransform = '';
+  const translateYPrevTop = nextSnapshot.bounds.top - prevSnapshot.bounds.top;
+  const translateYNextTop = prevSnapshot.bounds.top - nextSnapshot.bounds.top;
+  const translateXPrevRight = prevSnapshot.bounds.right - nextSnapshot.bounds.right;
+  const translateXNextRight = nextSnapshot.bounds.right - prevSnapshot.bounds.right;
+  const translateYPrevBottom = prevSnapshot.bounds.bottom - nextSnapshot.bounds.bottom;
+  const translateYNextBottom = nextSnapshot.bounds.bottom - prevSnapshot.bounds.bottom;
+  const translateXPrevLeft = nextSnapshot.bounds.left - prevSnapshot.bounds.left;
+  const translateXNextLeft = prevSnapshot.bounds.left - nextSnapshot.bounds.left;
+
+  switch (prevSnapshot.transitionProperties.origin) {
+    case 'topLeft':
+      prevTransform = `translate(${translateXPrevLeft}px, ${translateYPrevTop}px)`;
+      nextTransform = `translate(${translateXNextLeft}px, ${translateYNextTop}px)`;
+      break;
+    case 'topRight':
+      prevTransform = `translate(${translateXPrevRight}px, ${translateYPrevTop}px)`;
+      nextTransform = `translate(${translateXNextRight}px, ${translateYNextTop}px)`;
+      break;
+    case 'bottomRight':
+      prevTransform = `translate(${translateXPrevRight}px, ${translateYPrevBottom}px)`;
+      nextTransform = `translate(${translateXNextRight}px, ${translateYNextBottom}px)`;
+      break;
+    case 'bottomLeft':
+      prevTransform = `translate(${translateXPrevLeft}px, ${translateYPrevBottom}px)`;
+      nextTransform = `translate(${translateXNextLeft}px, ${translateYNextBottom}px)`;
+      break;
+  }
+
+  const prevKeyframes: Keyframes = [
+    { opacity: prevSnapshot.computedStyle.opacity, ...generalKeyframes[0], transform: 'translate(0, 0)' },
+    { opacity: prevSnapshot.computedStyle.opacity },
+    { opacity: 0, ...generalKeyframes[1], transform: prevTransform },
   ];
-  const nextKeyframes = [
-    {
-      ...generalKeyframes[0],
-      transform: `translate(${prevSnapshot.boundingBox.left - nextSnapshot.boundingBox.left}px, ${
-        prevSnapshot.boundingBox.top - nextSnapshot.boundingBox.top
-      }px)`,
-    },
-    { ...generalKeyframes[1], transform: 'translate(0, 0)' },
+  const nextKeyframes: Keyframes = [
+    { opacity: 0, ...generalKeyframes[0], transform: nextTransform },
+    { opacity: nextSnapshot.computedStyle.opacity },
+    { opacity: nextSnapshot.computedStyle.opacity, ...generalKeyframes[1], transform: 'translate(0, 0)' },
   ];
 
   const animationOptions: KeyframeAnimationOptions = {
-    duration: config.duration,
-    easing: config.easing ?? 'ease',
+    duration: prevSnapshot.transitionProperties.duration,
+    easing: prevSnapshot.transitionProperties.easing,
+    delay: prevSnapshot.transitionProperties.delay,
+    fill: 'forwards',
   };
   const transitions: Animation[] = [];
 
-  if (prevSnapshot.transitionProperties.mutationTransitionType === 'overlap') {
-    const prevTransition = prevSnapshot.image.animate(
-      [
-        { opacity: prevSnapshot.computedStyle.opacity, ...prevKeyframes[0] },
-        { opacity: prevSnapshot.computedStyle.opacity },
-        { opacity: 0, ...prevKeyframes[1] },
-      ],
-      animationOptions
-    );
+  if (prevSnapshot.transitionProperties.delay) {
+    prevSnapshot.image.animate(getInitialKeyframe(prevKeyframes), { fill: 'forwards' });
+    nextSnapshot.image.animate(getInitialKeyframe(nextKeyframes), { fill: 'forwards' });
+  }
 
-    const nextTransition = nextSnapshot.image.animate(
-      [
-        { opacity: 0, ...nextKeyframes[0] },
-        { opacity: nextSnapshot.computedStyle.opacity },
-        { opacity: nextSnapshot.computedStyle.opacity, ...nextKeyframes[1] },
-      ],
-      animationOptions
-    );
+  const prevTransition = prevSnapshot.image.animate(prevKeyframes, animationOptions);
+  const nextTransition = nextSnapshot.image.animate(nextKeyframes, animationOptions);
 
-    transitions.push(prevTransition, nextTransition);
-  } else if (prevSnapshot.transitionProperties.mutationTransitionType === 'sequential') {
-    const prevTransition = prevSnapshot.image.animate(
-      [
-        { opacity: prevSnapshot.computedStyle.opacity, ...prevKeyframes[0] },
-        { opacity: prevSnapshot.computedStyle.opacity },
-        { opacity: 0, ...prevKeyframes[1] },
-      ],
-      animationOptions
-    );
+  transitions.push(prevTransition, nextTransition);
 
-    const nextTransition = nextSnapshot.image.animate(
-      [
-        { opacity: 0, ...nextKeyframes[0] },
-        { opacity: nextSnapshot.computedStyle.opacity },
-        { opacity: nextSnapshot.computedStyle.opacity, ...nextKeyframes[1] },
-      ],
-      animationOptions
-    );
+  if (prevSnapshot.transitionProperties.mutationTransitionType === 'sequential') {
+    const prevContentKeyframes: Keyframes = { opacity: [1, 0, 0] };
+    const nextContentKeyframes: Keyframes = { opacity: [0, 0, 1] };
 
-    const prevContentTransition = prevSnapshot.image.children[0].animate(
-      [{ opacity: 1 }, { opacity: 0 }, { opacity: 0 }],
-      animationOptions
-    );
+    if (prevSnapshot.transitionProperties.delay) {
+      prevSnapshot.image.children[0].animate(getInitialKeyframe(prevContentKeyframes), { fill: 'forwards' });
+      nextSnapshot.image.children[0].animate(getInitialKeyframe(nextContentKeyframes), { fill: 'forwards' });
+    }
 
-    const nextContentTransition = nextSnapshot.image.children[0].animate(
-      [{ opacity: 0 }, { opacity: 0 }, { opacity: 1 }],
-      animationOptions
-    );
+    const prevContentTransition = prevSnapshot.image.children[0].animate(prevContentKeyframes, animationOptions);
+    const nextContentTransition = nextSnapshot.image.children[0].animate(nextContentKeyframes, animationOptions);
 
-    transitions.push(prevTransition, nextTransition, prevContentTransition, nextContentTransition);
-  } else {
+    transitions.push(prevContentTransition, nextContentTransition);
+  } else if (prevSnapshot.transitionProperties.mutationTransitionType !== 'overlap') {
     throw Error(`"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition type`);
   }
 
@@ -120,9 +113,6 @@ const playMutationTransition = async (
   }));
 
   await Promise.all(transitions.map((i) => i.finished));
-  delete activeTransitions[prevSnapshot.tag];
-
-  removeSnapshotsAndResetTarget();
 };
 
 export default playMutationTransition;
