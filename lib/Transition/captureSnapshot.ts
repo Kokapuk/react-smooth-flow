@@ -33,14 +33,6 @@ const captureSnapshot = (
     throw Error(`Failed to find transition root with tag "${transitionProperties.transitionRootTag}"`);
   }
 
-  const transitionRootComputedStyle = transitionRoot ? getComputedStyle(transitionRoot) : null;
-
-  if (transitionRootComputedStyle?.position === 'static') {
-    console.warn(
-      `Transition root with tag "${transitionProperties.transitionRootTag}" has position property set to "static". This may cause visual transition issues`
-    );
-  }
-
   const transitionRootBounds = transitionRoot ? getElementBounds(transitionRoot) : null;
 
   if (transitionRootBounds) {

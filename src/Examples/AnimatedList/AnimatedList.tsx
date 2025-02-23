@@ -79,7 +79,7 @@ const AnimatedList = () => {
                 ],
                 exitKeyframes: 'reversedEnter',
                 duration: 300,
-                contentAlign: 'center',
+                contentAlign: 'topCenter',
               },
             })}
             key={i}

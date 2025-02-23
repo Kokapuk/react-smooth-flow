@@ -93,6 +93,7 @@ export interface Snapshot {
 }
 
 export interface TransitionSnapshot {
+  snapshot: Snapshot;
   transition: Animation;
   onCancel(): void;
 }

@@ -8,7 +8,6 @@
 }
 
 .rsf-image {
-  pointer-events: none;
   user-select: none;
   background-clip: padding-box;
 }
@@ -16,6 +15,7 @@
 .rsf-snapshotContainer {
   display: flex;
   position: absolute;
+  pointer-events: none;
 
   $horizontalCenterTop: calc(50% + (var(--borderBottomWidth) - var(--borderTopWidth)) / 2);
   $verticalCenterLeft: calc(50% + (var(--borderRightWidth) - var(--borderLeftWidth)) / 2);

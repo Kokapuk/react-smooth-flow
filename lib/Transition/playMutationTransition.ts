@@ -10,6 +10,8 @@ const playMutationTransition = async (targetElement: HTMLElement, prevSnapshot: 
 
   const resetTargetStyles = hideElementNoTransition(targetElement);
 
+  activeTransitions[prevSnapshot.tag] = [];
+
   transitionRoot.append(prevSnapshot.image);
   transitionRoot.append(nextSnapshot.image);
 
@@ -71,17 +73,26 @@ const playMutationTransition = async (targetElement: HTMLElement, prevSnapshot: 
     delay: prevSnapshot.transitionProperties.delay,
     fill: 'forwards',
   };
-  const transitions: Animation[] = [];
 
   if (prevSnapshot.transitionProperties.delay) {
     prevSnapshot.image.animate(getInitialKeyframe(prevKeyframes), { fill: 'forwards' });
     nextSnapshot.image.animate(getInitialKeyframe(nextKeyframes), { fill: 'forwards' });
   }
 
+  const removeSnapshotsAndResetTarget = () => {
+    prevSnapshot.image.remove();
+    nextSnapshot.image.remove();
+
+    resetTargetStyles();
+  };
+
   const prevTransition = prevSnapshot.image.animate(prevKeyframes, animationOptions);
   const nextTransition = nextSnapshot.image.animate(nextKeyframes, animationOptions);
 
-  transitions.push(prevTransition, nextTransition);
+  activeTransitions[prevSnapshot.tag].push(
+    { transition: prevTransition, snapshot: prevSnapshot, onCancel: removeSnapshotsAndResetTarget },
+    { transition: nextTransition, snapshot: nextSnapshot, onCancel: removeSnapshotsAndResetTarget }
+  );
 
   if (prevSnapshot.transitionProperties.mutationTransitionType === 'sequential') {
     const prevContentKeyframes: Keyframes = { opacity: [1, 0, 0] };
@@ -95,24 +106,15 @@ const playMutationTransition = async (targetElement: HTMLElement, prevSnapshot: 
     const prevContentTransition = prevSnapshot.image.children[0].animate(prevContentKeyframes, animationOptions);
     const nextContentTransition = nextSnapshot.image.children[0].animate(nextContentKeyframes, animationOptions);
 
-    transitions.push(prevContentTransition, nextContentTransition);
+    activeTransitions[prevSnapshot.tag].push(
+      { transition: prevContentTransition, snapshot: prevSnapshot, onCancel: removeSnapshotsAndResetTarget },
+      { transition: nextContentTransition, snapshot: nextSnapshot, onCancel: removeSnapshotsAndResetTarget }
+    );
   } else if (prevSnapshot.transitionProperties.mutationTransitionType !== 'overlap') {
     throw Error(`"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition type`);
   }
 
-  const removeSnapshotsAndResetTarget = () => {
-    prevSnapshot.image.remove();
-    nextSnapshot.image.remove();
-
-    resetTargetStyles();
-  };
-
-  activeTransitions[prevSnapshot.tag] = transitions.map((i) => ({
-    transition: i,
-    onCancel: removeSnapshotsAndResetTarget,
-  }));
-
-  await Promise.all(transitions.map((i) => i.finished));
+  await Promise.all(activeTransitions[prevSnapshot.tag].map((i) => i.transition.finished));
 };
 
 export default playMutationTransition;

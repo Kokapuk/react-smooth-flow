@@ -1,4 +1,5 @@
 import { flushSync } from 'react-dom';
+import applyPositionToRoots from './applyPositionToRoots';
 import applyPositionToSnapshots from './applyPositionToSnapshots';
 import cancelTransition from './cancelTransition';
 import captureSnapshot from './captureSnapshot';
@@ -46,6 +47,7 @@ const startTransition = async (tags: string[], modifyDOM: () => void | Promise<v
     );
   validateSnapshotPairs(pairs, tags);
   applyPositionToSnapshots(pairs);
+  const resetRootsPositions = applyPositionToRoots(pairs);
 
   config?.onBegin?.();
 
@@ -68,9 +70,11 @@ const startTransition = async (tags: string[], modifyDOM: () => void | Promise<v
     );
 
     finishTransitions(...tags);
+    resetRootsPositions();
     config?.onFinish?.();
   } catch (err: any) {
     if (err.name === 'AbortError') {
+      resetRootsPositions();
       config?.onCancel?.();
       return;
     }

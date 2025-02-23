@@ -8,12 +8,7 @@ const Clipping = () => {
   const [isToggled, setToggled] = useState(true);
 
   return (
-    <Example
-      title="Clipping"
-      style={{
-        width: 250,
-      }}
-    >
+    <Example title="Clipping" style={{ width: 250 }}>
       <div className={styles.container} {...constructTransitionRoot('clippingContainer')}>
         <div
           className={styles.target}
