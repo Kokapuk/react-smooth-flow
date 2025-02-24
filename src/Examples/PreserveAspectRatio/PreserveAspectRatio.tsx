@@ -58,6 +58,7 @@ const PreserveAspectRatio = () => {
                   () => setActivePanel(i)
                 )
               }
+              data-panelnumber={i}
               className={styles.button}
               key={i}
               style={{ visibility: activePanel === i ? 'hidden' : undefined }}

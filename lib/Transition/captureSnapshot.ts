@@ -42,7 +42,7 @@ const captureSnapshot = (
     bounds.bottom -= transitionRootBounds.bottom + transitionRootBounds.scrollBarHeight + transitionRoot!.scrollTop;
   }
 
-  const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
+  let targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
   hideElementsWithTags(excludeTags, targetElementClone);
   segregateIds(targetElementClone, excludeTags);
@@ -87,8 +87,9 @@ const captureSnapshot = (
         .replace(/\sdata-transition=".+?"/gm, '')
         .replace(/\sdata-transitionroot=".+?"/gm, '')}
     </div>`;
+  targetElementClone = image.children[0].children[0] as HTMLElement;
 
-  copyRelevantStyles(targetElement, image);
+  copyRelevantStyles(targetElement, targetElementClone, image);
 
   return {
     tag: targetTag,
