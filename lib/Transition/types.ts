@@ -1,3 +1,5 @@
+import { Properties } from 'csstype';
+
 export interface Bounds {
   top: number;
   right: number;
@@ -22,7 +24,7 @@ export type ContentAlign =
   | 'centerLeft'
   | 'center';
 
-export type Origin = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
+export type PositionAnchor = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
 
 export type ImageOverflow = 'hidden' | 'visible';
 
@@ -46,7 +48,7 @@ export interface TransitionProperties {
   enterKeyframes?: Keyframes;
   exitKeyframes?: Keyframes | 'reversedEnter';
   contentAlign?: ContentAlign;
-  origin?: Origin;
+  positionAnchor?: PositionAnchor;
   avoidMutationTransition?: boolean;
   transitionRootTag?: string;
   mutationTransitionType?: MutationTransitionType;
@@ -66,20 +68,7 @@ export interface TransitionConfig {
   onFinish?(): void;
 }
 
-export type ComputedStyle = Omit<
-  CSSStyleDeclaration,
-  | 'item'
-  | 'getPropertyPriority'
-  | 'getPropertyValue'
-  | 'removeProperty'
-  | 'setProperty'
-  | 'cssProperty'
-  | 'cssText'
-  | 'length'
-  | 'parentRule'
-  | number
-  | typeof Symbol.iterator
->;
+export type ComputedStyle = Record<keyof Properties, string>;
 
 export interface Snapshot {
   tag: string;

@@ -16,10 +16,27 @@ const Benchmark = () => {
     setResult(Date.now() - startTime);
   };
 
+  const startBenchmarkOnRoot = () => {
+    const startTime = Date.now();
+    startTransition(['benchmarkGrid'], () => {});
+    setResult(Date.now() - startTime);
+  };
+
   return (
     <Example title="Benchmark">
-      <div className={styles.wrapper}>
-        <div className={styles.grid} {...constructTransitionRoot('benchmarkRoot')}>
+      <div className={styles.wrapper} {...constructTransitionRoot('benchmarkRoot')}>
+        <div
+          className={styles.grid}
+          {...constructTransition({
+            benchmarkGrid: {
+              avoidMutationTransition: true,
+              enterKeyframes: { opacity: [0, 0, 1], scale: [0.5, 0.5, 1] },
+              exitKeyframes: 'reversedEnter',
+              transitionRootTag: 'benchmarkRoot',
+              duration: 2000,
+            },
+          })}
+        >
           {cells.map((i) => (
             <div
               className={styles.cell}
@@ -41,6 +58,7 @@ const Benchmark = () => {
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 15 }}>
         <Button onClick={startBenchmark}>Run</Button>
+        <Button onClick={startBenchmarkOnRoot}>Run on grid</Button>
         <p>{result}ms</p>
       </div>
     </Example>

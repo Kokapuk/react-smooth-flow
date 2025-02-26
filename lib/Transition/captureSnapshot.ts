@@ -1,14 +1,14 @@
 import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
-import copyRelevantStyles from './copyRelevantStyles';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';
 import getElementByTransitionRootTag from './getElementByTransitionRootTag';
 import getElementTransitionMapping from './getElementTransitionMapping';
+import getTotalOpacity from './getTotalOpacity';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import segregateIds from './segregateIds';
-import { Bounds, Snapshot } from './types';
+import { Snapshot } from './types';
 
 const captureSnapshot = (
   targetElement: HTMLElement | null,
@@ -20,8 +20,11 @@ const captureSnapshot = (
   }
 
   const transitionMapping = getElementTransitionMapping(targetElement)!;
+
   const computedStyle = getComputedStyleNoRef(targetElement);
-  const bounds = getElementBounds(targetElement) as Bounds;
+  computedStyle.opacity = `${getTotalOpacity(targetElement)}`;
+
+  const bounds = getElementBounds(targetElement);
   const hasFixedPosition = elementHasFixedPosition(targetElement);
   const transitionProperties = transitionMapping[targetTag];
 
@@ -42,7 +45,7 @@ const captureSnapshot = (
     bounds.bottom -= transitionRootBounds.bottom + transitionRootBounds.scrollBarHeight + transitionRoot!.scrollTop;
   }
 
-  let targetElementClone = targetElement.cloneNode(true) as HTMLElement;
+  const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
   hideElementsWithTags(excludeTags, targetElementClone);
   segregateIds(targetElementClone, excludeTags);
@@ -64,6 +67,7 @@ const captureSnapshot = (
   image.style.width = `${bounds.width}px`;
   image.style.height = `${bounds.height}px`;
 
+  // @ts-ignore
   STYLE_PROPERTIES_TO_CAPTURE.forEach((property) => (image.style[property] = computedStyle[property]));
 
   const snapshotContainerStyles = Object.entries({
@@ -87,9 +91,6 @@ const captureSnapshot = (
         .replace(/\sdata-transition=".+?"/gm, '')
         .replace(/\sdata-transitionroot=".+?"/gm, '')}
     </div>`;
-  targetElementClone = image.children[0].children[0] as HTMLElement;
-
-  copyRelevantStyles(targetElement, targetElementClone, image);
 
   return {
     tag: targetTag,

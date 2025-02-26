@@ -37,7 +37,7 @@ const playMutationTransition = async (targetElement: HTMLElement, prevSnapshot: 
   const translateXPrevLeft = nextSnapshot.bounds.left - prevSnapshot.bounds.left;
   const translateXNextLeft = prevSnapshot.bounds.left - nextSnapshot.bounds.left;
 
-  switch (prevSnapshot.transitionProperties.origin) {
+  switch (prevSnapshot.transitionProperties.positionAnchor) {
     case 'topLeft':
       prevTransform = `translate(${translateXPrevLeft}px, ${translateYPrevTop}px)`;
       nextTransform = `translate(${translateXNextLeft}px, ${translateYNextTop}px)`;

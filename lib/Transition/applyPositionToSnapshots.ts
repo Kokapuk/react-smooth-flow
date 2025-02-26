@@ -17,7 +17,7 @@ const setSnapshotPosition = (snapshot: Snapshot, position: 'absolute' | 'fixed')
     snapshot.bounds.left += window.scrollX;
   }
 
-  switch (snapshot.transitionProperties.origin) {
+  switch (snapshot.transitionProperties.positionAnchor) {
     case 'topLeft':
       snapshot.image.style.top = `${snapshot.bounds.top}px`;
       snapshot.image.style.left = `${snapshot.bounds.left}px`;

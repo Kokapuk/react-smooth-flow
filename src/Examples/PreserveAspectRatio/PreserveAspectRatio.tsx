@@ -21,7 +21,7 @@ const PreserveAspectRatio = () => {
             duration: 675,
             delay: 75,
             easing: materialDesignEmphasizedEasing,
-            origin: 'topRight',
+            positionAnchor: 'topRight',
           },
         })}
       >
@@ -38,7 +38,7 @@ const PreserveAspectRatio = () => {
             })}
           >
             <button
-              style={{ float: 'right', height: 22, width: 22 }}
+              style={{ float: 'right', height: 22, width: 22, border: 'none', borderRadius: 5 }}
               onClick={() => startTransition(['container', `panel-${activePanel}`], () => setActivePanel(null))}
             >
               X

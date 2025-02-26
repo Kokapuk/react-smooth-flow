@@ -1,19 +1,18 @@
 import getElementTransitionMapping from './getElementTransitionMapping';
 
 const getElementByTransitionTag = (tag: string, parent: Element | Document = document) => {
-  const transitionTargets = parent.querySelectorAll('[data-transition]');
-
+  const transitionTargets: HTMLElement[] = Array.from(parent.querySelectorAll('[data-transition]'));
   const matchedElements: HTMLElement[] = [];
 
   for (const transitionTarget of transitionTargets) {
-    const transitionsMapping = getElementTransitionMapping(transitionTarget as HTMLElement);
+    const transitionsMapping = getElementTransitionMapping(transitionTarget);
 
     if (!transitionsMapping) {
       continue;
     }
 
     if (Object.keys(transitionsMapping).includes(tag)) {
-      matchedElements.push(transitionTarget as HTMLElement);
+      matchedElements.push(transitionTarget);
     }
   }
 

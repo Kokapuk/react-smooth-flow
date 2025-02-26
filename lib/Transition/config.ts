@@ -1,55 +1,28 @@
-import { ComputedStyle, ParsedTransitionProperties, TransitionProperties } from './types';
+import { Properties } from 'csstype';
+import { ParsedTransitionProperties, TransitionProperties } from './types';
 
-export const STYLE_PROPERTIES_TO_CAPTURE: Readonly<(keyof ComputedStyle)[]> = [
+export const STYLE_PROPERTIES_TO_CAPTURE: Readonly<(keyof Properties)[]> = [
   'opacity',
   'backgroundColor',
   'boxShadow',
   'backdropFilter',
-
-  'borderTopLeftRadius',
-  'borderTopRightRadius',
-  'borderBottomRightRadius',
-  'borderBottomLeftRadius',
-
+  'borderRadius',
+  'borderWidth',
   'borderTopWidth',
   'borderRightWidth',
   'borderBottomWidth',
   'borderLeftWidth',
-
-  'borderTopColor',
-  'borderRightColor',
-  'borderBottomColor',
-  'borderLeftColor',
-
-  'borderTopStyle',
-  'borderRightStyle',
-  'borderBottomStyle',
-  'borderLeftStyle',
+  'borderColor',
+  'borderStyle',
 ];
 
-export const STYLE_PROPERTIES_TO_ANIMATE: Readonly<(keyof ComputedStyle)[]> = [
+export const STYLE_PROPERTIES_TO_ANIMATE: Readonly<(keyof Properties)[]> = [
   'backgroundColor',
   'boxShadow',
-
-  'borderTopLeftRadius',
-  'borderTopRightRadius',
-  'borderBottomRightRadius',
-  'borderBottomLeftRadius',
-
-  'borderTopWidth',
-  'borderRightWidth',
-  'borderBottomWidth',
-  'borderLeftWidth',
-
-  'borderTopColor',
-  'borderRightColor',
-  'borderBottomColor',
-  'borderLeftColor',
-
-  'borderTopStyle',
-  'borderRightStyle',
-  'borderBottomStyle',
-  'borderLeftStyle',
+  'borderRadius',
+  'borderWidth',
+  'borderColor',
+  'borderStyle',
 ];
 
 export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionProperties)[]> = [
@@ -57,7 +30,7 @@ export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionPropert
   'easing',
   'delay',
   'ignoreReducedMotion',
-  'origin',
+  'positionAnchor',
   'transitionRootTag',
   'avoidMutationTransition',
   'mutationTransitionType',
@@ -71,7 +44,7 @@ export const DEFAULT_TRANSITION_PROPERTIES: Readonly<
     | 'enterKeyframes'
     | 'exitKeyframes'
     | 'contentAlign'
-    | 'origin'
+    | 'positionAnchor'
     | 'mutationTransitionType'
     | 'overflow'
   >
@@ -81,7 +54,7 @@ export const DEFAULT_TRANSITION_PROPERTIES: Readonly<
   enterKeyframes: { opacity: [0, 1] },
   exitKeyframes: { opacity: [1, 0] },
   contentAlign: 'topLeft',
-  origin: 'topLeft',
+  positionAnchor: 'topLeft',
   mutationTransitionType: 'overlap',
   overflow: 'hidden',
 };

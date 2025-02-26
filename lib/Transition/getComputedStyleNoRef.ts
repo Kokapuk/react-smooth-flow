@@ -1,20 +1,12 @@
-import detectBrowser from './detectBrowser';
+import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
 import { ComputedStyle } from './types';
 
-const getComputedStyleNoRef = (element: HTMLElement) => {
+const getComputedStyleNoRef = (element: HTMLElement): ComputedStyle => {
   const computedStyleWithRef = window.getComputedStyle(element);
-  const detectedBrowser = detectBrowser();
+  const computedStyle: Partial<ComputedStyle> = {};
 
-  if (detectedBrowser === 'chromium') {
-    return JSON.parse(JSON.stringify(computedStyleWithRef)) as ComputedStyle
-  }
-
-  const computedStyleParsed = JSON.parse(JSON.stringify(computedStyleWithRef));
-  const properties = Object.values(computedStyleParsed) as string[];
-  const computedStyle: Record<string, string> = {};
-
-  properties.forEach(
-    (i) => (computedStyle[i.replace(/-./g, (i) => i[1].toUpperCase())] = computedStyleWithRef.getPropertyValue(i))
+  STYLE_PROPERTIES_TO_CAPTURE.forEach(
+    (i) => (computedStyle[i] = computedStyleWithRef[i as keyof typeof computedStyleWithRef] as string)
   );
 
   return computedStyle as ComputedStyle;

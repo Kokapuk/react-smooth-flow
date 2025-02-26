@@ -25,19 +25,19 @@
     cursor: pointer;
     color: black;
 
-    &[data-panelnumber='1'] {
+    &:nth-child(1) {
       background-color: #fe797b;
     }
 
-    &[data-panelnumber='2'] {
+    &:nth-child(2) {
       background-color: #ffea56;
     }
 
-    &[data-panelnumber='3'] {
+    &:nth-child(3) {
       background-color: #8fe968;
     }
-
-    &[data-panelnumber='4'] {
+    
+    &:nth-child(4) {
       background-color: #36cedc;
     }
   }
