@@ -48,6 +48,7 @@ const Benchmark = () => {
                   exitKeyframes: 'reversedEnter',
                   transitionRootTag: 'benchmarkRoot',
                   duration: 2000,
+                  relevantStyleProperties: ['display', 'place-items'],
                 },
               })}
             >

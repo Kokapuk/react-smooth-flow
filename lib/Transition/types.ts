@@ -1,17 +1,16 @@
-import { Properties } from 'csstype';
+import { Properties, PropertiesHyphen } from 'csstype';
 
-export interface Bounds {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-  width: number;
-  height: number;
-  scrollBarWidth: number;
-  scrollBarHeight: number;
+export interface Keyframe {
+  offset?: number;
+  [key: string]: string | number | undefined;
 }
 
-export type MutationTransitionType = 'overlap' | 'sequential';
+export interface PropertyIndexedKeyframes {
+  offset?: number[];
+  [key: string]: string[] | number[] | undefined;
+}
+
+export type Keyframes = Keyframe[] | PropertyIndexedKeyframes;
 
 export type ContentAlign =
   | 'topLeft'
@@ -26,19 +25,11 @@ export type ContentAlign =
 
 export type PositionAnchor = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
 
+export type MutationTransitionType = 'overlap' | 'sequential';
+
 export type ImageOverflow = 'hidden' | 'visible';
 
-export interface Keyframe {
-  offset?: number;
-  [key: string]: string | number | undefined;
-}
-
-export interface PropertyIndexedKeyframes {
-  offset?: number[];
-  [key: string]: string[] | number[] | undefined;
-}
-
-export type Keyframes = Keyframe[] | PropertyIndexedKeyframes;
+export type RelevantStyleProperties = Exclude<keyof PropertiesHyphen, 'pointer-events'>[];
 
 export interface TransitionProperties {
   duration: number;
@@ -53,6 +44,7 @@ export interface TransitionProperties {
   transitionRootTag?: string;
   mutationTransitionType?: MutationTransitionType;
   overflow?: ImageOverflow;
+  relevantStyleProperties?: RelevantStyleProperties;
 }
 
 export interface ParsedTransitionProperties extends Required<TransitionProperties> {
@@ -69,6 +61,17 @@ export interface TransitionConfig {
 }
 
 export type ComputedStyle = Record<keyof Properties, string>;
+
+export interface Bounds {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+  width: number;
+  height: number;
+  scrollBarWidth: number;
+  scrollBarHeight: number;
+}
 
 export interface Snapshot {
   tag: string;

@@ -1,4 +1,5 @@
 import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
+import copyRelevantStyles from './copyRelevantStyles';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';
@@ -46,6 +47,10 @@ const captureSnapshot = (
   }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
+
+  if (transitionProperties.relevantStyleProperties.length) {
+    copyRelevantStyles(targetElement, targetElementClone, transitionProperties.relevantStyleProperties);
+  }
 
   hideElementsWithTags(excludeTags, targetElementClone);
   segregateIds(targetElementClone, excludeTags);

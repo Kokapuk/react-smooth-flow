@@ -68,6 +68,7 @@ const PreserveAspectRatio = () => {
                       mutationTransitionType: 'sequential',
                       duration: 750,
                       easing: materialDesignEmphasizedEasing,
+                      relevantStyleProperties: ['font', 'color'],
                     },
                   })
                 : null)}

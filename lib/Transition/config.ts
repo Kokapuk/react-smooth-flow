@@ -47,6 +47,7 @@ export const DEFAULT_TRANSITION_PROPERTIES: Readonly<
     | 'positionAnchor'
     | 'mutationTransitionType'
     | 'overflow'
+    | 'relevantStyleProperties'
   >
 > = {
   easing: 'ease',
@@ -57,4 +58,5 @@ export const DEFAULT_TRANSITION_PROPERTIES: Readonly<
   positionAnchor: 'topLeft',
   mutationTransitionType: 'overlap',
   overflow: 'hidden',
+  relevantStyleProperties: [],
 };
