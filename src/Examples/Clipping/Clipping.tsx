@@ -13,34 +13,32 @@ const Clipping = () => {
         <div
           className={styles.target}
           style={isToggled ? undefined : { visibility: 'hidden' }}
-          {...(isToggled
-            ? constructTransition({
-                nonClipped: {
-                  enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
-                  exitKeyframes: 'reversedEnter',
-                  transitionRootTag: 'clippingContainer',
-                  duration: 600,
-                },
-              })
-            : null)}
+          {...constructTransition({
+            nonClipped: {
+              enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
+              exitKeyframes: 'reversedEnter',
+              transitionRootTag: 'clippingContainer',
+              duration: 600,
+              disabled: !isToggled,
+            },
+          })}
         >
           Non Clipped
         </div>
         <div
           className={styles.target}
           style={isToggled ? undefined : { visibility: 'hidden' }}
-          {...(isToggled
-            ? constructTransition({
-                clipped: {
-                  enterKeyframes: [
-                    { transform: 'translateX(-100%)', clipPath: 'inset(0 0 0 100%)' },
-                    { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
-                  ],
-                  exitKeyframes: 'reversedEnter',
-                  duration: 600,
-                },
-              })
-            : null)}
+          {...constructTransition({
+            clipped: {
+              enterKeyframes: [
+                { transform: 'translateX(-100%)', clipPath: 'inset(0 0 0 100%)' },
+                { transform: 'translateX(0)', clipPath: 'inset(0 0 0 0)' },
+              ],
+              exitKeyframes: 'reversedEnter',
+              duration: 600,
+              disabled: !isToggled,
+            },
+          })}
         >
           Clipped
         </div>

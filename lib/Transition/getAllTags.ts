@@ -1,8 +1,9 @@
 import getElementByTransitionTag from './getElementByTransitionTag';
 import getElementTransitionMapping from './getElementTransitionMapping';
+import { Tag } from './types';
 
-const getAllTags = (tags: string[]) => {
-  const allTags: string[] = [];
+const getAllTags = (tags: Tag[]) => {
+  const allTags: Tag[] = [];
 
   tags.forEach((i) => {
     const element = getElementByTransitionTag(i);

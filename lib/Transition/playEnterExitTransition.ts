@@ -2,7 +2,7 @@ import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Snapshot } from './types';
+import { Snapshot, Tag } from './types';
 
 const playEnterExitTransition = async (
   targetElement: HTMLElement | null,
@@ -14,7 +14,7 @@ const playEnterExitTransition = async (
   const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
 
   if (prevSnapshot || nextSnapshot) {
-    activeTransitions[(prevSnapshot?.tag ?? nextSnapshot?.tag) as string] = [];
+    activeTransitions[(prevSnapshot?.tag ?? nextSnapshot?.tag) as Tag] = [];
   }
 
   await Promise.all([

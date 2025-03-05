@@ -80,4 +80,8 @@
     width: 100% !important;
     height: 100% !important;
   }
+
+  & * {
+    animation: none !important;
+  }
 }

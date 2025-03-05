@@ -53,25 +53,23 @@ const PreserveAspectRatio = () => {
           {buttons.map((i) => (
             <button
               onClick={() =>
-                startTransition(
-                  ['container', activePanel ? `panel-${activePanel}` : null, `panel-${i}`].filter(Boolean) as string[],
-                  () => setActivePanel(i)
+                startTransition(['container', activePanel && `panel-${activePanel}`, `panel-${i}`], () =>
+                  setActivePanel(i)
                 )
               }
               data-panelnumber={i}
               className={styles.button}
               key={i}
               style={{ visibility: activePanel === i ? 'hidden' : undefined }}
-              {...(activePanel !== i
-                ? constructTransition({
-                    [`panel-${i}`]: {
-                      mutationTransitionType: 'sequential',
-                      duration: 750,
-                      easing: materialDesignEmphasizedEasing,
-                      relevantStyleProperties: ['font', 'color'],
-                    },
-                  })
-                : null)}
+              {...constructTransition({
+                [`panel-${i}`]: {
+                  mutationTransitionType: 'sequential',
+                  duration: 750,
+                  easing: materialDesignEmphasizedEasing,
+                  relevantStyleProperties: ['font', 'color'],
+                  disabled: activePanel === i,
+                },
+              })}
             >
               {i}
             </button>

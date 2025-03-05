@@ -1,6 +1,7 @@
 import getElementTransitionMapping from './getElementTransitionMapping';
+import { Tag } from './types';
 
-const elementMatchesAnyTag = (element: HTMLElement, tags: string[]) => {
+const elementMatchesAnyTag = (element: HTMLElement, tags: Tag[]) => {
   const transitionMapping = getElementTransitionMapping(element);
 
   if (!transitionMapping) {

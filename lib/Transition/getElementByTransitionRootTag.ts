@@ -1,4 +1,6 @@
-const getElementByTransitionRootTag = (tag: string, parent: Element | Document = document) => {
+import { Tag } from './types';
+
+const getElementByTransitionRootTag = (tag: Tag, parent: Element | Document = document) => {
   const matchedElements = parent.querySelectorAll(`[data-transitionroot='${tag}']`);
 
   if (!matchedElements.length) {

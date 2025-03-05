@@ -1,6 +1,7 @@
 import { activeTransitions } from './store';
+import { Tag } from './types';
 
-const finishTransitions = (...tags: string[]) => {
+const finishTransitions = (...tags: Tag[]) => {
   tags.forEach((i) => {
     activeTransitions[i]?.forEach((i) => {
       i.onCancel();

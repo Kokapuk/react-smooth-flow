@@ -1,9 +1,9 @@
 import { CONSISTENT_TRANSITION_PROPERTIES } from './config';
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 import { activeTransitions } from './store';
-import { Snapshot } from './types';
+import { Snapshot, Tag } from './types';
 
-const anyParentMatchesAnyTag = (element: HTMLElement, tags: string[]) => {
+const anyParentMatchesAnyTag = (element: HTMLElement, tags: Tag[]) => {
   if (elementMatchesAnyTag(element, tags)) {
     return true;
   }
@@ -20,7 +20,7 @@ const validateSnapshotPairs = (
     prev: Snapshot | null;
     next: Snapshot | null;
   }[],
-  tags: string[]
+  tags: Tag[]
 ) => {
   pairs.forEach(({ prev, next }) => {
     if (prev && next) {

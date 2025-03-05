@@ -9,13 +9,9 @@ import getTotalOpacity from './getTotalOpacity';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
 import segregateIds from './segregateIds';
-import { Snapshot } from './types';
+import { Snapshot, Tag } from './types';
 
-const captureSnapshot = (
-  targetElement: HTMLElement | null,
-  targetTag: string,
-  excludeTags: string[]
-): Snapshot | null => {
+const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excludeTags: Tag[]): Snapshot | null => {
   if (!targetElement) {
     return null;
   }
@@ -68,7 +64,6 @@ const captureSnapshot = (
   const image = document.createElement('div');
   image.className = 'rsf-image';
   image.style.overflow = transitionProperties.overflow;
-  image.style.zIndex = `${getTotalZIndex(targetElement, transitionRoot ?? undefined)}`;
   image.style.width = `${bounds.width}px`;
   image.style.height = `${bounds.height}px`;
 
@@ -106,6 +101,7 @@ const captureSnapshot = (
     hasFixedPosition,
     transitionRoot,
     targetElement,
+    totalZIndex: getTotalZIndex(targetElement, transitionRoot ?? undefined),
   };
 };
 

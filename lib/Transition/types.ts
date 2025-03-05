@@ -1,5 +1,7 @@
 import { Properties, PropertiesHyphen } from 'csstype';
 
+export type Tag = string;
+
 export interface Keyframe {
   offset?: number;
   [key: string]: string | number | undefined;
@@ -41,17 +43,18 @@ export interface TransitionProperties {
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   avoidMutationTransition?: boolean;
-  transitionRootTag?: string;
+  transitionRootTag?: Tag;
   mutationTransitionType?: MutationTransitionType;
   overflow?: ImageOverflow;
   relevantStyleProperties?: RelevantStyleProperties;
+  disabled?: boolean;
 }
 
 export interface ParsedTransitionProperties extends Required<TransitionProperties> {
   exitKeyframes: Keyframes;
 }
 
-export type TransitionMapping<T extends TransitionProperties = TransitionProperties> = Record<string, T>;
+export type TransitionMapping<T extends TransitionProperties = TransitionProperties> = Record<Tag, T>;
 
 export interface TransitionConfig {
   noFlushSync?: boolean;
@@ -74,7 +77,7 @@ export interface Bounds {
 }
 
 export interface Snapshot {
-  tag: string;
+  tag: Tag;
   bounds: Bounds;
   image: HTMLDivElement;
   computedStyle: ComputedStyle;
@@ -82,6 +85,7 @@ export interface Snapshot {
   hasFixedPosition: boolean;
   transitionRoot?: HTMLElement | null;
   targetElement: HTMLElement;
+  totalZIndex: number;
 }
 
 export interface TransitionSnapshot {
@@ -89,3 +93,6 @@ export interface TransitionSnapshot {
   transition: Animation;
   onCancel(): void;
 }
+
+export type Falsy = false | 0 | '' | null | undefined;
+export type FalsyArray<T> = (T | Falsy)[];

@@ -5,7 +5,9 @@ import startTransition from './Transition/startTransition';
 import './Transition/style.scss';
 
 import {
+  FalsyArray,
   ParsedTransitionProperties,
+  Tag,
   TransitionConfig,
   TransitionMapping,
   TransitionProperties,
@@ -13,4 +15,4 @@ import {
 
 export { cancelTransition, constructTransition, constructTransitionRoot, startTransition };
 
-export type { ParsedTransitionProperties, TransitionConfig, TransitionMapping, TransitionProperties };
+export type { FalsyArray, ParsedTransitionProperties, Tag, TransitionConfig, TransitionMapping, TransitionProperties };

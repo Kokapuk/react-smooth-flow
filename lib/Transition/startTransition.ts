@@ -1,4 +1,5 @@
 import { flushSync } from 'react-dom';
+import applyMaxZIndexToSnapshots from './applyMaxZIndexToSnapshots';
 import applyPositionToRoots from './applyPositionToRoots';
 import applyPositionToSnapshots from './applyPositionToSnapshots';
 import cancelTransition from './cancelTransition';
@@ -9,17 +10,23 @@ import getElementByTransitionTag from './getElementByTransitionTag';
 import isMotionReduced from './isMotionReduced';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
-import { TransitionConfig } from './types';
+import { FalsyArray, Tag, TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
+import getTruthyArray from './getTruthyArray';
 
-const startTransition = async (tags: string[], modifyDOM: () => void | Promise<void>, config?: TransitionConfig) => {
-  cancelTransition(...getAllTags(tags));
+const startTransition = async (
+  tags: FalsyArray<Tag>,
+  modifyDOM: () => void | Promise<void>,
+  config?: TransitionConfig
+) => {
+  const validTags = getTruthyArray(tags);
+  cancelTransition(...getAllTags(validTags));
 
-  const prevSnapshots = tags.map((i) =>
+  const prevSnapshots = validTags.map((i) =>
     captureSnapshot(
       getElementByTransitionTag(i),
       i,
-      tags.filter((j) => j !== i)
+      validTags.filter((j) => j !== i)
     )
   );
 
@@ -29,11 +36,11 @@ const startTransition = async (tags: string[], modifyDOM: () => void | Promise<v
     await flushSync(modifyDOM);
   }
 
-  const nextSnapshots = tags.map((i) =>
+  const nextSnapshots = validTags.map((i) =>
     captureSnapshot(
       getElementByTransitionTag(i),
       i,
-      tags.filter((j) => j !== i)
+      validTags.filter((j) => j !== i)
     )
   );
 
@@ -45,8 +52,9 @@ const startTransition = async (tags: string[], modifyDOM: () => void | Promise<v
         i.next?.transitionProperties.ignoreReducedMotion ||
         !isMotionReduced()
     );
-  validateSnapshotPairs(pairs, tags);
+  validateSnapshotPairs(pairs, validTags);
   applyPositionToSnapshots(pairs);
+  applyMaxZIndexToSnapshots(pairs);
   const resetRootsPositions = applyPositionToRoots(pairs);
 
   config?.onBegin?.();
@@ -69,7 +77,7 @@ const startTransition = async (tags: string[], modifyDOM: () => void | Promise<v
       })
     );
 
-    finishTransitions(...tags);
+    finishTransitions(...validTags);
     resetRootsPositions();
     config?.onFinish?.();
   } catch (err: any) {
