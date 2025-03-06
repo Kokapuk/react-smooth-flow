@@ -5,7 +5,7 @@ const copyRelevantStyles = (
   transferTarget: HTMLElement,
   properties: RelevantStyleProperties
 ) => {
-  const computedStyle = getComputedStyle(captureTarget);
+  const computedStyle = window.getComputedStyle(captureTarget);
 
   properties.forEach((property) => {
     transferTarget.style.setProperty(property, computedStyle.getPropertyValue(property), 'important');

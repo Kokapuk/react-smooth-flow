@@ -1,3 +1,3 @@
-import { Tag, TransitionSnapshot } from './types';
+import { Tag, Transition } from './types';
 
-export const activeTransitions: Record<Tag, TransitionSnapshot[]> = {};
+export const activeTransitions: Record<Tag, Transition[]> = {};

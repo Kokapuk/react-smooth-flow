@@ -12,49 +12,49 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: Tag[]) => {
 
   const idMap: Record<string, string> = {};
 
-  elements.forEach((i) => {
-    if (!i.id) {
+  elements.forEach((element) => {
+    if (!element.id) {
       return;
     }
 
-    if (elementMatchesAnyTag(i, excludeTags)) {
+    if (elementMatchesAnyTag(element, excludeTags)) {
       return;
     }
 
     const newId = `rsf-${Math.random().toString(16).split('.')[1]}`;
 
-    idMap[i.id] = newId;
-    i.id = newId;
+    idMap[element.id] = newId;
+    element.id = newId;
   });
 
-  Array.from(targetElement.querySelectorAll('[clip-path^="url(#"]')).forEach((i) => {
-    const id = i.getAttribute('clip-path')?.match(/url\(#(.+)\)/)?.[1];
+  Array.from(targetElement.querySelectorAll('[clip-path^="url(#"]')).forEach((element) => {
+    const id = element.getAttribute('clip-path')?.match(/url\(#(.+)\)/)?.[1];
 
     if (!id) {
       return;
     }
 
-    i.setAttribute('clip-path', `url(#${idMap[id]})`);
+    element.setAttribute('clip-path', `url(#${idMap[id]})`);
   });
 
-  Array.from(targetElement.querySelectorAll('[mask^="url(#"]')).forEach((i) => {
-    const id = i.getAttribute('mask')?.match(/url\(#(.+)\)/)?.[1];
+  Array.from(targetElement.querySelectorAll('[mask^="url(#"]')).forEach((element) => {
+    const id = element.getAttribute('mask')?.match(/url\(#(.+)\)/)?.[1];
 
     if (!id) {
       return;
     }
 
-    i.setAttribute('mask', `url(#${idMap[id]})`);
+    element.setAttribute('mask', `url(#${idMap[id]})`);
   });
 
-  Array.from(targetElement.querySelectorAll('use[href^="#"]')).forEach((i) => {
-    const id = i.getAttribute('href')?.replace('#', '');
+  Array.from(targetElement.querySelectorAll('use[href^="#"]')).forEach((element) => {
+    const id = element.getAttribute('href')?.replace('#', '');
 
     if (!id) {
       return;
     }
 
-    i.setAttribute('href', `#${idMap[id]}`);
+    element.setAttribute('href', `#${idMap[id]}`);
   });
 };
 

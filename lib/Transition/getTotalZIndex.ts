@@ -3,8 +3,8 @@ const getTotalZIndex = (element: HTMLElement, upToElement: HTMLElement = documen
   let zIndex = 0;
 
   while (target && target !== upToElement) {
-    const computedStyles = window.getComputedStyle(target);
-    const parsedZIndex = parseInt(computedStyles.zIndex);
+    const computedStyle = window.getComputedStyle(target);
+    const parsedZIndex = parseInt(computedStyle.zIndex);
 
     if (!Number.isNaN(parsedZIndex)) {
       zIndex += parsedZIndex;

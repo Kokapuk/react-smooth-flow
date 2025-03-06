@@ -7,12 +7,12 @@ import captureSnapshot from './captureSnapshot';
 import finishTransitions from './finishTransitions';
 import getAllTags from './getAllTags';
 import getElementByTransitionTag from './getElementByTransitionTag';
+import getTruthyArray from './getTruthyArray';
 import isMotionReduced from './isMotionReduced';
 import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
 import { FalsyArray, Tag, TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
-import getTruthyArray from './getTruthyArray';
 
 const startTransition = async (
   tags: FalsyArray<Tag>,
@@ -22,11 +22,11 @@ const startTransition = async (
   const validTags = getTruthyArray(tags);
   cancelTransition(...getAllTags(validTags));
 
-  const prevSnapshots = validTags.map((i) =>
+  const prevSnapshots = validTags.map((targetTag) =>
     captureSnapshot(
-      getElementByTransitionTag(i),
-      i,
-      validTags.filter((j) => j !== i)
+      getElementByTransitionTag(targetTag),
+      targetTag,
+      validTags.filter((tag) => tag !== targetTag)
     )
   );
 
@@ -36,20 +36,20 @@ const startTransition = async (
     await flushSync(modifyDOM);
   }
 
-  const nextSnapshots = validTags.map((i) =>
+  const nextSnapshots = validTags.map((targetTag) =>
     captureSnapshot(
-      getElementByTransitionTag(i),
-      i,
-      validTags.filter((j) => j !== i)
+      getElementByTransitionTag(targetTag),
+      targetTag,
+      validTags.filter((tag) => tag !== targetTag)
     )
   );
 
   const pairs = prevSnapshots
     .map((i, index) => ({ prev: i, next: nextSnapshots[index] }))
     .filter(
-      (i) =>
-        i.prev?.transitionProperties.ignoreReducedMotion ||
-        i.next?.transitionProperties.ignoreReducedMotion ||
+      (pair) =>
+        pair.prev?.transitionProperties.ignoreReducedMotion ||
+        pair.next?.transitionProperties.ignoreReducedMotion ||
         !isMotionReduced()
     );
   validateSnapshotPairs(pairs, validTags);

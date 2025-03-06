@@ -2,9 +2,9 @@ const elementHasFixedPosition = (element: HTMLElement) => {
   let target: HTMLElement | null = element;
 
   while (target && target !== document.body) {
-    const computedStyles = window.getComputedStyle(target);
+    const computedStyle = window.getComputedStyle(target);
 
-    if (computedStyles.position === 'fixed') {
+    if (computedStyle.position === 'fixed') {
       return true;
     }
 

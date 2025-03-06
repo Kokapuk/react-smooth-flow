@@ -14,7 +14,7 @@ const applyPositionToRoots = (pairs: { prev: Snapshot | null; next: Snapshot | n
   }
 
   uniqueRoots.forEach((root) => {
-    const computedStyle = getComputedStyle(root);
+    const computedStyle = window.getComputedStyle(root);
 
     if (computedStyle.position !== 'static') {
       return;

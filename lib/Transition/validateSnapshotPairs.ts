@@ -24,10 +24,10 @@ const validateSnapshotPairs = (
 ) => {
   pairs.forEach(({ prev, next }) => {
     if (prev && next) {
-      CONSISTENT_TRANSITION_PROPERTIES.forEach((i) => {
-        if (prev.transitionProperties[i] !== next.transitionProperties[i]) {
+      CONSISTENT_TRANSITION_PROPERTIES.forEach((property) => {
+        if (prev.transitionProperties[property] !== next.transitionProperties[property]) {
           throw Error(
-            `"${i}" property differ for previous and next snapshots. It should never update while snapshots are being captured. Transition tag: ${prev.tag}`
+            `"${property}" property differ for previous and next snapshots. It should never update while snapshots are being captured. Transition tag: ${prev.tag}`
           );
         }
       });
@@ -35,45 +35,45 @@ const validateSnapshotPairs = (
 
     const pair = [prev, next].filter(Boolean) as Snapshot[];
 
-    pair.forEach((i) => {
-      if (!i.transitionRoot) {
+    pair.forEach((snapshot) => {
+      if (!snapshot.transitionRoot) {
         return;
       }
 
-      if (!anyParentMatchesAnyTag(i.transitionRoot, tags)) {
+      if (!anyParentMatchesAnyTag(snapshot.transitionRoot, tags)) {
         return;
       }
 
       throw Error(
-        `Snapshot with tag "${i.tag}" has custom transition root, but either root it self or one of its parents will also be transitioned`
+        `Snapshot with tag "${snapshot.tag}" has custom transition root, but either root it self or one of its parents will also be transitioned`
       );
     });
 
-    pair.forEach((i) => {
-      if (!i.transitionRoot) {
+    pair.forEach((snapshot) => {
+      if (!snapshot.transitionRoot) {
         return;
       }
 
       const activeTransitionTags = Object.keys(activeTransitions);
 
-      if (!anyParentMatchesAnyTag(i.transitionRoot, activeTransitionTags)) {
+      if (!anyParentMatchesAnyTag(snapshot.transitionRoot, activeTransitionTags)) {
         return;
       }
 
       throw Error(
-        `Snapshot with tag "${i.tag}" has custom transition root, but either root it self or one of its parents are being transitioned`
+        `Snapshot with tag "${snapshot.tag}" has custom transition root, but either root it self or one of its parents are being transitioned`
       );
     });
 
-    // pair.forEach((i) => {
+    // pair.forEach((snapshot) => {
     //   const activeTransitionTags = Object.keys(activeTransitions);
 
     //   activeTransitionTags.forEach((tag) => {
-    //     const transitionTarget = getElementByTransitionTag(tag, i.targetElement);
+    //     const transitionTarget = getElementByTransitionTag(tag, snapshot.targetElement);
 
     //     if (transitionTarget) {
     //       throw Error(
-    //         `Snapshot with tag "${i.tag}" has ongoing transition inside for element with transition tag "${tag}"`
+    //         `Snapshot with tag "${snapshot.tag}" has ongoing transition inside for element with transition tag "${tag}"`
     //       );
     //     }
     //   });

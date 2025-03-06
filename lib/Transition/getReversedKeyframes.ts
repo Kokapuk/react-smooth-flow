@@ -3,13 +3,15 @@ import { Keyframes, PropertyIndexedKeyframes } from './types';
 const getReversedKeyframes = (keyframes: Keyframes) => {
   if (Array.isArray(keyframes)) {
     const reversedKeyframes = [...keyframes].reverse();
-    reversedKeyframes.forEach((i) => (i.offset = i.offset === undefined ? undefined : 1 - i.offset));
+    reversedKeyframes.forEach(
+      (keyframe) => (keyframe.offset = keyframe.offset === undefined ? undefined : 1 - keyframe.offset)
+    );
 
     return reversedKeyframes;
   } else {
     const reversedKeyframes = JSON.parse(JSON.stringify(keyframes)) as PropertyIndexedKeyframes;
-    Object.keys(reversedKeyframes).forEach((key) => reversedKeyframes[key]!.reverse());
-    reversedKeyframes.offset = reversedKeyframes.offset?.map((i) => 1 - i);
+    Object.keys(reversedKeyframes).forEach((property) => reversedKeyframes[property]!.reverse());
+    reversedKeyframes.offset = reversedKeyframes.offset?.map((offset) => 1 - offset);
 
     return reversedKeyframes;
   }

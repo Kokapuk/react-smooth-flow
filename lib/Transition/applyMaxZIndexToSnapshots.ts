@@ -5,13 +5,13 @@ const applyMaxZIndexToSnapshots = (pairs: { prev: Snapshot | null; next: Snapsho
   const maxZIndex = Math.max(...pairsMaxZIndex);
 
   pairs
-    .flatMap((i) => [i.prev, i.next])
-    .forEach((i) => {
-      if (!i) {
+    .flatMap((pair) => [pair.prev, pair.next])
+    .forEach((snapshot) => {
+      if (!snapshot) {
         return;
       }
 
-      i.image.style.zIndex = maxZIndex.toString();
+      snapshot.image.style.zIndex = maxZIndex.toString();
     });
 };
 

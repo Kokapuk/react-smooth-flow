@@ -67,7 +67,6 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   image.style.width = `${bounds.width}px`;
   image.style.height = `${bounds.height}px`;
 
-  // @ts-ignore
   STYLE_PROPERTIES_TO_CAPTURE.forEach((property) => (image.style[property] = computedStyle[property]));
 
   const snapshotContainerStyles = Object.entries({

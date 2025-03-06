@@ -5,18 +5,18 @@ import { Tag } from './types';
 const getAllTags = (tags: Tag[]) => {
   const allTags: Tag[] = [];
 
-  tags.forEach((i) => {
-    const element = getElementByTransitionTag(i);
+  tags.forEach((tag) => {
+    const element = getElementByTransitionTag(tag);
 
     if (!element) {
-      allTags.push(i);
+      allTags.push(tag);
       return;
     }
 
     const transitionMapping = getElementTransitionMapping(element);
 
     if (!transitionMapping) {
-      allTags.push(i);
+      allTags.push(tag);
       return;
     }
 

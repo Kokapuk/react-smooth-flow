@@ -5,13 +5,13 @@ import { FalsyArray, Tag } from './types';
 const cancelTransition = (...tags: FalsyArray<Tag>) => {
   const validTags = getTruthyArray(tags);
 
-  validTags.forEach((i) => {
-    activeTransitions[i]?.forEach((i) => {
-      i.transition.cancel();
-      i.onCancel();
+  validTags.forEach((tag) => {
+    activeTransitions[tag]?.forEach((transition) => {
+      transition.animation.cancel();
+      transition.onCancel();
     });
 
-    delete activeTransitions[i];
+    delete activeTransitions[tag];
   });
 };
 

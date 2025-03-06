@@ -1,7 +1,7 @@
 import { activeTransitions } from './store';
 
 export const rootHasActiveTransition = (root: HTMLElement) => {
-  const snapshots = Object.keys(activeTransitions).flatMap((tag) => activeTransitions[tag]);
+  const transitions = Object.keys(activeTransitions).flatMap((tag) => activeTransitions[tag]);
 
-  return snapshots.some((i) => i.snapshot.transitionRoot === root);
+  return transitions.some((transition) => transition.snapshot.transitionRoot === root);
 };

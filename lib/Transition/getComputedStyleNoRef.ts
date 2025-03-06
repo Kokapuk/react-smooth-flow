@@ -3,13 +3,12 @@ import { ComputedStyle } from './types';
 
 const getComputedStyleNoRef = (element: HTMLElement): ComputedStyle => {
   const computedStyleWithRef = window.getComputedStyle(element);
-  const computedStyle: Partial<ComputedStyle> = {};
 
-  STYLE_PROPERTIES_TO_CAPTURE.forEach(
-    (i) => (computedStyle[i] = computedStyleWithRef[i as keyof typeof computedStyleWithRef] as string)
-  );
+  const computedStyle = Object.fromEntries(
+    STYLE_PROPERTIES_TO_CAPTURE.map((property) => [property, computedStyleWithRef[property]])
+  ) as ComputedStyle;
 
-  return computedStyle as ComputedStyle;
+  return computedStyle;
 };
 
 export default getComputedStyleNoRef;

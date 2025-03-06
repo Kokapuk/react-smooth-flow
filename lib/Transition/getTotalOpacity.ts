@@ -3,8 +3,8 @@ const getTotalOpacity = (element: HTMLElement) => {
   let opacity = 1;
 
   while (target && target !== document.body) {
-    const computedStyles = window.getComputedStyle(target);
-    const parsedOpacity = parseFloat(computedStyles.opacity);
+    const computedStyle = window.getComputedStyle(target);
+    const parsedOpacity = parseFloat(computedStyle.opacity);
 
     if (!Number.isNaN(parsedOpacity)) {
       opacity *= parsedOpacity;

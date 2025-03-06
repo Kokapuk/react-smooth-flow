@@ -46,19 +46,13 @@ const applyPositionToSnapshots = (pairs: { prev: Snapshot | null; next: Snapshot
         continue;
       }
 
-      setSnapshotPosition(
-        snapshot,
-        snapshot.hasFixedPosition && !snapshot.transitionRoot ? 'fixed' : 'absolute'
-      );
+      setSnapshotPosition(snapshot, snapshot.hasFixedPosition && !snapshot.transitionRoot ? 'fixed' : 'absolute');
 
       continue;
     }
 
-    [prevSnapshot, nextSnapshot].forEach((i) =>
-      setSnapshotPosition(
-        i,
-        nextSnapshot.hasFixedPosition && !i.transitionRoot ? 'fixed' : 'absolute'
-      )
+    [prevSnapshot, nextSnapshot].forEach((snapshot) =>
+      setSnapshotPosition(snapshot, nextSnapshot.hasFixedPosition && !snapshot.transitionRoot ? 'fixed' : 'absolute')
     );
   }
 };

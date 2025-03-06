@@ -1,4 +1,5 @@
-import { Properties, PropertiesHyphen } from 'csstype';
+import { PropertiesHyphen } from 'csstype';
+import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
 
 export type Tag = string;
 
@@ -63,7 +64,7 @@ export interface TransitionConfig {
   onFinish?(): void;
 }
 
-export type ComputedStyle = Record<keyof Properties, string>;
+export type ComputedStyle = Record<(typeof STYLE_PROPERTIES_TO_CAPTURE)[number], string>;
 
 export interface Bounds {
   top: number;
@@ -88,9 +89,9 @@ export interface Snapshot {
   totalZIndex: number;
 }
 
-export interface TransitionSnapshot {
+export interface Transition {
   snapshot: Snapshot;
-  transition: Animation;
+  animation: Animation;
   onCancel(): void;
 }
 
