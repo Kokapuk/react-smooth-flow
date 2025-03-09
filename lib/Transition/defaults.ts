@@ -1,6 +1,10 @@
 import { Properties } from 'csstype';
 import { ParsedTransitionProperties, TransitionProperties } from './types';
 
+export interface ConfigurableDefaults {
+  defaultTransitionProperties: ParsedTransitionProperties;
+}
+
 export const STYLE_PROPERTIES_TO_CAPTURE = [
   'opacity',
   'backgroundColor',
@@ -36,15 +40,23 @@ export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionPropert
   'mutationTransitionType',
 ];
 
-export const DEFAULT_TRANSITION_PROPERTIES = {
-  easing: 'ease',
-  ignoreReducedMotion: false,
-  enterKeyframes: { opacity: [0, 1] },
-  exitKeyframes: { opacity: [1, 0] },
-  contentAlign: 'topLeft',
-  positionAnchor: 'topLeft',
-  mutationTransitionType: 'overlap',
-  overflow: 'hidden',
-  relevantStyleProperties: [],
-  disabled: false,
-} as const satisfies Partial<ParsedTransitionProperties>;
+const defaults: ConfigurableDefaults = {
+  defaultTransitionProperties: {
+    duration: 300,
+    easing: 'ease',
+    delay: 0,
+    ignoreReducedMotion: false,
+    enterKeyframes: { opacity: [0, 1] },
+    exitKeyframes: { opacity: [1, 0] },
+    contentAlign: 'topLeft',
+    positionAnchor: 'topLeft',
+    avoidMutationTransition: false,
+    transitionRootTag: null,
+    mutationTransitionType: 'overlap',
+    overflow: 'hidden',
+    relevantStyleProperties: [],
+    disabled: false,
+  },
+};
+
+export default defaults;

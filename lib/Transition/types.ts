@@ -1,5 +1,5 @@
 import { PropertiesHyphen } from 'csstype';
-import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
+import { STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
 
 export type Tag = string;
 
@@ -35,7 +35,7 @@ export type ImageOverflow = 'hidden' | 'visible';
 export type RelevantStyleProperties = Exclude<keyof PropertiesHyphen, 'pointer-events'>[];
 
 export interface TransitionProperties {
-  duration: number;
+  duration?: number;
   easing?: string;
   delay?: number;
   ignoreReducedMotion?: boolean;
@@ -51,11 +51,13 @@ export interface TransitionProperties {
   disabled?: boolean;
 }
 
-export interface ParsedTransitionProperties extends Required<TransitionProperties> {
+export type ParsedTransitionProperties = Required<Omit<TransitionProperties, 'exitKeyframes' | 'transitionRootTag'>> & {
   exitKeyframes: Keyframes;
-}
+  transitionRootTag: Tag | null;
+};
 
-export type TransitionMapping<T extends TransitionProperties = TransitionProperties> = Record<Tag, T>;
+export type TransitionMapping<T extends TransitionProperties | ParsedTransitionProperties = TransitionProperties> =
+  Record<Tag, T>;
 
 export interface TransitionConfig {
   noFlushSync?: boolean;

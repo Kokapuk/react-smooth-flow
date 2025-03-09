@@ -1,4 +1,4 @@
-import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
+import { STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
 import { ComputedStyle } from './types';
 
 const getComputedStyleNoRef = (element: HTMLElement): ComputedStyle => {

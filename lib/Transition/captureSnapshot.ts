@@ -1,5 +1,5 @@
-import { STYLE_PROPERTIES_TO_CAPTURE } from './config';
 import copyRelevantStyles from './copyRelevantStyles';
+import { STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';

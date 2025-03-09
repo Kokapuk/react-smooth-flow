@@ -1,4 +1,4 @@
-import { STYLE_PROPERTIES_TO_ANIMATE } from './config';
+import { STYLE_PROPERTIES_TO_ANIMATE } from './defaults';
 import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';

@@ -1,6 +1,7 @@
 import cancelTransition from './Transition/cancelTransition';
 import constructTransition from './Transition/constructTransition';
 import constructTransitionRoot from './Transition/constructTransitionRoot';
+import defaults, { ConfigurableDefaults } from './Transition/defaults';
 import startTransition from './Transition/startTransition';
 import './Transition/style.scss';
 
@@ -13,6 +14,14 @@ import {
   TransitionProperties,
 } from './Transition/types';
 
-export { cancelTransition, constructTransition, constructTransitionRoot, startTransition };
+export { cancelTransition, constructTransition, constructTransitionRoot, defaults, startTransition };
 
-export type { FalsyArray, ParsedTransitionProperties, Tag, TransitionConfig, TransitionMapping, TransitionProperties };
+export type {
+  ConfigurableDefaults,
+  FalsyArray,
+  ParsedTransitionProperties,
+  Tag,
+  TransitionConfig,
+  TransitionMapping,
+  TransitionProperties,
+};

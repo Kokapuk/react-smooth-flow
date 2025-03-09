@@ -52,6 +52,7 @@ const startTransition = async (
         pair.next?.transitionProperties.ignoreReducedMotion ||
         !isMotionReduced()
     );
+
   validateSnapshotPairs(pairs, validTags);
   applyPositionToSnapshots(pairs);
   applyMaxZIndexToSnapshots(pairs);
@@ -64,12 +65,7 @@ const startTransition = async (
       pairs.map(({ prev: prevSnapshot, next: nextSnapshot }) => {
         const targetElement = nextSnapshot ? getElementByTransitionTag(nextSnapshot.tag) : null;
 
-        if (
-          prevSnapshot &&
-          nextSnapshot &&
-          !prevSnapshot.transitionProperties.avoidMutationTransition &&
-          !nextSnapshot.transitionProperties.avoidMutationTransition
-        ) {
+        if (prevSnapshot && nextSnapshot && !prevSnapshot.transitionProperties.avoidMutationTransition) {
           return playMutationTransition(targetElement!, prevSnapshot, nextSnapshot);
         } else {
           return playEnterExitTransition(targetElement, prevSnapshot, nextSnapshot);

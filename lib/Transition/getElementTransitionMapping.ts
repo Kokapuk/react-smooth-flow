@@ -1,4 +1,4 @@
-import { DEFAULT_TRANSITION_PROPERTIES } from './config';
+import defaults, { ConfigurableDefaults } from './defaults';
 import getReversedKeyframes from './getReversedKeyframes';
 import { ParsedTransitionProperties, TransitionMapping } from './types';
 
@@ -22,11 +22,11 @@ const getElementTransitionMapping = (element: HTMLElement) => {
       transitionProperties.exitKeyframes = getReversedKeyframes(transitionProperties.enterKeyframes);
     }
 
-    Object.keys(DEFAULT_TRANSITION_PROPERTIES).forEach((key) => {
-      const typedKey = key as keyof typeof DEFAULT_TRANSITION_PROPERTIES;
+    Object.keys(defaults.defaultTransitionProperties).forEach((key) => {
+      const typedKey = key as keyof ConfigurableDefaults['defaultTransitionProperties'];
 
       if (transitionProperties[typedKey] === undefined) {
-        (transitionProperties[typedKey] as any) = DEFAULT_TRANSITION_PROPERTIES[typedKey];
+        (transitionProperties[typedKey] as any) = defaults.defaultTransitionProperties[typedKey];
       }
     });
   });

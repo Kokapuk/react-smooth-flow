@@ -1,4 +1,4 @@
-import { CONSISTENT_TRANSITION_PROPERTIES } from './config';
+import { CONSISTENT_TRANSITION_PROPERTIES } from './defaults';
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 import { activeTransitions } from './store';
 import { Snapshot, Tag } from './types';
