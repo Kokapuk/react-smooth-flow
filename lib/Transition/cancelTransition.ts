@@ -8,7 +8,7 @@ const cancelTransition = (...tags: FalsyArray<Tag>) => {
   validTags.forEach((tag) => {
     activeTransitions[tag]?.forEach((transition) => {
       transition.animation.cancel();
-      transition.onCancel();
+      transition.cleanup();
     });
 
     delete activeTransitions[tag];

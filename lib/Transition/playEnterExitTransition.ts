@@ -41,7 +41,7 @@ const playEnterExitTransition = async (
       activeTransitions[prevSnapshot.tag].push({
         snapshot: prevSnapshot,
         animation: exitTransition,
-        onCancel: () => prevSnapshot.image.remove(),
+        cleanup: () => prevSnapshot.image.remove(),
       });
 
       await exitTransition.finished;
@@ -70,7 +70,7 @@ const playEnterExitTransition = async (
       activeTransitions[nextSnapshot.tag].push({
         snapshot: nextSnapshot,
         animation: enterTransition,
-        onCancel: () => {
+        cleanup: () => {
           nextSnapshot.image.remove();
           resetTargetStyles?.();
         },

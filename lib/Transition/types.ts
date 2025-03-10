@@ -94,7 +94,7 @@ export interface Snapshot {
 export interface Transition {
   snapshot: Snapshot;
   animation: Animation;
-  onCancel(): void;
+  cleanup(): void;
 }
 
 export type Falsy = false | 0 | '' | null | undefined;

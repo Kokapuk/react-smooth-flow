@@ -90,8 +90,8 @@ const playMutationTransition = async (targetElement: HTMLElement, prevSnapshot: 
   const nextTransition = nextSnapshot.image.animate(nextKeyframes, animationOptions);
 
   activeTransitions[prevSnapshot.tag].push(
-    { animation: prevTransition, snapshot: prevSnapshot, onCancel: removeSnapshotsAndResetTarget },
-    { animation: nextTransition, snapshot: nextSnapshot, onCancel: removeSnapshotsAndResetTarget }
+    { animation: prevTransition, snapshot: prevSnapshot, cleanup: removeSnapshotsAndResetTarget },
+    { animation: nextTransition, snapshot: nextSnapshot, cleanup: removeSnapshotsAndResetTarget }
   );
 
   if (prevSnapshot.transitionProperties.mutationTransitionType === 'sequential') {
@@ -107,8 +107,8 @@ const playMutationTransition = async (targetElement: HTMLElement, prevSnapshot: 
     const nextContentTransition = nextSnapshot.image.children[0].animate(nextContentKeyframes, animationOptions);
 
     activeTransitions[prevSnapshot.tag].push(
-      { animation: prevContentTransition, snapshot: prevSnapshot, onCancel: removeSnapshotsAndResetTarget },
-      { animation: nextContentTransition, snapshot: nextSnapshot, onCancel: removeSnapshotsAndResetTarget }
+      { animation: prevContentTransition, snapshot: prevSnapshot, cleanup: removeSnapshotsAndResetTarget },
+      { animation: nextContentTransition, snapshot: nextSnapshot, cleanup: removeSnapshotsAndResetTarget }
     );
   } else if (prevSnapshot.transitionProperties.mutationTransitionType !== 'overlap') {
     throw Error(`"${prevSnapshot.transitionProperties.mutationTransitionType}" is invalid mutation transition type`);

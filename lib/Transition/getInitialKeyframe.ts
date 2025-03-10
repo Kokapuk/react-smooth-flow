@@ -3,6 +3,11 @@ import { Keyframes, PropertyIndexedKeyframes } from './types';
 const getInitialKeyframe = (keyframes: Keyframes) => {
   if (Array.isArray(keyframes)) {
     const initialKeyframe = keyframes.slice(0, 1);
+
+    if (!initialKeyframe.length) {
+      return [];
+    }
+
     delete initialKeyframe[0].offset;
 
     return initialKeyframe;
