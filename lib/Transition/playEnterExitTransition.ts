@@ -2,81 +2,80 @@ import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Snapshot, Tag } from './types';
+import { Keyframes, SnapshotPair, SnapshotPairSharedData } from './types';
 
-const playEnterExitTransition = async (
-  targetElement: HTMLElement | null,
-  prevSnapshot: Snapshot | null,
-  nextSnapshot: Snapshot | null
+const playTransition = (
+  image: HTMLDivElement,
+  transitionRoot: HTMLElement,
+  keyframes: Keyframes,
+  snapshotPairSharedData: SnapshotPairSharedData,
+  resetTargetStyles?: (() => void) | null
 ) => {
-  const transitionRoot = prevSnapshot?.transitionRoot ?? nextSnapshot?.transitionRoot ?? getTransitionRoot();
+  transitionRoot.append(image);
 
-  const resetTargetStyles = targetElement ? hideElementNoTransition(targetElement) : undefined;
-
-  if (prevSnapshot || nextSnapshot) {
-    activeTransitions[(prevSnapshot?.tag ?? nextSnapshot?.tag) as Tag] = [];
+  if (snapshotPairSharedData.transitionProperties.delay) {
+    image.animate(getInitialKeyframe(keyframes), {
+      fill: 'forwards',
+    });
   }
+
+  const transition = image.animate(keyframes, {
+    duration: snapshotPairSharedData.transitionProperties.duration,
+    easing: snapshotPairSharedData.transitionProperties.easing,
+    delay: snapshotPairSharedData.transitionProperties.delay,
+    fill: 'forwards',
+  });
+
+  activeTransitions[snapshotPairSharedData.tag].push({
+    snapshotPairSharedData,
+    animation: transition,
+    cleanup: () => {
+      image.remove();
+      resetTargetStyles?.();
+    },
+  });
+
+  return transition.finished;
+};
+
+const playEnterExitTransition = async ({
+  shared,
+  prevSnapshot,
+  nextSnapshot,
+  prevImage,
+  nextImage,
+}: SnapshotPair<'enterExit'>) => {
+  const transitionRoot = shared.transitionRoot ?? getTransitionRoot();
+  const resetTargetStyles = nextSnapshot?.targetElement ? hideElementNoTransition(nextSnapshot.targetElement) : null;
+  activeTransitions[shared.tag] = [];
 
   await Promise.all([
     (async () => {
-      if (!prevSnapshot) {
+      if (!prevSnapshot || !prevImage) {
         return;
       }
 
-      transitionRoot.append(prevSnapshot.image);
-
-      if (prevSnapshot.transitionProperties.delay) {
-        prevSnapshot.image.animate(getInitialKeyframe(prevSnapshot.transitionProperties.exitKeyframes), {
-          fill: 'forwards',
-        });
-      }
-
-      const exitTransition = prevSnapshot.image.animate(prevSnapshot.transitionProperties.exitKeyframes, {
-        duration: prevSnapshot.transitionProperties.duration,
-        easing: prevSnapshot.transitionProperties.easing,
-        delay: prevSnapshot.transitionProperties.delay,
-        fill: 'forwards',
-      });
-
-      activeTransitions[prevSnapshot.tag].push({
-        snapshot: prevSnapshot,
-        animation: exitTransition,
-        cleanup: () => prevSnapshot.image.remove(),
-      });
-
-      await exitTransition.finished;
+      await playTransition(
+        prevImage,
+        transitionRoot,
+        prevSnapshot.transitionProperties.exitKeyframes,
+        shared,
+        resetTargetStyles
+      );
     })(),
 
     (async () => {
-      if (!nextSnapshot) {
+      if (!nextSnapshot || !nextImage) {
         return;
       }
 
-      transitionRoot.append(nextSnapshot.image);
-
-      if (nextSnapshot.transitionProperties.delay) {
-        nextSnapshot.image.animate(getInitialKeyframe(nextSnapshot.transitionProperties.enterKeyframes), {
-          fill: 'forwards',
-        });
-      }
-
-      const enterTransition = nextSnapshot.image.animate(nextSnapshot.transitionProperties.enterKeyframes, {
-        duration: nextSnapshot.transitionProperties.duration,
-        easing: nextSnapshot.transitionProperties.easing,
-        delay: nextSnapshot.transitionProperties.delay,
-        fill: 'forwards',
-      });
-
-      activeTransitions[nextSnapshot.tag].push({
-        snapshot: nextSnapshot,
-        animation: enterTransition,
-        cleanup: () => {
-          nextSnapshot.image.remove();
-          resetTargetStyles?.();
-        },
-      });
-
-      await enterTransition.finished;
+      await playTransition(
+        nextImage,
+        transitionRoot,
+        nextSnapshot.transitionProperties.enterKeyframes,
+        shared,
+        resetTargetStyles
+      );
     })(),
   ]);
 };

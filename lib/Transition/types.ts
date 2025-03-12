@@ -1,5 +1,9 @@
 import { PropertiesHyphen } from 'csstype';
-import { STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
+import {
+  CONSISTENT_SNAPSHOT_PROPERTIES,
+  CONSISTENT_TRANSITION_PROPERTIES,
+  STYLE_PROPERTIES_TO_CAPTURE,
+} from './defaults';
 
 export type Tag = string;
 
@@ -91,8 +95,29 @@ export interface Snapshot {
   totalZIndex: number;
 }
 
+export type SharedTransitionProperties = Pick<
+  ParsedTransitionProperties,
+  (typeof CONSISTENT_TRANSITION_PROPERTIES)[number]
+>;
+
+export type SnapshotPairSharedData = Required<Pick<Snapshot, (typeof CONSISTENT_SNAPSHOT_PROPERTIES)[number]>> & {
+  transitionProperties: SharedTransitionProperties;
+};
+
+export type SnapshotPairTransitionType = 'mutation' | 'enterExit';
+
+export type SnapshotPair<T extends SnapshotPairTransitionType> = {
+  prevSnapshot: T extends 'mutation' ? Snapshot : Snapshot | null;
+  nextSnapshot: T extends 'mutation' ? Snapshot : Snapshot | null;
+  firstValidSnapshot: Snapshot;
+  shared: SnapshotPairSharedData;
+  transitionType: T;
+} & (T extends 'mutation'
+  ? { image: HTMLDivElement }
+  : { prevImage: HTMLDivElement | null; nextImage: HTMLDivElement | null });
+
 export interface Transition {
-  snapshot: Snapshot;
+  snapshotPairSharedData: SnapshotPairSharedData;
   animation: Animation;
   cleanup(): void;
 }

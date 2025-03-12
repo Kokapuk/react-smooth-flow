@@ -1,5 +1,4 @@
 import copyRelevantStyles from './copyRelevantStyles';
-import { STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';
@@ -62,34 +61,18 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
 
   const image = document.createElement('div');
-  image.className = 'rsf-image';
-  image.style.overflow = transitionProperties.overflow;
+  image.classList.add('rsf-snapshotContainer', `rsf-${transitionProperties.contentAlign}`);
   image.style.width = `${bounds.width}px`;
   image.style.height = `${bounds.height}px`;
+  image.style.padding = `${computedStyle.borderTopWidth} ${computedStyle.borderRightWidth} ${computedStyle.borderBottomWidth} ${computedStyle.borderLeftWidth}`;
+  image.style.setProperty('--borderTopWidth', computedStyle.borderTopWidth);
+  image.style.setProperty('--borderRightWidth', computedStyle.borderRightWidth);
+  image.style.setProperty('--borderBottomWidth', computedStyle.borderBottomWidth);
+  image.style.setProperty('--borderLeftWidth', computedStyle.borderLeftWidth);
 
-  STYLE_PROPERTIES_TO_CAPTURE.forEach((property) => (image.style[property] = computedStyle[property]));
-
-  const snapshotContainerStyles = Object.entries({
-    width: `${bounds.width}px`,
-    height: `${bounds.height}px`,
-    '--borderTopWidth': computedStyle.borderTopWidth,
-    '--borderRightWidth': computedStyle.borderRightWidth,
-    '--borderBottomWidth': computedStyle.borderBottomWidth,
-    '--borderLeftWidth': computedStyle.borderLeftWidth,
-    padding: `${computedStyle.borderTopWidth} ${computedStyle.borderRightWidth} ${computedStyle.borderBottomWidth} ${computedStyle.borderLeftWidth}`,
-  })
-    .filter(([_, value]) => Boolean(value))
-    .map(([key, value]) => `${key}: ${value}`)
-    .join('; ');
-
-  const snapshotContainerClasses = ['rsf-snapshotContainer', `rsf-${transitionProperties.contentAlign}`].join(' ');
-
-  image.innerHTML = `
-    <div class="${snapshotContainerClasses}" style="${snapshotContainerStyles}">
-      ${targetElementClone.outerHTML
-        .replace(/\sdata-transition=".+?"/gm, '')
-        .replace(/\sdata-transitionroot=".+?"/gm, '')}
-    </div>`;
+  image.innerHTML = targetElementClone.outerHTML
+    .replace(/\sdata-transition=".+?"/gm, '')
+    .replace(/\sdata-transitionroot=".+?"/gm, '');
 
   return {
     tag: targetTag,

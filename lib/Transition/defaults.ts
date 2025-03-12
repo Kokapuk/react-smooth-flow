@@ -1,5 +1,5 @@
 import { Properties } from 'csstype';
-import { ParsedTransitionProperties, TransitionProperties } from './types';
+import { ParsedTransitionProperties, Snapshot, TransitionProperties } from './types';
 
 export interface ConfigurableDefaults {
   defaultTransitionProperties: ParsedTransitionProperties;
@@ -21,6 +21,7 @@ export const STYLE_PROPERTIES_TO_CAPTURE = [
 ] as const satisfies Readonly<(keyof Properties)[]>;
 
 export const STYLE_PROPERTIES_TO_ANIMATE = [
+  'opacity',
   'backgroundColor',
   'boxShadow',
   'borderRadius',
@@ -29,7 +30,7 @@ export const STYLE_PROPERTIES_TO_ANIMATE = [
   'borderStyle',
 ] as const satisfies Readonly<(typeof STYLE_PROPERTIES_TO_CAPTURE)[number][]>;
 
-export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionProperties)[]> = [
+export const CONSISTENT_TRANSITION_PROPERTIES = [
   'duration',
   'easing',
   'delay',
@@ -38,7 +39,10 @@ export const CONSISTENT_TRANSITION_PROPERTIES: Readonly<(keyof TransitionPropert
   'transitionRootTag',
   'avoidMutationTransition',
   'mutationTransitionType',
-];
+  'overflow',
+] as const satisfies Readonly<(keyof TransitionProperties)[]>;
+
+export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag', 'transitionRoot'] as const satisfies Readonly<(keyof Snapshot)[]>;
 
 const defaults: ConfigurableDefaults = {
   defaultTransitionProperties: {

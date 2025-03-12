@@ -1,15 +1,12 @@
 import { rootHasActiveTransition } from './rootHasActiveTransition';
-import { Snapshot } from './types';
+import { SnapshotPair } from './types';
 
-const applyPositionToRoots = (pairs: { prev: Snapshot | null; next: Snapshot | null }[]) => {
+const applyPositionToRoots = (pairs: (SnapshotPair<'mutation'> | SnapshotPair<'enterExit'>)[]) => {
   const uniqueRoots: HTMLElement[] = [];
 
-  for (const { prev: prevSnapshot, next: nextSnapshot } of pairs) {
-    if (prevSnapshot?.transitionRoot && !uniqueRoots.includes(prevSnapshot.transitionRoot)) {
-      uniqueRoots.push(prevSnapshot.transitionRoot);
-    }
-    if (nextSnapshot?.transitionRoot && !uniqueRoots.includes(nextSnapshot.transitionRoot)) {
-      uniqueRoots.push(nextSnapshot.transitionRoot);
+  for (const { shared } of pairs) {
+    if (shared.transitionRoot && !uniqueRoots.includes(shared.transitionRoot)) {
+      uniqueRoots.push(shared.transitionRoot);
     }
   }
 
