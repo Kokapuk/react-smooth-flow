@@ -1,8 +1,8 @@
-const getTotalOpacity = (element: HTMLElement) => {
+const getTotalOpacity = (element: HTMLElement, upToElement: HTMLElement = document.body) => {
   let target: HTMLElement | null = element;
   let opacity = 1;
 
-  while (target && target !== document.body) {
+  while (target && target !== upToElement) {
     const computedStyle = window.getComputedStyle(target);
     const parsedOpacity = parseFloat(computedStyle.opacity);
 

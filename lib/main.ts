@@ -1,9 +1,9 @@
-import cancelTransition from './Transition/cancelTransition';
-import constructTransition from './Transition/constructTransition';
-import constructTransitionRoot from './Transition/constructTransitionRoot';
-import defaults, { ConfigurableDefaults } from './Transition/defaults';
-import startTransition from './Transition/startTransition';
-import './Transition/style.scss';
+import cancelTransition from './cancelTransition';
+import constructTransition from './constructTransition';
+import constructTransitionRoot from './constructTransitionRoot';
+import defaults, { ConfigurableDefaults } from './defaults';
+import startTransition from './startTransition';
+import './style.scss';
 
 import {
   FalsyArray,
@@ -12,7 +12,7 @@ import {
   TransitionConfig,
   TransitionMapping,
   TransitionProperties,
-} from './Transition/types';
+} from './types';
 
 export { cancelTransition, constructTransition, constructTransitionRoot, defaults, startTransition };
 

@@ -8,7 +8,7 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: Tag[]) => {
     elements.push(targetElement);
   }
 
-  elements.push(...(Array.from(targetElement.querySelectorAll('[id]')) as HTMLElement[]));
+  elements.push(...(targetElement.querySelectorAll('[id]') as NodeListOf<HTMLElement>));
 
   const idMap: Record<string, string> = {};
 
@@ -27,7 +27,7 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: Tag[]) => {
     element.id = newId;
   });
 
-  Array.from(targetElement.querySelectorAll('[clip-path^="url(#"]')).forEach((element) => {
+  targetElement.querySelectorAll('[clip-path^="url(#"]').forEach((element) => {
     const id = element.getAttribute('clip-path')?.match(/url\(#(.+)\)/)?.[1];
 
     if (!id) {
@@ -37,7 +37,7 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: Tag[]) => {
     element.setAttribute('clip-path', `url(#${idMap[id]})`);
   });
 
-  Array.from(targetElement.querySelectorAll('[mask^="url(#"]')).forEach((element) => {
+  targetElement.querySelectorAll('[mask^="url(#"]').forEach((element) => {
     const id = element.getAttribute('mask')?.match(/url\(#(.+)\)/)?.[1];
 
     if (!id) {
@@ -47,7 +47,7 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: Tag[]) => {
     element.setAttribute('mask', `url(#${idMap[id]})`);
   });
 
-  Array.from(targetElement.querySelectorAll('use[href^="#"]')).forEach((element) => {
+  targetElement.querySelectorAll('use[href^="#"]').forEach((element) => {
     const id = element.getAttribute('href')?.replace('#', '');
 
     if (!id) {

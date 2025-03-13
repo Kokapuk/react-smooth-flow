@@ -16,14 +16,7 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   }
 
   const transitionMapping = getElementTransitionMapping(targetElement)!;
-
-  const computedStyle = getComputedStyleNoRef(targetElement);
-  computedStyle.opacity = `${getTotalOpacity(targetElement)}`;
-
-  const bounds = getElementBounds(targetElement);
-  const hasFixedPosition = elementHasFixedPosition(targetElement);
   const transitionProperties = transitionMapping[targetTag];
-
   const transitionRoot = transitionProperties.transitionRootTag
     ? getElementByTransitionRootTag(transitionProperties.transitionRootTag)
     : null;
@@ -32,6 +25,11 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     throw Error(`Failed to find transition root with tag "${transitionProperties.transitionRootTag}"`);
   }
 
+  const computedStyle = getComputedStyleNoRef(targetElement);
+  computedStyle.opacity = `${getTotalOpacity(targetElement, transitionRoot ?? undefined)}`;
+
+  const bounds = getElementBounds(targetElement);
+  const hasFixedPosition = elementHasFixedPosition(targetElement);
   const transitionRootBounds = transitionRoot ? getElementBounds(transitionRoot) : null;
 
   if (transitionRootBounds) {

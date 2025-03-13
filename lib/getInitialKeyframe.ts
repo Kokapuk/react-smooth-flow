@@ -15,7 +15,7 @@ const getInitialKeyframe = (keyframes: Keyframes) => {
     const initialKeyframe = JSON.parse(JSON.stringify(keyframes)) as PropertyIndexedKeyframes;
     delete initialKeyframe.offset;
 
-    Object.keys(initialKeyframe).forEach((key) => initialKeyframe[key]!.splice(1));
+    Object.keys(initialKeyframe).forEach((property) => initialKeyframe[property]!.splice(1));
 
     return initialKeyframe;
   }

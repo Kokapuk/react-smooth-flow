@@ -9,24 +9,26 @@ const getElementTransitionMapping = (element: HTMLElement) => {
 
   const transitionMapping = JSON.parse(element.dataset.transition) as TransitionMapping;
 
-  Object.keys(transitionMapping).forEach((key) => {
-    const transitionProperties = transitionMapping[key];
+  Object.keys(transitionMapping).forEach((tag) => {
+    const transitionProperties = transitionMapping[tag];
 
     if (transitionProperties.exitKeyframes === 'reversedEnter') {
       if (!transitionProperties.enterKeyframes) {
         throw Error(
-          `Transition target with tag "${key}" has "exitKeyframes" property set to "reversedEnter", but "enterKeyframes" was not specified. Either specify "enterKeyframes" or don't set "exitKeyframes" to "reversedEnter"`
+          `Transition target with tag "${tag}" has "exitKeyframes" property set to "reversedEnter", but "enterKeyframes" was not specified. Either specify "enterKeyframes" or don't set "exitKeyframes" to "reversedEnter"`
         );
       }
 
       transitionProperties.exitKeyframes = getReversedKeyframes(transitionProperties.enterKeyframes);
     }
 
-    Object.keys(defaults.defaultTransitionProperties).forEach((key) => {
-      const typedKey = key as keyof ConfigurableDefaults['defaultTransitionProperties'];
+    const properties = Object.keys(
+      defaults.defaultTransitionProperties
+    ) as (keyof ConfigurableDefaults['defaultTransitionProperties'])[];
 
-      if (transitionProperties[typedKey] === undefined) {
-        (transitionProperties[typedKey] as any) = defaults.defaultTransitionProperties[typedKey];
+    properties.forEach((property) => {
+      if (transitionProperties[property] === undefined) {
+        (transitionProperties[property] as any) = defaults.defaultTransitionProperties[property];
       }
     });
   });

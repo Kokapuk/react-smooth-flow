@@ -7,7 +7,7 @@ import { Keyframes, ParsedTransitionProperties, SnapshotPair } from './types';
 
 const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: SnapshotPair<'mutation'>) => {
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((snapshot) => {
-    const keyframe: Record<string, string> = {
+    const keyframe: Record<string, string | number> = {
       width: `${snapshot.bounds.width}px`,
       height: `${snapshot.bounds.height}px`,
     };
@@ -51,7 +51,7 @@ const getContentKeyframes = (
 ): { exitContentKeyframes: Keyframes; enterContentKeyframes: Keyframes } => {
   switch (mutationTransitionType) {
     case 'overlap':
-      return { exitContentKeyframes: { opacity: [1, 0] }, enterContentKeyframes: { opacity: [0, 1] } };
+      return { exitContentKeyframes: { opacity: [1, 1, 0] }, enterContentKeyframes: { opacity: [0, 1, 1] } };
     case 'sequential':
       return { exitContentKeyframes: { opacity: [1, 0, 0] }, enterContentKeyframes: { opacity: [0, 0, 1] } };
     default: {

@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react(), dts({ rollupTypes: true, tsconfigPath: './tsconfig.app.json' })],
   resolve: {
     alias: {
-      "@lib": resolve(__dirname, "./lib/"),
+      '@lib': resolve(__dirname, './lib/'),
     },
   },
   build: {

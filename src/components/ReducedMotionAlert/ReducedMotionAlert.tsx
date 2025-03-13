@@ -1,4 +1,4 @@
-import isMotionReduced from '@lib/Transition/isMotionReduced';
+import isMotionReduced from '@lib/isMotionReduced';
 import { useEffect, useState } from 'react';
 import styles from './ReducedMotionAlert.module.scss';
 
