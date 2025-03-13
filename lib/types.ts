@@ -32,8 +32,6 @@ export type ContentAlign =
 
 export type PositionAnchor = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
 
-export type MutationTransitionType = 'overlap' | 'sequential';
-
 export type ImageOverflow = 'hidden' | 'visible';
 
 export type RelevantStyleProperties = Exclude<keyof PropertiesHyphen, 'pointer-events'>[];
@@ -45,18 +43,22 @@ export interface TransitionProperties {
   ignoreReducedMotion?: boolean;
   enterKeyframes?: Keyframes;
   exitKeyframes?: Keyframes | 'reversedEnter';
+  contentEnterKeyframes?: Keyframes;
+  contentExitKeyframes?: Keyframes | 'reversedEnter';
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   avoidMutationTransition?: boolean;
   transitionRootTag?: Tag;
-  mutationTransitionType?: MutationTransitionType;
   overflow?: ImageOverflow;
   relevantStyleProperties?: RelevantStyleProperties;
   disabled?: boolean;
 }
 
-export type ParsedTransitionProperties = Required<Omit<TransitionProperties, 'exitKeyframes' | 'transitionRootTag'>> & {
+export type ParsedTransitionProperties = Required<
+  Omit<TransitionProperties, 'exitKeyframes' | 'contentExitKeyframes' | 'transitionRootTag'>
+> & {
   exitKeyframes: Keyframes;
+  contentExitKeyframes: Keyframes;
   transitionRootTag: Tag | null;
 };
 

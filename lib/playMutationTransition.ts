@@ -3,7 +3,7 @@ import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Keyframes, ParsedTransitionProperties, SnapshotPair } from './types';
+import { Keyframes, SnapshotPair } from './types';
 
 const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: SnapshotPair<'mutation'>) => {
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((snapshot) => {
@@ -46,22 +46,8 @@ const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: SnapshotPair<
   return keyframes;
 };
 
-const getContentKeyframes = (
-  mutationTransitionType: ParsedTransitionProperties['mutationTransitionType']
-): { exitContentKeyframes: Keyframes; enterContentKeyframes: Keyframes } => {
-  switch (mutationTransitionType) {
-    case 'overlap':
-      return { exitContentKeyframes: { opacity: [1, 1, 0] }, enterContentKeyframes: { opacity: [0, 1, 1] } };
-    case 'sequential':
-      return { exitContentKeyframes: { opacity: [1, 0, 0] }, enterContentKeyframes: { opacity: [0, 0, 1] } };
-    default: {
-      throw Error(`"${mutationTransitionType}" is invalid mutation transition type`);
-    }
-  }
-};
-
 const playMutationTransition = async (pair: SnapshotPair<'mutation'>) => {
-  const { shared, nextSnapshot, image } = pair;
+  const { shared, prevSnapshot, nextSnapshot, image } = pair;
   const transitionRoot = shared.transitionRoot ?? getTransitionRoot();
   const resetTargetStyles = hideElementNoTransition(nextSnapshot.targetElement);
   activeTransitions[shared.tag] = [];
@@ -95,17 +81,24 @@ const playMutationTransition = async (pair: SnapshotPair<'mutation'>) => {
 
   const exitContent = image.children[0] as HTMLDivElement;
   const enterContent = image.children[1] as HTMLDivElement;
-  const { exitContentKeyframes, enterContentKeyframes } = getContentKeyframes(
-    shared.transitionProperties.mutationTransitionType
-  );
 
   if (shared.transitionProperties.delay) {
-    exitContent.animate(getInitialKeyframe(exitContentKeyframes), { fill: 'forwards' });
-    enterContent.animate(getInitialKeyframe(enterContentKeyframes), { fill: 'forwards' });
+    exitContent.animate(getInitialKeyframe(prevSnapshot.transitionProperties.contentExitKeyframes), {
+      fill: 'forwards',
+    });
+    enterContent.animate(getInitialKeyframe(nextSnapshot.transitionProperties.contentEnterKeyframes), {
+      fill: 'forwards',
+    });
   }
 
-  const exitContentTransition = exitContent.animate(exitContentKeyframes, animationOptions);
-  const enterContentTransition = enterContent.animate(enterContentKeyframes, animationOptions);
+  const exitContentTransition = exitContent.animate(
+    prevSnapshot.transitionProperties.contentExitKeyframes,
+    animationOptions
+  );
+  const enterContentTransition = enterContent.animate(
+    nextSnapshot.transitionProperties.contentEnterKeyframes,
+    animationOptions
+  );
 
   activeTransitions[shared.tag].push(
     { animation: exitContentTransition, snapshotPairSharedData: shared, cleanup: removeSnapshotsAndResetTarget },

@@ -22,6 +22,16 @@ const getElementTransitionMapping = (element: HTMLElement) => {
       transitionProperties.exitKeyframes = getReversedKeyframes(transitionProperties.enterKeyframes);
     }
 
+    if (transitionProperties.contentExitKeyframes === 'reversedEnter') {
+      if (!transitionProperties.contentEnterKeyframes) {
+        throw Error(
+          `Transition target with tag "${tag}" has "contentExitKeyframes" property set to "reversedEnter", but "contentEnterKeyframes" was not specified. Either specify "contentEnterKeyframes" or don't set "contentExitKeyframes" to "reversedEnter"`
+        );
+      }
+
+      transitionProperties.contentExitKeyframes = getReversedKeyframes(transitionProperties.contentEnterKeyframes);
+    }
+
     const properties = Object.keys(
       defaults.defaultTransitionProperties
     ) as (keyof ConfigurableDefaults['defaultTransitionProperties'])[];

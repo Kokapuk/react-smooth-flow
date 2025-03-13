@@ -38,7 +38,6 @@ export const CONSISTENT_TRANSITION_PROPERTIES = [
   'positionAnchor',
   'transitionRootTag',
   'avoidMutationTransition',
-  'mutationTransitionType',
   'overflow',
 ] as const satisfies Readonly<(keyof TransitionProperties)[]>;
 
@@ -52,11 +51,12 @@ const defaults: ConfigurableDefaults = {
     ignoreReducedMotion: false,
     enterKeyframes: { opacity: [0, 1] },
     exitKeyframes: { opacity: [1, 0] },
+    contentEnterKeyframes: { opacity: [0, 1, 1] },
+    contentExitKeyframes: { opacity: [1, 1, 0] },
     contentAlign: 'topLeft',
     positionAnchor: 'topLeft',
     avoidMutationTransition: false,
     transitionRootTag: null,
-    mutationTransitionType: 'overlap',
     overflow: 'hidden',
     relevantStyleProperties: [],
     disabled: false,

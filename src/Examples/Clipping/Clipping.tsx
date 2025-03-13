@@ -15,7 +15,7 @@ const Clipping = () => {
           style={isToggled ? undefined : { visibility: 'hidden' }}
           {...constructTransition({
             nonClipped: {
-              enterKeyframes: [{ transform: 'translateX(-125%)' }, { transform: 'translateX(0)' }],
+              enterKeyframes: { transform: ['translateX(-125%)', 'translateX(0)'] },
               exitKeyframes: 'reversedEnter',
               transitionRootTag: 'clippingContainer',
               duration: 600,

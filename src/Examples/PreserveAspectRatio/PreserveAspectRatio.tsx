@@ -31,9 +31,11 @@ const PreserveAspectRatio = () => {
             data-panelnumber={activePanel}
             {...constructTransition({
               [`panel-${activePanel}`]: {
-                mutationTransitionType: 'sequential',
                 duration: 750,
                 easing: materialDesignEmphasizedEasing,
+                // contentEnterKeyframes: { opacity: [0, 0, 1] },
+                contentEnterKeyframes: { transform: ['translateX(100%)', 'translateX(0)'] },
+                contentExitKeyframes: 'reversedEnter',
               },
             })}
           >
@@ -63,11 +65,13 @@ const PreserveAspectRatio = () => {
               style={{ visibility: activePanel === i ? 'hidden' : undefined }}
               {...constructTransition({
                 [`panel-${i}`]: {
-                  mutationTransitionType: 'sequential',
                   duration: 750,
                   easing: materialDesignEmphasizedEasing,
                   relevantStyleProperties: ['font', 'color'],
                   disabled: activePanel === i,
+                  // contentEnterKeyframes: { opacity: [0, 0, 1] },
+                  contentEnterKeyframes: { transform: ['translateX(-100%)', 'translateX(0)'] },
+                  contentExitKeyframes: 'reversedEnter',
                 },
               })}
             >
