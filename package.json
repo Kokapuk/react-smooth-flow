@@ -1,6 +1,6 @@
 {
   "name": "react-smooth-flow",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Effortless React animations for entering, exiting, and updating elements",
   "keywords": [
     "react",
@@ -15,6 +15,10 @@
     "react view transition",
     "react-view-transition"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kokapuk/react-smooth-flow.git"
+  },
   "homepage": "https://github.com/Kokapuk/react-smooth-flow#readme",
   "bugs": {
     "url": "https://github.com/Kokapuk/react-smooth-flow/issues"
