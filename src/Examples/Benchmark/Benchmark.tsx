@@ -29,7 +29,7 @@ const Benchmark = () => {
           className={styles.grid}
           {...constructTransition({
             benchmarkGrid: {
-              avoidMutationTransition: true,
+              forcePresenceTransition: true,
               enterKeyframes: { opacity: [0, 0, 1], scale: [0.5, 0.5, 1] },
               exitKeyframes: 'reversedEnter',
               transitionRootTag: 'benchmarkRoot',
@@ -43,7 +43,7 @@ const Benchmark = () => {
               key={i}
               {...constructTransition({
                 [`${i}-benchmark`]: {
-                  avoidMutationTransition: true,
+                  forcePresenceTransition: true,
                   enterKeyframes: { opacity: [0, 0, 1], scale: [0.5, 0.5, 1] },
                   exitKeyframes: 'reversedEnter',
                   transitionRootTag: 'benchmarkRoot',

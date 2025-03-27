@@ -16,13 +16,13 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   }
 
   const transitionMapping = getElementTransitionMapping(targetElement)!;
-  const transitionProperties = transitionMapping[targetTag];
-  const transitionRoot = transitionProperties.transitionRootTag
-    ? getElementByTransitionRootTag(transitionProperties.transitionRootTag)
+  const transitionOptions = transitionMapping[targetTag];
+  const transitionRoot = transitionOptions.transitionRootTag
+    ? getElementByTransitionRootTag(transitionOptions.transitionRootTag)
     : null;
 
-  if (transitionProperties.transitionRootTag && !transitionRoot) {
-    throw Error(`Failed to find transition root with tag "${transitionProperties.transitionRootTag}"`);
+  if (transitionOptions.transitionRootTag && !transitionRoot) {
+    throw Error(`Failed to find transition root with tag "${transitionOptions.transitionRootTag}"`);
   }
 
   const computedStyle = getComputedStyleNoRef(targetElement);
@@ -41,8 +41,8 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
 
-  if (transitionProperties.relevantStyleProperties.length) {
-    copyRelevantStyles(targetElement, targetElementClone, transitionProperties.relevantStyleProperties);
+  if (transitionOptions.relevantStyleProperties.length) {
+    copyRelevantStyles(targetElement, targetElementClone, transitionOptions.relevantStyleProperties);
   }
 
   hideElementsWithTags(excludeTags, targetElementClone);
@@ -59,7 +59,7 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
 
   const image = document.createElement('div');
-  image.classList.add('rsf-snapshotContainer', `rsf-${transitionProperties.contentAlign}`);
+  image.classList.add('rsf-snapshotContainer', `rsf-${transitionOptions.contentAlign}`);
   image.style.width = `${bounds.width}px`;
   image.style.height = `${bounds.height}px`;
   image.style.padding = `${computedStyle.borderTopWidth} ${computedStyle.borderRightWidth} ${computedStyle.borderBottomWidth} ${computedStyle.borderLeftWidth}`;
@@ -77,7 +77,7 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     bounds,
     image,
     computedStyle,
-    transitionProperties,
+    transitionOptions: transitionOptions,
     hasFixedPosition,
     transitionRoot,
     targetElement,

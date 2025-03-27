@@ -2,32 +2,33 @@ import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Keyframes, SnapshotPair, SnapshotPairSharedData } from './types';
+import { Keyframes, PresenceSnapshotPair } from './types';
 
 const playTransition = (
   image: HTMLDivElement,
   transitionRoot: HTMLElement,
   keyframes: Keyframes,
-  snapshotPairSharedData: SnapshotPairSharedData,
+  pair: PresenceSnapshotPair,
   resetTargetStyles?: (() => void) | null
 ) => {
+  const { shared } = pair;
   transitionRoot.append(image);
 
-  if (snapshotPairSharedData.transitionProperties.delay) {
+  if (shared.transitionOptions.delay) {
     image.animate(getInitialKeyframe(keyframes), {
       fill: 'forwards',
     });
   }
 
   const transition = image.animate(keyframes, {
-    duration: snapshotPairSharedData.transitionProperties.duration,
-    easing: snapshotPairSharedData.transitionProperties.easing,
-    delay: snapshotPairSharedData.transitionProperties.delay,
+    duration: shared.transitionOptions.duration,
+    easing: shared.transitionOptions.easing,
+    delay: shared.transitionOptions.delay,
     fill: 'forwards',
   });
 
-  activeTransitions[snapshotPairSharedData.tag].push({
-    snapshotPairSharedData,
+  activeTransitions[shared.tag].push({
+    snapshotPair: pair,
     animation: transition,
     cleanup: () => {
       image.remove();
@@ -38,13 +39,8 @@ const playTransition = (
   return transition.finished;
 };
 
-const playEnterExitTransition = async ({
-  shared,
-  prevSnapshot,
-  nextSnapshot,
-  prevImage,
-  nextImage,
-}: SnapshotPair<'enterExit'>) => {
+const playPresenceTransition = async (pair: PresenceSnapshotPair) => {
+  const { shared, prevSnapshot, nextSnapshot, prevImage, nextImage } = pair;
   const transitionRoot = shared.transitionRoot ?? getTransitionRoot();
   const resetTargetStyles = nextSnapshot?.targetElement ? hideElementNoTransition(nextSnapshot.targetElement) : null;
   activeTransitions[shared.tag] = [];
@@ -58,8 +54,8 @@ const playEnterExitTransition = async ({
       await playTransition(
         prevImage,
         transitionRoot,
-        prevSnapshot.transitionProperties.exitKeyframes,
-        shared,
+        prevSnapshot.transitionOptions.exitKeyframes,
+        pair,
         resetTargetStyles
       );
     })(),
@@ -72,12 +68,12 @@ const playEnterExitTransition = async ({
       await playTransition(
         nextImage,
         transitionRoot,
-        nextSnapshot.transitionProperties.enterKeyframes,
-        shared,
+        nextSnapshot.transitionOptions.enterKeyframes,
+        pair,
         resetTargetStyles
       );
     })(),
   ]);
 };
 
-export default playEnterExitTransition;
+export default playPresenceTransition;

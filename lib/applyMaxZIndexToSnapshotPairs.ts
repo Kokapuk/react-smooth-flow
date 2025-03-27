@@ -1,6 +1,6 @@
 import { SnapshotPair } from './types';
 
-const applyMaxZIndexToSnapshotPairs = (pairs: (SnapshotPair<'mutation'> | SnapshotPair<'enterExit'>)[]) => {
+const applyMaxZIndexToSnapshotPairs = (pairs: SnapshotPair[]) => {
   const pairsMaxZIndex = pairs.map(({ prevSnapshot, nextSnapshot }) =>
     Math.max(prevSnapshot?.totalZIndex ?? -1, nextSnapshot?.totalZIndex ?? -1)
   );
@@ -9,7 +9,7 @@ const applyMaxZIndexToSnapshotPairs = (pairs: (SnapshotPair<'mutation'> | Snapsh
   pairs.forEach((pair) => {
     if (pair.transitionType === 'mutation') {
       pair.image.style.zIndex = maxZIndex.toString();
-    } else if (pair.transitionType === 'enterExit') {
+    } else if (pair.transitionType === 'presence') {
       if (pair.prevImage) {
         pair.prevImage.style.zIndex = maxZIndex.toString();
       }

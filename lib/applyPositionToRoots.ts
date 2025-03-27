@@ -1,7 +1,7 @@
 import { rootHasActiveTransition } from './rootHasActiveTransition';
 import { SnapshotPair } from './types';
 
-const applyPositionToRoots = (pairs: (SnapshotPair<'mutation'> | SnapshotPair<'enterExit'>)[]) => {
+const applyPositionToRoots = (pairs: SnapshotPair[]) => {
   const uniqueRoots: HTMLElement[] = [];
 
   for (const { shared } of pairs) {

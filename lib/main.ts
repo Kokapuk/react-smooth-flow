@@ -4,24 +4,32 @@ import constructTransitionRoot from './constructTransitionRoot';
 import defaults, { ConfigurableDefaults } from './defaults';
 import startTransition from './startTransition';
 import './style.scss';
+import usePreCommitEffect from './usePreCommitEffect';
 
 import {
   FalsyArray,
-  ParsedTransitionProperties,
+  ParsedTransitionOptions,
   Tag,
   TransitionConfig,
   TransitionMapping,
-  TransitionProperties,
+  TransitionOptions,
 } from './types';
 
-export { cancelTransition, constructTransition, constructTransitionRoot, defaults, startTransition };
+export {
+  cancelTransition,
+  constructTransition,
+  constructTransitionRoot,
+  defaults,
+  startTransition,
+  usePreCommitEffect,
+};
 
 export type {
   ConfigurableDefaults,
   FalsyArray,
-  ParsedTransitionProperties,
+  ParsedTransitionOptions,
   Tag,
   TransitionConfig,
   TransitionMapping,
-  TransitionProperties,
+  TransitionOptions,
 };

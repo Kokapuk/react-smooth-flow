@@ -1,9 +1,5 @@
 import { PropertiesHyphen } from 'csstype';
-import {
-  CONSISTENT_SNAPSHOT_PROPERTIES,
-  CONSISTENT_TRANSITION_PROPERTIES,
-  STYLE_PROPERTIES_TO_CAPTURE,
-} from './defaults';
+import { CONSISTENT_SNAPSHOT_PROPERTIES, CONSISTENT_TRANSITION_OPTIONS, STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
 
 export type Tag = string;
 
@@ -36,7 +32,7 @@ export type ImageOverflow = 'hidden' | 'visible';
 
 export type RelevantStyleProperties = Exclude<keyof PropertiesHyphen, 'pointer-events'>[];
 
-export interface TransitionProperties {
+export interface TransitionOptions {
   duration?: number;
   easing?: string;
   delay?: number;
@@ -47,26 +43,28 @@ export interface TransitionProperties {
   contentExitKeyframes?: Keyframes | 'reversedEnter';
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
-  avoidMutationTransition?: boolean;
+  forcePresenceTransition?: boolean;
   transitionRootTag?: Tag;
   overflow?: ImageOverflow;
   relevantStyleProperties?: RelevantStyleProperties;
   disabled?: boolean;
 }
 
-export type ParsedTransitionProperties = Required<
-  Omit<TransitionProperties, 'exitKeyframes' | 'contentExitKeyframes' | 'transitionRootTag'>
+export type ParsedTransitionOptions = Required<
+  Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'transitionRootTag'>
 > & {
   exitKeyframes: Keyframes;
   contentExitKeyframes: Keyframes;
   transitionRootTag: Tag | null;
 };
 
-export type TransitionMapping<T extends TransitionProperties | ParsedTransitionProperties = TransitionProperties> =
-  Record<Tag, T>;
+export type TransitionMapping<T extends TransitionOptions | ParsedTransitionOptions = TransitionOptions> = Record<
+  Tag,
+  T
+>;
 
 export interface TransitionConfig {
-  noFlushSync?: boolean;
+  flushSync?: boolean;
   onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
@@ -90,36 +88,42 @@ export interface Snapshot {
   bounds: Bounds;
   image: HTMLDivElement;
   computedStyle: ComputedStyle;
-  transitionProperties: ParsedTransitionProperties;
+  transitionOptions: ParsedTransitionOptions;
   hasFixedPosition: boolean;
   transitionRoot?: HTMLElement | null;
   targetElement: HTMLElement;
   totalZIndex: number;
 }
 
-export type SharedTransitionProperties = Pick<
-  ParsedTransitionProperties,
-  (typeof CONSISTENT_TRANSITION_PROPERTIES)[number]
->;
+export type SharedTransitionOptions = Pick<ParsedTransitionOptions, (typeof CONSISTENT_TRANSITION_OPTIONS)[number]>;
 
 export type SnapshotPairSharedData = Required<Pick<Snapshot, (typeof CONSISTENT_SNAPSHOT_PROPERTIES)[number]>> & {
-  transitionProperties: SharedTransitionProperties;
+  transitionOptions: SharedTransitionOptions;
 };
 
-export type SnapshotPairTransitionType = 'mutation' | 'enterExit';
-
-export type SnapshotPair<T extends SnapshotPairTransitionType> = {
-  prevSnapshot: T extends 'mutation' ? Snapshot : Snapshot | null;
-  nextSnapshot: T extends 'mutation' ? Snapshot : Snapshot | null;
+export interface MutationSnapshotPair {
+  prevSnapshot: Snapshot;
+  nextSnapshot: Snapshot;
   firstValidSnapshot: Snapshot;
   shared: SnapshotPairSharedData;
-  transitionType: T;
-} & (T extends 'mutation'
-  ? { image: HTMLDivElement }
-  : { prevImage: HTMLDivElement | null; nextImage: HTMLDivElement | null });
+  transitionType: 'mutation';
+  image: HTMLDivElement;
+}
+
+export interface PresenceSnapshotPair {
+  prevSnapshot: Snapshot | null;
+  nextSnapshot: Snapshot | null;
+  firstValidSnapshot: Snapshot;
+  shared: SnapshotPairSharedData;
+  transitionType: 'presence';
+  prevImage: HTMLDivElement | null;
+  nextImage: HTMLDivElement | null;
+}
+
+export type SnapshotPair = MutationSnapshotPair | PresenceSnapshotPair;
 
 export interface Transition {
-  snapshotPairSharedData: SnapshotPairSharedData;
+  snapshotPair: SnapshotPair;
   animation: Animation;
   cleanup(): void;
 }

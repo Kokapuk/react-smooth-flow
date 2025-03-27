@@ -27,7 +27,7 @@ const applyPositionToImage = (
     leftModifier = window.scrollX;
   }
 
-  switch (snapshot.transitionProperties.positionAnchor) {
+  switch (snapshot.transitionOptions.positionAnchor) {
     case 'topLeft':
       image.style.top = `${snapshot.bounds.top + topModifier}px`;
       image.style.left = `${snapshot.bounds.left + leftModifier}px`;
@@ -47,16 +47,16 @@ const applyPositionToImage = (
   }
 };
 
-const applyPositionToSnapshotPairs = (pairs: SnapshotPair<'mutation' | 'enterExit'>[]) => {
+const applyPositionToSnapshotPairs = (pairs: SnapshotPair[]) => {
   pairs.forEach((pair) => {
     if (pair.transitionType === 'mutation') {
-      const { prevSnapshot, nextSnapshot, image, shared, firstValidSnapshot } = pair as SnapshotPair<'mutation'>;
+      const { prevSnapshot, nextSnapshot, image, shared, firstValidSnapshot } = pair;
 
       const lastValidSnapshot = (nextSnapshot ?? prevSnapshot) as Snapshot;
       const position = lastValidSnapshot.hasFixedPosition && !lastValidSnapshot.transitionRoot ? 'fixed' : 'absolute';
       applyPositionToImage(image, position, firstValidSnapshot, shared.transitionRoot);
-    } else if (pair.transitionType === 'enterExit') {
-      const { prevSnapshot, nextSnapshot, prevImage, nextImage, shared } = pair as SnapshotPair<'enterExit'>;
+    } else if (pair.transitionType === 'presence') {
+      const { prevSnapshot, nextSnapshot, prevImage, nextImage, shared } = pair;
       const snapshotImagePairs = [
         { snapshot: prevSnapshot, image: prevImage },
         { snapshot: nextSnapshot, image: nextImage },

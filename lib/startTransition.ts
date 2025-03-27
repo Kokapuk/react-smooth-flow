@@ -1,5 +1,6 @@
 import { flushSync } from 'react-dom';
 import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
+import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
 import applyPositionToSnapshotPairs from './applyPositionToSnapshotPairs';
 import cancelTransition from './cancelTransition';
@@ -7,19 +8,21 @@ import captureSnapshot from './captureSnapshot';
 import finishTransitions from './finishTransitions';
 import getAllTags from './getAllTags';
 import getElementByTransitionTag from './getElementByTransitionTag';
+import getImageBoundsByTag from './getImageBoundsByTag';
 import getSnapshotPairs from './getSnapshotPairs';
 import getTruthyArray from './getTruthyArray';
-import playEnterExitTransition from './playEnterExitTransition';
 import playMutationTransition from './playMutationTransition';
-import { FalsyArray, Tag, TransitionConfig } from './types';
+import playPresenceTransition from './playPresenceTransition';
+import { Bounds, FalsyArray, Tag, TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
-const startTransition = async (
-  tags: FalsyArray<Tag>,
-  modifyDOM: () => void | Promise<void>,
-  config?: TransitionConfig
-) => {
+const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, config?: TransitionConfig) => {
+  const finalConfig = { flushSync: true, ...config };
+
   const validTags = getTruthyArray(tags);
+  const persistentBounds: Record<Tag, Bounds | null> = Object.fromEntries(
+    validTags.map((tag) => [tag, getImageBoundsByTag(tag)])
+  );
   cancelTransition(...getAllTags(validTags));
 
   const prevSnapshots = validTags.map((targetTag) =>
@@ -30,10 +33,14 @@ const startTransition = async (
     )
   );
 
-  if (config?.noFlushSync) {
-    await modifyDOM();
+  if (updateDOM) {
+    if (finalConfig.flushSync) {
+      flushSync(updateDOM);
+    } else {
+      updateDOM();
+    }
   } else {
-    await flushSync(modifyDOM);
+    await (() => {})();
   }
 
   const nextSnapshots = validTags.map((targetTag) =>
@@ -46,30 +53,31 @@ const startTransition = async (
 
   const snapshotParis = getSnapshotPairs(prevSnapshots, nextSnapshots);
   validateSnapshotPairs(snapshotParis, validTags);
+  applyPersistentBoundsToPairs(snapshotParis, persistentBounds);
   applyPositionToSnapshotPairs(snapshotParis);
   applyMaxZIndexToSnapshotPairs(snapshotParis);
   const resetRootsPositions = applyPositionToRoots(snapshotParis);
 
-  config?.onBegin?.();
+  finalConfig.onBegin?.();
 
   try {
     await Promise.all(
       snapshotParis.map((pair) => {
         if (pair.transitionType === 'mutation') {
           return playMutationTransition(pair);
-        } else if (pair.transitionType === 'enterExit') {
-          return playEnterExitTransition(pair);
+        } else if (pair.transitionType === 'presence') {
+          return playPresenceTransition(pair);
         }
       })
     );
 
     finishTransitions(...validTags);
     resetRootsPositions();
-    config?.onFinish?.();
+    finalConfig.onFinish?.();
   } catch (err: any) {
     if (err.name === 'AbortError') {
       resetRootsPositions();
-      config?.onCancel?.();
+      finalConfig.onCancel?.();
       return;
     }
 

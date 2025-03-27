@@ -3,9 +3,9 @@ import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
 import { activeTransitions } from './store';
-import { Keyframes, SnapshotPair } from './types';
+import { Keyframes, MutationSnapshotPair } from './types';
 
-const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: SnapshotPair<'mutation'>) => {
+const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: MutationSnapshotPair) => {
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((snapshot) => {
     const keyframe: Record<string, string | number> = {
       width: `${snapshot.bounds.width}px`,
@@ -23,7 +23,7 @@ const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: SnapshotPair<
   const translateYBottom = prevSnapshot.bounds.bottom - nextSnapshot.bounds.bottom;
   const translateXLeft = nextSnapshot.bounds.left - prevSnapshot.bounds.left;
 
-  switch (shared.transitionProperties.positionAnchor) {
+  switch (shared.transitionOptions.positionAnchor) {
     case 'topLeft':
       transform = `translate(${translateXLeft}px, ${translateYTop}px)`;
       break;
@@ -46,7 +46,7 @@ const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: SnapshotPair<
   return keyframes;
 };
 
-const playMutationTransition = async (pair: SnapshotPair<'mutation'>) => {
+const playMutationTransition = async (pair: MutationSnapshotPair) => {
   const { shared, prevSnapshot, nextSnapshot, image } = pair;
   const transitionRoot = shared.transitionRoot ?? getTransitionRoot();
   const resetTargetStyles = hideElementNoTransition(nextSnapshot.targetElement);
@@ -54,15 +54,15 @@ const playMutationTransition = async (pair: SnapshotPair<'mutation'>) => {
   transitionRoot.append(image);
 
   const animationOptions: KeyframeAnimationOptions = {
-    duration: shared.transitionProperties.duration,
-    easing: shared.transitionProperties.easing,
-    delay: shared.transitionProperties.delay,
+    duration: shared.transitionOptions.duration,
+    easing: shared.transitionOptions.easing,
+    delay: shared.transitionOptions.delay,
     fill: 'forwards',
   };
 
   const imageKeyframes = getImageKeyframes(pair);
 
-  if (shared.transitionProperties.delay) {
+  if (shared.transitionOptions.delay) {
     image.animate(getInitialKeyframe(imageKeyframes), { fill: 'forwards' });
   }
 
@@ -75,34 +75,34 @@ const playMutationTransition = async (pair: SnapshotPair<'mutation'>) => {
 
   activeTransitions[shared.tag].push({
     animation: transition,
-    snapshotPairSharedData: shared,
+    snapshotPair: pair,
     cleanup: removeSnapshotsAndResetTarget,
   });
 
   const exitContent = image.children[0] as HTMLDivElement;
   const enterContent = image.children[1] as HTMLDivElement;
 
-  if (shared.transitionProperties.delay) {
-    exitContent.animate(getInitialKeyframe(prevSnapshot.transitionProperties.contentExitKeyframes), {
+  if (shared.transitionOptions.delay) {
+    exitContent.animate(getInitialKeyframe(prevSnapshot.transitionOptions.contentExitKeyframes), {
       fill: 'forwards',
     });
-    enterContent.animate(getInitialKeyframe(nextSnapshot.transitionProperties.contentEnterKeyframes), {
+    enterContent.animate(getInitialKeyframe(nextSnapshot.transitionOptions.contentEnterKeyframes), {
       fill: 'forwards',
     });
   }
 
   const exitContentTransition = exitContent.animate(
-    prevSnapshot.transitionProperties.contentExitKeyframes,
+    prevSnapshot.transitionOptions.contentExitKeyframes,
     animationOptions
   );
   const enterContentTransition = enterContent.animate(
-    nextSnapshot.transitionProperties.contentEnterKeyframes,
+    nextSnapshot.transitionOptions.contentEnterKeyframes,
     animationOptions
   );
 
   activeTransitions[shared.tag].push(
-    { animation: exitContentTransition, snapshotPairSharedData: shared, cleanup: removeSnapshotsAndResetTarget },
-    { animation: enterContentTransition, snapshotPairSharedData: shared, cleanup: removeSnapshotsAndResetTarget }
+    { animation: exitContentTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget },
+    { animation: enterContentTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget }
   );
 
   await Promise.all(activeTransitions[shared.tag].map((transition) => transition.animation.finished));
