@@ -47,6 +47,7 @@ export interface TransitionOptions {
   transitionRootTag?: Tag;
   overflow?: ImageOverflow;
   relevantStyleProperties?: RelevantStyleProperties;
+  persistBounds?: boolean;
   disabled?: boolean;
 }
 
@@ -89,6 +90,7 @@ export interface Snapshot {
   image: HTMLDivElement;
   computedStyle: ComputedStyle;
   transitionOptions: ParsedTransitionOptions;
+  transitionMapping: TransitionMapping<ParsedTransitionOptions>;
   hasFixedPosition: boolean;
   transitionRoot?: HTMLElement | null;
   targetElement: HTMLElement;
@@ -130,3 +132,7 @@ export interface Transition {
 
 export type Falsy = false | 0 | '' | null | undefined;
 export type FalsyArray<T> = (T | Falsy)[];
+
+export type StoreRecord = Record<Tag, Transition[]>;
+export type Id = string;
+export type Store = Record<Id, StoreRecord>;

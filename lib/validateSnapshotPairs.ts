@@ -1,6 +1,5 @@
 import { CONSISTENT_SNAPSHOT_PROPERTIES, CONSISTENT_TRANSITION_OPTIONS } from './defaults';
 import elementMatchesAnyTag from './elementMatchesAnyTag';
-import { activeTransitions } from './store';
 import { Snapshot, SnapshotPair, Tag } from './types';
 
 const anyParentMatchesAnyTag = (element: HTMLElement, tags: Tag[]) => {
@@ -51,21 +50,21 @@ const validateSnapshotPairs = (pairs: SnapshotPair[], tags: Tag[]) => {
       );
     });
 
-    pair.forEach((snapshot) => {
-      if (!snapshot.transitionRoot) {
-        return;
-      }
+    // pair.forEach((snapshot) => {
+    //   if (!snapshot.transitionRoot) {
+    //     return;
+    //   }
 
-      const activeTransitionTags = Object.keys(activeTransitions);
+    //   const activeTransitionTags = Object.keys(activeTransitions);
 
-      if (!anyParentMatchesAnyTag(snapshot.transitionRoot, activeTransitionTags)) {
-        return;
-      }
+    //   if (!anyParentMatchesAnyTag(snapshot.transitionRoot, activeTransitionTags)) {
+    //     return;
+    //   }
 
-      throw Error(
-        `Snapshot with tag "${snapshot.tag}" has custom transition root, but either root it self or one of its parents are being transitioned`
-      );
-    });
+    //   throw Error(
+    //     `Snapshot with tag "${snapshot.tag}" has custom transition root, but either root it self or one of its parents are being transitioned`
+    //   );
+    // });
 
     // pair.forEach((snapshot) => {
     //   const activeTransitionTags = Object.keys(activeTransitions);

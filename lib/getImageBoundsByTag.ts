@@ -1,21 +1,21 @@
 import getElementBounds from './getElementBounds';
-import { activeTransitions } from './store';
+import { getRecordByTag } from './store';
 import { Tag } from './types';
 
 const getImageBoundsByTag = (tag: Tag) => {
-  const activeTransition = activeTransitions[tag];
+  const record = getRecordByTag(tag);
 
-  if (!activeTransition) {
+  if (!record) {
     return null;
   }
 
-  const activeTransitionPair = activeTransitions[tag][0].snapshotPair;
+  const activeTransitionPair = record[tag][0].snapshotPair;
 
-  if (activeTransitionPair.transitionType === 'mutation') {
-    return getElementBounds(activeTransitionPair.image);
+  if (activeTransitionPair.transitionType === 'presence') {
+    return null;
   }
 
-  return null;
+  return getElementBounds(activeTransitionPair.image);
 };
 
 export default getImageBoundsByTag;

@@ -44,6 +44,7 @@ interface TransitionOptions {
   transitionRootTag?: Tag;
   overflow?: ImageOverflow;
   relevantStyleProperties?: RelevantStyleProperties;
+  persistBounds?: boolean;
   disabled?: boolean;
 }
 
@@ -195,6 +196,12 @@ Default: `[]`
 
 Additional style properties to capture and apply to snapshot content.
 
+#### `persistBounds`
+
+Default: `true`
+
+Determines whether to capture bounds of pre-DOM update snapshot from active mutation transition snapshot, if possible. (Mutation transition only)
+
 #### `disabled`
 
 Default: `false`
@@ -267,6 +274,9 @@ startTransition(
   { flushSync: false }
 );
 ```
+
+> [!IMPORTANT]
+> Order of the provided tags represents the order of corresponding snapshots in the DOM. It may be crucial in some cases, when transitioning elements intersect with each other and you want them to be ordered correctly.
 
 ### `TransitionConfig` options
 
@@ -366,6 +376,7 @@ interface TransitionOptions {
   transitionRootTag?: Tag;
   overflow?: ImageOverflow;
   relevantStyleProperties?: RelevantStyleProperties;
+  persistBounds?: boolean;
   disabled?: boolean;
 }
 
@@ -406,6 +417,7 @@ const defaults: ConfigurableDefaults = {
     transitionRootTag: null,
     overflow: 'hidden',
     relevantStyleProperties: [],
+    persistBounds: true,
     disabled: false,
   },
 };
@@ -428,7 +440,10 @@ defaults.defaultTransitionOptions.ignoreReducedMotion = true;
 ### Type declaration
 
 ```ts
-declare const usePreCommitEffect: (effect: (isInitialRender: boolean) => void, deps?: React.DependencyList) => void;
+declare const usePreCommitEffect: (
+  effect: (isInitialRender: boolean) => void | (() => void),
+  deps?: React.DependencyList
+) => void;
 ```
 
 ### Usage

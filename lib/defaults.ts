@@ -60,6 +60,7 @@ const defaults: ConfigurableDefaults = {
     transitionRootTag: null,
     overflow: 'hidden',
     relevantStyleProperties: [],
+    persistBounds: true,
     disabled: false,
   },
 };

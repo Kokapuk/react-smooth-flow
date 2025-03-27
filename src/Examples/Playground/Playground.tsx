@@ -84,13 +84,13 @@ const Playground = () => {
           />
         )}
         <div
-          {...constructTransition({ switchContainer: { duration: 600 } })}
+          {...constructTransition({ switchContainer: { duration: 600, positionAnchor: 'topRight' } })}
           style={{ border: '1px solid white', width: '50%', minHeight: 20, height: 'min-content', marginLeft: 'auto' }}
         >
           {inSquare && (
             <div
               {...constructTransition({ switchSquare: { duration: 600 } })}
-              style={{ background: 'red', width: '100%', height: 50 }}
+              style={{ background: 'red', width: '100%', height: 48 }}
             />
           )}
         </div>

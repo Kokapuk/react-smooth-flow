@@ -1,14 +1,14 @@
 import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
-import { activeTransitions } from './store';
-import { Keyframes, PresenceSnapshotPair } from './types';
+import { Keyframes, PresenceSnapshotPair, Tag, Transition } from './types';
 
 const playTransition = (
   image: HTMLDivElement,
   transitionRoot: HTMLElement,
   keyframes: Keyframes,
   pair: PresenceSnapshotPair,
+  transitions: Record<Tag, Transition[]>,
   resetTargetStyles?: (() => void) | null
 ) => {
   const { shared } = pair;
@@ -27,7 +27,7 @@ const playTransition = (
     fill: 'forwards',
   });
 
-  activeTransitions[shared.tag].push({
+  transitions[shared.tag].push({
     snapshotPair: pair,
     animation: transition,
     cleanup: () => {
@@ -39,41 +39,33 @@ const playTransition = (
   return transition.finished;
 };
 
-const playPresenceTransition = async (pair: PresenceSnapshotPair) => {
+const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: Record<Tag, Transition[]>) => {
   const { shared, prevSnapshot, nextSnapshot, prevImage, nextImage } = pair;
   const transitionRoot = shared.transitionRoot ?? getTransitionRoot();
   const resetTargetStyles = nextSnapshot?.targetElement ? hideElementNoTransition(nextSnapshot.targetElement) : null;
-  activeTransitions[shared.tag] = [];
+  transitions[shared.tag] = [];
 
-  await Promise.all([
-    (async () => {
-      if (!prevSnapshot || !prevImage) {
-        return;
-      }
+  if (prevSnapshot && prevImage) {
+    playTransition(
+      prevImage,
+      transitionRoot,
+      prevSnapshot.transitionOptions.exitKeyframes,
+      pair,
+      transitions,
+      resetTargetStyles
+    );
+  }
 
-      await playTransition(
-        prevImage,
-        transitionRoot,
-        prevSnapshot.transitionOptions.exitKeyframes,
-        pair,
-        resetTargetStyles
-      );
-    })(),
-
-    (async () => {
-      if (!nextSnapshot || !nextImage) {
-        return;
-      }
-
-      await playTransition(
-        nextImage,
-        transitionRoot,
-        nextSnapshot.transitionOptions.enterKeyframes,
-        pair,
-        resetTargetStyles
-      );
-    })(),
-  ]);
+  if (nextSnapshot && nextImage) {
+    playTransition(
+      nextImage,
+      transitionRoot,
+      nextSnapshot.transitionOptions.enterKeyframes,
+      pair,
+      transitions,
+      resetTargetStyles
+    );
+  }
 };
 
 export default playPresenceTransition;

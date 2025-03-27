@@ -2,8 +2,7 @@ import { STYLE_PROPERTIES_TO_ANIMATE } from './defaults';
 import getInitialKeyframe from './getInitialKeyframe';
 import getTransitionRoot from './getTransitionRoot';
 import hideElementNoTransition from './hideElementNoTransition';
-import { activeTransitions } from './store';
-import { Keyframes, MutationSnapshotPair } from './types';
+import { Keyframes, MutationSnapshotPair, Tag, Transition } from './types';
 
 const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: MutationSnapshotPair) => {
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((snapshot) => {
@@ -46,11 +45,11 @@ const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: MutationSnaps
   return keyframes;
 };
 
-const playMutationTransition = async (pair: MutationSnapshotPair) => {
+const playMutationTransition = (pair: MutationSnapshotPair, transitions: Record<Tag, Transition[]>) => {
   const { shared, prevSnapshot, nextSnapshot, image } = pair;
   const transitionRoot = shared.transitionRoot ?? getTransitionRoot();
   const resetTargetStyles = hideElementNoTransition(nextSnapshot.targetElement);
-  activeTransitions[shared.tag] = [];
+  transitions[shared.tag] = [];
   transitionRoot.append(image);
 
   const animationOptions: KeyframeAnimationOptions = {
@@ -73,7 +72,7 @@ const playMutationTransition = async (pair: MutationSnapshotPair) => {
 
   const transition = image.animate(imageKeyframes, animationOptions);
 
-  activeTransitions[shared.tag].push({
+  transitions[shared.tag].push({
     animation: transition,
     snapshotPair: pair,
     cleanup: removeSnapshotsAndResetTarget,
@@ -100,12 +99,10 @@ const playMutationTransition = async (pair: MutationSnapshotPair) => {
     animationOptions
   );
 
-  activeTransitions[shared.tag].push(
+  transitions[shared.tag].push(
     { animation: exitContentTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget },
     { animation: enterContentTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget }
   );
-
-  await Promise.all(activeTransitions[shared.tag].map((transition) => transition.animation.finished));
 };
 
 export default playMutationTransition;

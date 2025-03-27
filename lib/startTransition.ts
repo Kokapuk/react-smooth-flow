@@ -3,9 +3,7 @@ import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
 import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
 import applyPositionToSnapshotPairs from './applyPositionToSnapshotPairs';
-import cancelTransition from './cancelTransition';
 import captureSnapshot from './captureSnapshot';
-import finishTransitions from './finishTransitions';
 import getAllTags from './getAllTags';
 import getElementByTransitionTag from './getElementByTransitionTag';
 import getImageBoundsByTag from './getImageBoundsByTag';
@@ -13,6 +11,7 @@ import getSnapshotPairs from './getSnapshotPairs';
 import getTruthyArray from './getTruthyArray';
 import playMutationTransition from './playMutationTransition';
 import playPresenceTransition from './playPresenceTransition';
+import { cancelTransition, finishTransition, getRecordById, getTransitionsById, setupRecord } from './store';
 import { Bounds, FalsyArray, Tag, TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
@@ -20,10 +19,12 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
   const finalConfig = { flushSync: true, ...config };
 
   const validTags = getTruthyArray(tags);
+  const allTags = getAllTags(validTags);
+
   const persistentBounds: Record<Tag, Bounds | null> = Object.fromEntries(
-    validTags.map((tag) => [tag, getImageBoundsByTag(tag)])
+    allTags.map((tag) => [tag, getImageBoundsByTag(tag)])
   );
-  cancelTransition(...getAllTags(validTags));
+  cancelTransition(...allTags);
 
   const prevSnapshots = validTags.map((targetTag) =>
     captureSnapshot(
@@ -60,18 +61,20 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
 
   finalConfig.onBegin?.();
 
-  try {
-    await Promise.all(
-      snapshotParis.map((pair) => {
-        if (pair.transitionType === 'mutation') {
-          return playMutationTransition(pair);
-        } else if (pair.transitionType === 'presence') {
-          return playPresenceTransition(pair);
-        }
-      })
-    );
+  const transitionId = setupRecord();
 
-    finishTransitions(...validTags);
+  try {
+    for (const pair of snapshotParis) {
+      if (pair.transitionType === 'mutation') {
+        playMutationTransition(pair, getRecordById(transitionId));
+      } else if (pair.transitionType === 'presence') {
+        playPresenceTransition(pair, getRecordById(transitionId));
+      }
+    }
+
+    await Promise.all(getTransitionsById(transitionId).map((transition) => transition.animation.finished));
+
+    finishTransition(transitionId);
     resetRootsPositions();
     finalConfig.onFinish?.();
   } catch (err: any) {

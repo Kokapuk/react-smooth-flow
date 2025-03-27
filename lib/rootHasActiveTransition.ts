@@ -1,7 +1,7 @@
-import { activeTransitions } from './store';
+import { getAllTransitions } from './store';
 
 export const rootHasActiveTransition = (root: HTMLElement) => {
-  const transitions = Object.keys(activeTransitions).flatMap((tag) => activeTransitions[tag]);
+  const transitions = getAllTransitions();
 
   return transitions.some((transition) => transition.snapshotPair.shared.transitionRoot === root);
 };
