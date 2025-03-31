@@ -54,28 +54,32 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   targetElementClone.style.setProperty('position', 'static', 'important');
   targetElementClone.style.setProperty('margin', '0', 'important');
   targetElementClone.style.setProperty('opacity', '1', 'important');
-  targetElementClone.style.setProperty('pointer-events', 'none', 'important');
   targetElementClone.style.setProperty('box-shadow', 'none', 'important');
   targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
 
-  const image = document.createElement('div');
-  image.classList.add('rsf-snapshotContainer', `rsf-${transitionOptions.contentAlign}`);
-  image.style.width = `${bounds.width}px`;
-  image.style.height = `${bounds.height}px`;
-  image.style.padding = `${computedStyle.borderTopWidth} ${computedStyle.borderRightWidth} ${computedStyle.borderBottomWidth} ${computedStyle.borderLeftWidth}`;
-  image.style.setProperty('--borderTopWidth', computedStyle.borderTopWidth);
-  image.style.setProperty('--borderRightWidth', computedStyle.borderRightWidth);
-  image.style.setProperty('--borderBottomWidth', computedStyle.borderBottomWidth);
-  image.style.setProperty('--borderLeftWidth', computedStyle.borderLeftWidth);
+  const snapshotContainer = document.createElement('div');
+  snapshotContainer.inert = true;
+  snapshotContainer.classList.add('rsf-snapshotContainer', `rsf-${transitionOptions.contentAlign}`);
+  snapshotContainer.style.setProperty('--borderTopWidth', computedStyle.borderTopWidth);
+  snapshotContainer.style.setProperty('--borderRightWidth', computedStyle.borderRightWidth);
+  snapshotContainer.style.setProperty('--borderBottomWidth', computedStyle.borderBottomWidth);
+  snapshotContainer.style.setProperty('--borderLeftWidth', computedStyle.borderLeftWidth);
 
-  image.innerHTML = targetElementClone.outerHTML
+  const transformContainer = document.createElement('div');
+  transformContainer.className = 'rsf-transformContainer';
+  transformContainer.style.width = `${bounds.width}px`;
+  transformContainer.style.height = `${bounds.height}px`;
+
+  transformContainer.innerHTML = targetElementClone.outerHTML
     .replace(/\sdata-transition=".+?"/gm, '')
     .replace(/\sdata-transitionroot=".+?"/gm, '');
+
+  snapshotContainer.append(transformContainer);
 
   return {
     tag: targetTag,
     bounds,
-    image,
+    image: snapshotContainer,
     computedStyle,
     transitionOptions,
     transitionMapping,

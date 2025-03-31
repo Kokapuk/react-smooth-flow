@@ -42,7 +42,7 @@ interface TransitionOptions {
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
   transitionRootTag?: Tag;
-  overflow?: ImageOverflow;
+  clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
   disabled?: boolean;
@@ -72,8 +72,6 @@ type ContentAlign =
   | 'center';
 
 type PositionAnchor = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
-
-type ImageOverflow = 'hidden' | 'visible';
 
 type RelevantStyleProperties = Exclude<keyof CSS.PropertiesHyphen, 'pointer-events'>[];
 ```
@@ -123,6 +121,9 @@ Transition duration in ms.
 Default: `'ease'`
 
 Transition easing function. [<easing-function\>](https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function)
+
+> [!TIP]
+> [Create complex animation curves in CSS with the linear() easing function](https://developer.chrome.com/docs/css-ui/css-linear-easing-function)
 
 #### `delay`
 
@@ -184,11 +185,11 @@ Default: `null`
 
 Determines custom transition root by tag instead of screen-wide overlay root.
 
-#### `overflow`
+#### `clip`
 
-Default: `hidden`
+Default: `true`
 
-Snapshot content overflow.
+Whether to clip snapshot content on overflow.
 
 #### `relevantStyleProperties`
 
@@ -336,7 +337,7 @@ cancelTransition('tagA', 'tagB');
 declare const defaults: ConfigurableDefaults;
 
 interface ConfigurableDefaults {
-  defaultTransitionOptions: ParsedTransitionOptions;
+  transitionOptions: ParsedTransitionOptions;
 }
 
 type ParsedTransitionOptions = Required<
@@ -374,7 +375,7 @@ interface TransitionOptions {
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
   transitionRootTag?: Tag;
-  overflow?: ImageOverflow;
+  clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
   disabled?: boolean;
@@ -393,16 +394,25 @@ type ContentAlign =
 
 type PositionAnchor = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
 
-type ImageOverflow = 'hidden' | 'visible';
-
 type RelevantStyleProperties = Exclude<keyof CSS.PropertiesHyphen, 'pointer-events'>[];
 ```
+
+### Options
+
+#### `debug`
+
+If enabled, performed transitions will never be finished and snapshots will never be removed from DOM so you can easily inspect page in "frozen" state to identify issues.
+
+#### `transitionOptions`
+
+Default transition options.
 
 ### Default values
 
 ```ts
 const defaults: ConfigurableDefaults = {
-  defaultTransitionOptions: {
+  debug: false,
+  transitionOptions: {
     duration: 300,
     easing: 'ease',
     delay: 0,
@@ -415,7 +425,7 @@ const defaults: ConfigurableDefaults = {
     positionAnchor: 'topLeft',
     forcePresenceTransition: false,
     transitionRootTag: null,
-    overflow: 'hidden',
+    clip: true,
     relevantStyleProperties: [],
     persistBounds: true,
     disabled: false,
@@ -428,9 +438,9 @@ const defaults: ConfigurableDefaults = {
 ```ts
 import { defaults } from 'react-smooth-flow';
 
-defaults.defaultTransitionOptions.duration = 600;
-defaults.defaultTransitionOptions.easing = 'linear';
-defaults.defaultTransitionOptions.ignoreReducedMotion = true;
+defaults.transitionOptions.duration = 600;
+defaults.transitionOptions.easing = 'linear';
+defaults.transitionOptions.ignoreReducedMotion = true;
 ```
 
 ## usePreCommitEffect

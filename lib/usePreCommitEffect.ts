@@ -14,6 +14,7 @@ const usePreCommitEffect = (effect: (isInitialRender: boolean) => void | (() => 
     if (initialRender.current) {
       initialRender.current = false;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps ?? [{}]);
 };
 

@@ -4,6 +4,7 @@ import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
 import applyPositionToSnapshotPairs from './applyPositionToSnapshotPairs';
 import captureSnapshot from './captureSnapshot';
+import defaults from './defaults';
 import getAllTags from './getAllTags';
 import getElementByTransitionTag from './getElementByTransitionTag';
 import getImageBoundsByTag from './getImageBoundsByTag';
@@ -72,13 +73,17 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
       }
     }
 
+    if (defaults.debug) {
+      return;
+    }
+
     await Promise.all(getTransitionsById(transitionId).map((transition) => transition.animation.finished));
 
     finishTransition(transitionId);
     resetRootsPositions();
     finalConfig.onFinish?.();
-  } catch (err: any) {
-    if (err.name === 'AbortError') {
+  } catch (err: unknown) {
+    if ((err as Error).name === 'AbortError') {
       resetRootsPositions();
       finalConfig.onCancel?.();
       return;

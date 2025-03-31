@@ -5,6 +5,7 @@ const getTransitionRoot = () => {
   if (!transitionRoot) {
     transitionRoot = document.createElement('div');
     transitionRoot.id = transitionRootId;
+    transitionRoot.ariaHidden = 'true';
 
     document.body.append(transitionRoot);
     document.documentElement.style.position = 'relative';

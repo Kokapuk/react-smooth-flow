@@ -33,12 +33,13 @@ const getElementTransitionMapping = (element: HTMLElement) => {
     }
 
     const properties = Object.keys(
-      defaults.defaultTransitionOptions
-    ) as (keyof ConfigurableDefaults['defaultTransitionOptions'])[];
+      defaults.transitionOptions
+    ) as (keyof ConfigurableDefaults['transitionOptions'])[];
 
     properties.forEach((property) => {
       if (transitionOptions[property] === undefined) {
-        (transitionOptions[property] as any) = defaults.defaultTransitionOptions[property];
+        const defaultPropertyValue = defaults.transitionOptions[property];
+        (transitionOptions[property] as unknown as typeof defaultPropertyValue) = defaultPropertyValue;
       }
     });
   });

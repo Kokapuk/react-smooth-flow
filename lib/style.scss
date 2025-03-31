@@ -4,7 +4,6 @@
   min-height: 100vh;
   overflow: hidden;
   pointer-events: none;
-  user-select: none;
 }
 
 .rsf-image {
@@ -14,73 +13,103 @@
 .rsf-snapshotContainer {
   display: flex;
   position: absolute;
-  pointer-events: none;
 
   $horizontalCenterTop: calc(50% + (var(--borderBottomWidth) - var(--borderTopWidth)) / 2);
   $verticalCenterLeft: calc(50% + (var(--borderRightWidth) - var(--borderLeftWidth)) / 2);
   $leftXOffset: calc(var(--borderLeftWidth) * -1);
   $topYOffset: calc(var(--borderTopWidth) * -1);
 
+  .rsf-transformContainer {
+    padding: var(--borderTopWidth) var(--borderRightWidth) var(--borderBottomWidth) var(--borderBottomWidth);
+
+    & > * {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    & * {
+      animation: none !important;
+    }
+  }
+
   &.rsf-topLeft {
     top: 0;
     left: 0;
-    transform: translate($leftXOffset, $topYOffset);
+
+    .rsf-transformContainer {
+      transform: translate($leftXOffset, $topYOffset);
+    }
   }
 
   &.rsf-topCenter {
     top: 0;
     left: $verticalCenterLeft;
-    transform: translate(-50%, $topYOffset);
+
+    .rsf-transformContainer {
+      transform: translate(-50%, $topYOffset);
+    }
   }
 
   &.rsf-topRight {
     top: 0;
     right: 0;
-    transform: translate(var(--borderRightWidth), $topYOffset);
+
+    .rsf-transformContainer {
+      transform: translate(var(--borderRightWidth), $topYOffset);
+    }
   }
 
   &.rsf-centerRight {
     top: $horizontalCenterTop;
     right: 0;
-    transform: translate(var(--borderRightWidth), -50%);
+
+    .rsf-transformContainer {
+      transform: translate(var(--borderRightWidth), -50%);
+    }
   }
 
   &.rsf-bottomRight {
     right: 0;
     bottom: 0;
-    transform: translate(var(--borderRightWidth), var(--borderBottomWidth));
+
+    .rsf-transformContainer {
+      transform: translate(var(--borderRightWidth), var(--borderBottomWidth));
+    }
   }
 
   &.rsf-bottomCenter {
     bottom: 0;
     left: $verticalCenterLeft;
-    transform: translate(-50%, var(--borderBottomWidth));
+
+    .rsf-transformContainer {
+      transform: translate(-50%, var(--borderBottomWidth));
+    }
   }
 
   &.rsf-bottomLeft {
     bottom: 0;
     left: 0;
-    transform: translate($leftXOffset, var(--borderBottomWidth));
+
+    .rsf-transformContainer {
+      transform: translate($leftXOffset, var(--borderBottomWidth));
+    }
   }
 
   &.rsf-centerLeft {
     top: $horizontalCenterTop;
     left: 0;
-    transform: translate($leftXOffset, -50%);
+
+    .rsf-transformContainer {
+      transform: translate($leftXOffset, -50%);
+    }
   }
 
   &.rsf-center {
     top: $horizontalCenterTop;
     left: $verticalCenterLeft;
-    transform: translate(-50%, -50%);
-  }
 
-  & > * {
-    width: 100% !important;
-    height: 100% !important;
-  }
-
-  & * {
-    animation: none !important;
+    .rsf-transformContainer {
+      transform: translate(-50%, -50%);
+    }
   }
 }

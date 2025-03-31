@@ -2,7 +2,8 @@ import { Properties } from 'csstype';
 import { ParsedTransitionOptions, Snapshot, TransitionOptions } from './types';
 
 export interface ConfigurableDefaults {
-  defaultTransitionOptions: ParsedTransitionOptions;
+  debug: boolean;
+  transitionOptions: ParsedTransitionOptions;
 }
 
 export const STYLE_PROPERTIES_TO_CAPTURE = [
@@ -39,13 +40,14 @@ export const CONSISTENT_TRANSITION_OPTIONS = [
   'positionAnchor',
   'transitionRootTag',
   'forcePresenceTransition',
-  'overflow',
+  'clip',
 ] as const satisfies Readonly<(keyof TransitionOptions)[]>;
 
 export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag', 'transitionRoot'] as const satisfies Readonly<(keyof Snapshot)[]>;
 
 const defaults: ConfigurableDefaults = {
-  defaultTransitionOptions: {
+  debug: false,
+  transitionOptions: {
     duration: 300,
     easing: 'ease',
     delay: 0,
@@ -58,7 +60,7 @@ const defaults: ConfigurableDefaults = {
     positionAnchor: 'topLeft',
     forcePresenceTransition: false,
     transitionRootTag: null,
-    overflow: 'hidden',
+    clip: true,
     relevantStyleProperties: [],
     persistBounds: true,
     disabled: false,

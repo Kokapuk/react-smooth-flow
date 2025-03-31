@@ -28,8 +28,6 @@ export type ContentAlign =
 
 export type PositionAnchor = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLeft';
 
-export type ImageOverflow = 'hidden' | 'visible';
-
 export type RelevantStyleProperties = Exclude<keyof PropertiesHyphen, 'pointer-events'>[];
 
 export interface TransitionOptions {
@@ -45,7 +43,7 @@ export interface TransitionOptions {
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
   transitionRootTag?: Tag;
-  overflow?: ImageOverflow;
+  clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
   disabled?: boolean;

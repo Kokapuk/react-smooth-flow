@@ -23,7 +23,6 @@ const AnimatedList = () => {
           .map((_, index) => index + 1)
       );
     }, 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buttons.length]);
 
   const shuffle = () => {
@@ -50,14 +49,14 @@ const AnimatedList = () => {
     const newButton = buttons.length ? Math.max(...buttons) + 1 : 1;
 
     startTransition(
-      [...buttons, newButton].map((i) => `button-${i}`),
+      [`button-${newButton}`],
       () => setButtons((prev) => [...prev, newButton])
     );
   };
 
   const removeElement = (element: number) => {
     startTransition(
-      buttons.map((i) => `button-${i}`),
+      buttons.filter(i => i >= element).map((i) => `button-${i}`),
       () => setButtons((prev) => prev.filter((j) => j !== element))
     );
   };
@@ -79,11 +78,11 @@ const AnimatedList = () => {
                 ],
                 exitKeyframes: 'reversedEnter',
                 duration: 300,
-                contentAlign: 'topCenter',
               },
             })}
             key={i}
             onClick={() => removeElement(i)}
+            style={{ width: 92 }}
           >
             Delete {i}
           </Button>

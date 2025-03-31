@@ -18,8 +18,8 @@ const PreserveAspectRatio = () => {
         {...constructTransition({
           container: {
             contentAlign: 'topRight',
-            duration: 675,
-            delay: 75,
+            duration: 650,
+            delay: 100,
             easing: materialDesignEmphasizedEasing,
             positionAnchor: 'topRight',
           },
@@ -40,7 +40,7 @@ const PreserveAspectRatio = () => {
             })}
           >
             <button
-              style={{ float: 'right', height: 22, width: 22, border: 'none', borderRadius: 5 }}
+              style={{ float: 'right', height: 22, width: 22, border: 'none', borderRadius: 5, cursor: 'pointer' }}
               onClick={() => startTransition(['container', `panel-${activePanel}`], () => setActivePanel(null))}
             >
               X
@@ -67,7 +67,7 @@ const PreserveAspectRatio = () => {
                 [`panel-${i}`]: {
                   duration: 750,
                   easing: materialDesignEmphasizedEasing,
-                  relevantStyleProperties: ['font', 'color'],
+                  relevantStyleProperties: ['font-size', 'color'],
                   disabled: activePanel === i,
                   // contentEnterKeyframes: { opacity: [0, 0, 1] },
                   contentEnterKeyframes: { transform: ['translateX(-100%)', 'translateX(0)'] },
