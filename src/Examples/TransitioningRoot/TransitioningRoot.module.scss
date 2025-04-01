@@ -1,0 +1,26 @@
+.wrapper {
+  display: grid;
+  place-items: center;
+  height: 325px;
+}
+
+.modal {
+  background-color: white;
+  width: 250px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+  color: black;
+  position: relative;
+}
+
+.indicator {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}

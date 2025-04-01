@@ -3,6 +3,7 @@ import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
 import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
 import applyPositionToSnapshotPairs from './applyPositionToSnapshotPairs';
+import applyTransitioningRootsToPairs from './applyTransitioningRootsToPairs';
 import captureSnapshot from './captureSnapshot';
 import defaults from './defaults';
 import getAllTags from './getAllTags';
@@ -55,6 +56,7 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
 
   const snapshotParis = getSnapshotPairs(prevSnapshots, nextSnapshots);
   validateSnapshotPairs(snapshotParis, validTags);
+  applyTransitioningRootsToPairs(snapshotParis);
   applyPersistentBoundsToPairs(snapshotParis, persistentBounds);
   applyPositionToSnapshotPairs(snapshotParis);
   applyMaxZIndexToSnapshotPairs(snapshotParis);

@@ -7,6 +7,7 @@ import ContentSizeChange from './Examples/ContentSizeChange';
 import Gallery from './Examples/Gallery';
 import Playground from './Examples/Playground';
 import PreserveAspectRatio from './Examples/PreserveAspectRatio';
+import TransitioningRoot from './Examples/TransitioningRoot';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
       <Gallery />
       <ContentAlignment />
       <Benchmark />
+      <TransitioningRoot />
     </>
   );
 };
