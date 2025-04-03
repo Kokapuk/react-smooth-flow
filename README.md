@@ -29,7 +29,7 @@ import 'react-smooth-flow/style.min.css';
 
 ## Usage
 
-Lets create your first animation! Start by creating a new component.
+Let's create your first animation! Start by creating a new component.
 
 ```tsx
 import { useState } from 'react';

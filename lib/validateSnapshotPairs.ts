@@ -40,12 +40,14 @@ const validateSnapshotPairs = (pairs: SnapshotPair[], _tags: Tag[]) => {
     //     return;
     //   }
 
-    //   if (!anyParentMatchesAnyTag(snapshot.transitionRoot, tags)) {
+    //   const filteredTags = tags.filter((tag) => tag !== snapshot.transitionOptions.transitionRootTag);
+
+    //   if (!anyParentMatchesAnyTag(snapshot.transitionRoot, filteredTags)) {
     //     return;
     //   }
 
     //   throw Error(
-    //     `Snapshot with tag "${snapshot.tag}" has custom transition root, but either root it self or one of its parents will also be transitioned`
+    //     `Snapshot with tag "${snapshot.tag}" has custom transition root, but one of its parents will also be transitioned`
     //   );
     // });
 

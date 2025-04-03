@@ -20,6 +20,7 @@
   $topYOffset: calc(var(--borderTopWidth) * -1);
 
   .rsf-transformContainer {
+    display: flex;
     padding: var(--borderTopWidth) var(--borderRightWidth) var(--borderBottomWidth) var(--borderBottomWidth);
 
     & > * {
