@@ -1,3 +1,4 @@
+import adjustBoundsToRoot from './adjustBoundsToRoot';
 import getElementBounds from './getElementBounds';
 import { getRecordByTag } from './store';
 import { Tag } from './types';
@@ -15,7 +16,13 @@ const getImageBoundsByTag = (tag: Tag) => {
     return null;
   }
 
-  return getElementBounds(activeTransitionPair.image);
+  const bounds = getElementBounds(activeTransitionPair.image);
+
+  if (activeTransitionPair.shared.transitionRoot) {
+    adjustBoundsToRoot(bounds, activeTransitionPair.shared.transitionRoot);
+  }
+
+  return bounds;
 };
 
 export default getImageBoundsByTag;

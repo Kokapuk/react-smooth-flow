@@ -4,7 +4,7 @@ const applyPositionToImage = (
   image: HTMLDivElement,
   position: 'absolute' | 'fixed',
   snapshot: Snapshot,
-  transitionRoot: HTMLElement | null
+  hasCustomRoot: boolean
 ) => {
   image.style.position = position;
 
@@ -13,7 +13,7 @@ const applyPositionToImage = (
   let bottomModifier = 0;
   let leftModifier = 0;
 
-  if (position === 'absolute' && !transitionRoot) {
+  if (position === 'absolute' && !hasCustomRoot) {
     const documentScrollRight =
       document.documentElement.scrollWidth -
       (document.documentElement.scrollLeft + document.documentElement.clientWidth);
@@ -50,11 +50,11 @@ const applyPositionToImage = (
 const applyPositionToSnapshotPairs = (pairs: SnapshotPair[]) => {
   pairs.forEach((pair) => {
     if (pair.transitionType === 'mutation') {
-      const { prevSnapshot, nextSnapshot, image, shared, firstValidSnapshot } = pair;
+      const { prevSnapshot, nextSnapshot, image, shared } = pair;
 
       const lastValidSnapshot = (nextSnapshot ?? prevSnapshot) as Snapshot;
       const position = lastValidSnapshot.hasFixedPosition && !lastValidSnapshot.transitionRoot ? 'fixed' : 'absolute';
-      applyPositionToImage(image, position, firstValidSnapshot, shared.transitionRoot);
+      applyPositionToImage(image, position, lastValidSnapshot, !!shared.transitionRoot);
     } else if (pair.transitionType === 'presence') {
       const { prevSnapshot, nextSnapshot, prevImage, nextImage, shared } = pair;
       const snapshotImagePairs = [
@@ -67,7 +67,7 @@ const applyPositionToSnapshotPairs = (pairs: SnapshotPair[]) => {
 
       snapshotImagePairs.forEach(({ snapshot, image }) => {
         const position = snapshot.hasFixedPosition && !snapshot.transitionRoot ? 'fixed' : 'absolute';
-        applyPositionToImage(image, position, snapshot, shared.transitionRoot);
+        applyPositionToImage(image, position, snapshot, !!shared.transitionRoot);
       });
     }
   });

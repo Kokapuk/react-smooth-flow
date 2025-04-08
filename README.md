@@ -167,6 +167,7 @@ export default function ExpandableSection() {
 ## Advantages over [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
 
 - supports all major modern browsers
+- higher customizability
 - provides more control over the document, you can specify which elements will be animated per call
 
   ```js
@@ -189,7 +190,7 @@ export default function ExpandableSection() {
 
 - losing some states on transition
 
-  React Smooth Flow has a simpler way of capturing a snapshot of an element. It does not take a screenshot, but uses the [cloneNode](https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode) instead. That means that some states that are not represented as attributes will not be captured, e.g. input values without `value` attribute, scroll position of scrollable elements, etc. You can read more about snapshot capturing process [here](/DOCS.md#Concept).
+  React Smooth Flow has a simpler way of capturing snapshots of elements. It does not take a screenshot, but uses the [cloneNode](https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode) instead. That means that some states that are not represented as attributes will not be captured, e.g. input values without `value` attribute, scroll position of scrollable elements, etc. You can read more about snapshot capturing process [here](/DOCS.md#Concept).
 
 ## Known issues
 

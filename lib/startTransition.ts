@@ -1,4 +1,5 @@
 import { flushSync } from 'react-dom';
+import appendPairsToDOM from './appendPairsToDOM';
 import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
 import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
@@ -57,6 +58,7 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
   const snapshotParis = getSnapshotPairs(prevSnapshots, nextSnapshots);
   validateSnapshotPairs(snapshotParis, validTags);
   applyTransitioningRootsToPairs(snapshotParis);
+  appendPairsToDOM(snapshotParis);
   applyPersistentBoundsToPairs(snapshotParis, persistentBounds);
   applyPositionToSnapshotPairs(snapshotParis);
   applyMaxZIndexToSnapshotPairs(snapshotParis);

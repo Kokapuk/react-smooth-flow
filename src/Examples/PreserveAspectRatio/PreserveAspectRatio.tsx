@@ -18,8 +18,7 @@ const PreserveAspectRatio = () => {
         {...constructTransition({
           container: {
             contentAlign: 'topRight',
-            duration: 650,
-            delay: 100,
+            duration: 750,
             easing: materialDesignEmphasizedEasing,
             positionAnchor: 'topRight',
           },

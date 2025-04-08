@@ -1,3 +1,4 @@
+import adjustBoundsToRoot from './adjustBoundsToRoot';
 import copyRelevantStyles from './copyRelevantStyles';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
@@ -30,13 +31,9 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
 
   const bounds = getElementBounds(targetElement);
   const hasFixedPosition = elementHasFixedPosition(targetElement);
-  const transitionRootBounds = transitionRoot ? getElementBounds(transitionRoot) : null;
-
-  if (transitionRootBounds) {
-    bounds.top -= transitionRootBounds.top - transitionRoot!.scrollTop;
-    bounds.right -= transitionRootBounds.right + transitionRootBounds.scrollBarWidth + transitionRoot!.scrollLeft;
-    bounds.left -= transitionRootBounds.left - transitionRoot!.scrollLeft;
-    bounds.bottom -= transitionRootBounds.bottom + transitionRootBounds.scrollBarHeight + transitionRoot!.scrollTop;
+  
+  if (transitionRoot) {
+    adjustBoundsToRoot(bounds, transitionRoot);
   }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;

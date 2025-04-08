@@ -39,6 +39,7 @@ export interface TransitionOptions {
   exitKeyframes?: Keyframes | 'reversedEnter';
   contentEnterKeyframes?: Keyframes;
   contentExitKeyframes?: Keyframes | 'reversedEnter';
+  scaleContent?: boolean;
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
@@ -134,3 +135,12 @@ export type FalsyArray<T> = (T | Falsy)[];
 export type StoreRecord = Record<Tag, Transition[]>;
 export type Id = string;
 export type Store = Record<Id, StoreRecord>;
+
+export interface TransformMatrix {
+  scaleX: number;
+  skewY: number;
+  skewX: number;
+  scaleY: number;
+  translateX: number;
+  translateY: number;
+}

@@ -38,6 +38,7 @@ interface TransitionOptions {
   exitKeyframes?: Keyframes | 'reversedEnter';
   contentEnterKeyframes?: Keyframes;
   contentExitKeyframes?: Keyframes | 'reversedEnter';
+  scaleContent?: boolean;
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
@@ -160,6 +161,12 @@ Mutation transition new content enter animation keyframes. [Keyframe Formats](ht
 Default: `{ opacity: [1, 1, 0] }`
 
 Mutation transition old content exit animation keyframes. [Keyframe Formats](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_Formats)
+
+#### `scaleContent`
+
+Default: `false`
+
+Wether snapshot content should scale on mutation transition.
 
 #### `contentAlign`
 
@@ -371,6 +378,7 @@ interface TransitionOptions {
   exitKeyframes?: Keyframes | 'reversedEnter';
   contentEnterKeyframes?: Keyframes;
   contentExitKeyframes?: Keyframes | 'reversedEnter';
+  scaleContent?: boolean;
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
@@ -421,6 +429,7 @@ const defaults: ConfigurableDefaults = {
     exitKeyframes: { opacity: [1, 0] },
     contentEnterKeyframes: { opacity: [0, 1, 1] },
     contentExitKeyframes: { opacity: [1, 1, 0] },
+    scaleContent: false,
     contentAlign: 'topLeft',
     positionAnchor: 'topLeft',
     forcePresenceTransition: false,

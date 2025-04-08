@@ -41,7 +41,7 @@ const ContentAlignment = () => {
               )
             }
             {...constructTransition({
-              contentAlignmentPanelButton: { duration: 800, easing: springEasing, },
+              contentAlignmentPanelButton: { duration: 800, easing: springEasing },
             })}
           >
             ...
