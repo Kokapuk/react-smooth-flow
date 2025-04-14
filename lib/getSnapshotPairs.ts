@@ -1,4 +1,4 @@
-import { CONSISTENT_TRANSITION_OPTIONS, STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
+import { CONSISTENT_TRANSITION_OPTIONS, STYLE_PROPERTIES_TO_APPLY_TO_IMAGE } from './defaults';
 import isMotionReduced from './isMotionReduced';
 import { Bounds, SharedTransitionOptions, Snapshot, SnapshotPair } from './types';
 
@@ -44,7 +44,7 @@ const getSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Sn
         const computedStyle = firstValidSnapshot.computedStyle;
         const image = createImage(sharedData.transitionOptions.clip, firstValidSnapshot.bounds);
 
-        STYLE_PROPERTIES_TO_CAPTURE.forEach((property) => (image.style[property] = computedStyle[property]));
+        STYLE_PROPERTIES_TO_APPLY_TO_IMAGE.forEach((property) => (image.style[property] = computedStyle[property]));
 
         if (prevSnapshot) {
           image.append(prevSnapshot.image);
@@ -69,7 +69,7 @@ const getSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Sn
         if (prevSnapshot) {
           prevImage = createImage(sharedData.transitionOptions.clip, prevSnapshot.bounds);
 
-          STYLE_PROPERTIES_TO_CAPTURE.forEach(
+          STYLE_PROPERTIES_TO_APPLY_TO_IMAGE.forEach(
             (property) => (prevImage!.style[property] = prevSnapshot.computedStyle[property])
           );
 
@@ -79,7 +79,7 @@ const getSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Sn
         if (nextSnapshot) {
           nextImage = createImage(sharedData.transitionOptions.clip, nextSnapshot.bounds);
 
-          STYLE_PROPERTIES_TO_CAPTURE.forEach(
+          STYLE_PROPERTIES_TO_APPLY_TO_IMAGE.forEach(
             (property) => (nextImage!.style[property] = nextSnapshot.computedStyle[property])
           );
 

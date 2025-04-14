@@ -31,7 +31,7 @@ export const cancelTransition = (...tags: FalsyArray<Tag>) => {
 
   transitions.forEach((i) => {
     i.animation.cancel();
-    i.cleanup();
+    i.cleanup?.();
   });
 
   recordIds.forEach((id) => delete activeTransitions[id]);
@@ -41,7 +41,10 @@ export const finishTransition = (id: Id) => {
   const tags = Object.keys(activeTransitions[id]);
   const transitions = tags.flatMap((tag) => activeTransitions[id][tag]);
 
-  transitions.forEach((i) => i.cleanup());
+  transitions.forEach((i) => {
+    i.animation.cancel();
+    i.cleanup?.();
+  });
 
   delete activeTransitions[id];
 };

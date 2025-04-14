@@ -47,6 +47,7 @@ export interface TransitionOptions {
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
+  transitionLayout?: boolean;
   disabled?: boolean;
 }
 
@@ -62,6 +63,11 @@ export type TransitionMapping<T extends TransitionOptions | ParsedTransitionOpti
   Tag,
   T
 >;
+
+export interface DOMPosition {
+  parentElement: HTMLElement;
+  index: number;
+}
 
 export interface TransitionConfig {
   flushSync?: boolean;
@@ -93,6 +99,7 @@ export interface Snapshot {
   hasFixedPosition: boolean;
   transitionRoot?: HTMLElement | null;
   targetElement: HTMLElement;
+  targetDOMPosition: DOMPosition;
   totalZIndex: number;
 }
 
@@ -126,7 +133,7 @@ export type SnapshotPair = MutationSnapshotPair | PresenceSnapshotPair;
 export interface Transition {
   snapshotPair: SnapshotPair;
   animation: Animation;
-  cleanup(): void;
+  cleanup?(): void;
 }
 
 export type Falsy = false | 0 | '' | null | undefined;

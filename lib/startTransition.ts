@@ -12,6 +12,7 @@ import getElementByTransitionTag from './getElementByTransitionTag';
 import getImageBoundsByTag from './getImageBoundsByTag';
 import getSnapshotPairs from './getSnapshotPairs';
 import getTruthyArray from './getTruthyArray';
+import playLayoutTransition from './playLayoutTransition';
 import playMutationTransition from './playMutationTransition';
 import playPresenceTransition from './playPresenceTransition';
 import { cancelTransition, finishTransition, getRecordById, getTransitionsById, setupRecord } from './store';
@@ -70,10 +71,17 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
 
   try {
     for (const pair of snapshotParis) {
+      const storeRecord = getRecordById(transitionId);
+      storeRecord[pair.shared.tag] = []
+
       if (pair.transitionType === 'mutation') {
-        playMutationTransition(pair, getRecordById(transitionId));
+        playMutationTransition(pair, storeRecord[pair.shared.tag]);
       } else if (pair.transitionType === 'presence') {
-        playPresenceTransition(pair, getRecordById(transitionId));
+        playPresenceTransition(pair, storeRecord[pair.shared.tag]);
+      }
+
+      if (pair.shared.transitionOptions.transitionLayout) {
+        playLayoutTransition(pair, storeRecord[pair.shared.tag]);
       }
     }
 

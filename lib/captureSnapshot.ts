@@ -30,8 +30,7 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   computedStyle.opacity = `${getTotalOpacity(targetElement, transitionRoot ?? undefined)}`;
 
   const bounds = getElementBounds(targetElement);
-  const hasFixedPosition = elementHasFixedPosition(targetElement);
-  
+
   if (transitionRoot) {
     adjustBoundsToRoot(bounds, transitionRoot);
   }
@@ -80,9 +79,13 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     computedStyle,
     transitionOptions,
     transitionMapping,
-    hasFixedPosition,
+    hasFixedPosition: elementHasFixedPosition(targetElement),
     transitionRoot,
     targetElement,
+    targetDOMPosition: {
+      parentElement: targetElement.parentElement!,
+      index: Array.from(targetElement.parentElement!.children).indexOf(targetElement),
+    },
     totalZIndex: getTotalZIndex(targetElement, transitionRoot ?? undefined),
   };
 };

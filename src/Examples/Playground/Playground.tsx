@@ -33,7 +33,7 @@ const Playground = () => {
     <Example title="Playground" style={{ width: 250, display: 'flex', flexDirection: 'column', gap: 15 }}>
       <div>
         <Button
-          {...constructTransition({ moveBtn: { duration: 600 } })}
+          {...constructTransition({ moveBtn: { duration: 600, transitionLayout: true } })}
           style={{
             display: 'block',
             marginInline: { left: 0, center: 'auto', right: 'auto 0' }[pos],
@@ -62,6 +62,7 @@ const Playground = () => {
                 ],
                 exitKeyframes: 'reversedEnter',
                 duration: 600,
+                transitionLayout: true,
               },
             })}
             className={cn(styles.indicator, !isOn && styles.inactive)}

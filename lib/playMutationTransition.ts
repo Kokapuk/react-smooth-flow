@@ -2,9 +2,15 @@ import { STYLE_PROPERTIES_TO_ANIMATE } from './defaults';
 import getInitialKeyframe from './getInitialKeyframe';
 import hideElementNoTransition from './hideElementNoTransition';
 import parseTransformMatrix from './parseTransformMatrix';
-import { ContentAlign, Keyframes, MutationSnapshotPair, Tag, Transition } from './types';
+import { ContentAlign, Keyframes, MutationSnapshotPair, Transition } from './types';
 
-const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: MutationSnapshotPair) => {
+const playImageTransition = (
+  pair: MutationSnapshotPair,
+  animationOptions: KeyframeAnimationOptions,
+  transitions: Transition[],
+  cleanup: () => void
+) => {
+  const { prevSnapshot, nextSnapshot, shared, image } = pair;
   const generalKeyframes = [prevSnapshot, nextSnapshot].map((snapshot) => {
     const keyframe: Record<string, string | number> = {
       width: `${snapshot.bounds.width}px`,
@@ -42,7 +48,51 @@ const getImageKeyframes = ({ prevSnapshot, nextSnapshot, shared }: MutationSnaps
     { ...generalKeyframes[1], transform: 'translate(0, 0)' },
   ];
 
-  return keyframes;
+  if (shared.transitionOptions.delay) {
+    image.animate(getInitialKeyframe(keyframes), { fill: 'forwards' });
+  }
+
+  const transition = image.animate(keyframes, animationOptions);
+
+  transitions.push({
+    animation: transition,
+    snapshotPair: pair,
+    cleanup,
+  });
+};
+
+const playContentTransition = (
+  pair: MutationSnapshotPair,
+  animationOptions: KeyframeAnimationOptions,
+  transitions: Transition[],
+  cleanup: () => void
+) => {
+  const { image, shared, prevSnapshot, nextSnapshot } = pair;
+  const exitContent = image.children[0] as HTMLDivElement;
+  const enterContent = image.children[1] as HTMLDivElement;
+
+  if (shared.transitionOptions.delay) {
+    exitContent.animate(getInitialKeyframe(prevSnapshot.transitionOptions.contentExitKeyframes), {
+      fill: 'forwards',
+    });
+    enterContent.animate(getInitialKeyframe(nextSnapshot.transitionOptions.contentEnterKeyframes), {
+      fill: 'forwards',
+    });
+  }
+
+  const exitContentTransition = exitContent.animate(
+    prevSnapshot.transitionOptions.contentExitKeyframes,
+    animationOptions
+  );
+  const enterContentTransition = enterContent.animate(
+    nextSnapshot.transitionOptions.contentEnterKeyframes,
+    animationOptions
+  );
+
+  transitions.push(
+    { animation: exitContentTransition, snapshotPair: pair, cleanup },
+    { animation: enterContentTransition, snapshotPair: pair, cleanup }
+  );
 };
 
 const applyTransformOriginToContent = (contentAlign: ContentAlign, target: HTMLDivElement) => {
@@ -77,11 +127,17 @@ const applyTransformOriginToContent = (contentAlign: ContentAlign, target: HTMLD
   }
 };
 
-const getContentScaleKeyframes = (
-  exitContentTransformContainer: HTMLDivElement,
-  enterContentTransformContainer: HTMLDivElement,
-  { prevSnapshot, nextSnapshot }: MutationSnapshotPair
+const playContentScaleTransition = (
+  pair: MutationSnapshotPair,
+  animationOptions: KeyframeAnimationOptions,
+  transitions: Transition[],
+  cleanup: () => void
 ) => {
+  const { prevSnapshot, nextSnapshot, image, shared } = pair;
+
+  const exitContentTransformContainer = image.children[0].children[0] as HTMLDivElement;
+  const enterContentTransformContainer = image.children[1].children[0] as HTMLDivElement;
+
   applyTransformOriginToContent(prevSnapshot.transitionOptions.contentAlign, exitContentTransformContainer);
   applyTransformOriginToContent(nextSnapshot.transitionOptions.contentAlign, enterContentTransformContainer);
 
@@ -97,13 +153,31 @@ const getContentScaleKeyframes = (
   enterContentMatrix.scaleY = prevSnapshot.bounds.height / nextSnapshot.bounds.height;
   const enterContentScaleAnimation: Keyframes = { transform: [enterContentMatrix.toString(), enterContentTo] };
 
-  return { exitContentScaleAnimation, enterContentScaleAnimation };
+  if (shared.transitionOptions.delay) {
+    exitContentTransformContainer.animate(getInitialKeyframe(exitContentScaleAnimation), {
+      fill: 'forwards',
+    });
+    enterContentTransformContainer.animate(getInitialKeyframe(enterContentScaleAnimation), {
+      fill: 'forwards',
+    });
+  }
+
+  const exitContentScaleTransition = exitContentTransformContainer.animate(exitContentScaleAnimation, animationOptions);
+
+  const enterContentScaleTransition = enterContentTransformContainer.animate(
+    enterContentScaleAnimation,
+    animationOptions
+  );
+
+  transitions.push(
+    { animation: exitContentScaleTransition, snapshotPair: pair, cleanup },
+    { animation: enterContentScaleTransition, snapshotPair: pair, cleanup }
+  );
 };
 
-const playMutationTransition = (pair: MutationSnapshotPair, transitions: Record<Tag, Transition[]>) => {
-  const { shared, prevSnapshot, nextSnapshot, image } = pair;
+const playMutationTransition = (pair: MutationSnapshotPair, transitions: Transition[]) => {
+  const { nextSnapshot, image, shared } = pair;
   const resetTargetStyles = hideElementNoTransition(nextSnapshot.targetElement);
-  transitions[shared.tag] = [];
 
   const animationOptions: KeyframeAnimationOptions = {
     duration: shared.transitionOptions.duration,
@@ -112,85 +186,17 @@ const playMutationTransition = (pair: MutationSnapshotPair, transitions: Record<
     fill: 'forwards',
   };
 
-  const imageKeyframes = getImageKeyframes(pair);
-
-  if (shared.transitionOptions.delay) {
-    image.animate(getInitialKeyframe(imageKeyframes), { fill: 'forwards' });
-  }
-
   const removeSnapshotsAndResetTarget = () => {
     image.remove();
     resetTargetStyles();
   };
 
-  const transition = image.animate(imageKeyframes, animationOptions);
-
-  transitions[shared.tag].push({
-    animation: transition,
-    snapshotPair: pair,
-    cleanup: removeSnapshotsAndResetTarget,
-  });
-
-  const exitContent = image.children[0] as HTMLDivElement;
-  const enterContent = image.children[1] as HTMLDivElement;
-
-  if (shared.transitionOptions.delay) {
-    exitContent.animate(getInitialKeyframe(prevSnapshot.transitionOptions.contentExitKeyframes), {
-      fill: 'forwards',
-    });
-    enterContent.animate(getInitialKeyframe(nextSnapshot.transitionOptions.contentEnterKeyframes), {
-      fill: 'forwards',
-    });
-  }
-
-  const exitContentTransition = exitContent.animate(
-    prevSnapshot.transitionOptions.contentExitKeyframes,
-    animationOptions
-  );
-  const enterContentTransition = enterContent.animate(
-    nextSnapshot.transitionOptions.contentEnterKeyframes,
-    animationOptions
-  );
+  playImageTransition(pair, animationOptions, transitions, removeSnapshotsAndResetTarget);
+  playContentTransition(pair, animationOptions, transitions, removeSnapshotsAndResetTarget);
 
   if (shared.transitionOptions.scaleContent) {
-    const exitContentTransformContainer = exitContent.children[0] as HTMLDivElement;
-    const enterContentTransformContainer = enterContent.children[0] as HTMLDivElement;
-
-    const { exitContentScaleAnimation, enterContentScaleAnimation } = getContentScaleKeyframes(
-      exitContentTransformContainer,
-      enterContentTransformContainer,
-      pair
-    );
-
-    if (shared.transitionOptions.delay) {
-      exitContentTransformContainer.animate(getInitialKeyframe(exitContentScaleAnimation), {
-        fill: 'forwards',
-      });
-      enterContentTransformContainer.animate(getInitialKeyframe(enterContentScaleAnimation), {
-        fill: 'forwards',
-      });
-    }
-
-    const exitContentScaleTransition = exitContentTransformContainer.animate(
-      exitContentScaleAnimation,
-      animationOptions
-    );
-
-    const enterContentScaleTransition = enterContentTransformContainer.animate(
-      enterContentScaleAnimation,
-      animationOptions
-    );
-
-    transitions[shared.tag].push(
-      { animation: exitContentScaleTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget },
-      { animation: enterContentScaleTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget }
-    );
+    playContentScaleTransition(pair, animationOptions, transitions, removeSnapshotsAndResetTarget);
   }
-
-  transitions[shared.tag].push(
-    { animation: exitContentTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget },
-    { animation: enterContentTransition, snapshotPair: pair, cleanup: removeSnapshotsAndResetTarget }
-  );
 };
 
 export default playMutationTransition;

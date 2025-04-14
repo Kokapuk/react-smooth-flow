@@ -1,6 +1,6 @@
 {
   "name": "react-smooth-flow",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Effortless React animations for entering, exiting, and updating elements",
   "keywords": [
     "react",
@@ -46,7 +46,8 @@
     "tsc": "tsc -b",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "publish": "pnpm build & pnpm publish"
   },
   "dependencies": {
     "react": "^19.0.0",

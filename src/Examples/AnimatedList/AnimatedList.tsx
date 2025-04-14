@@ -48,15 +48,12 @@ const AnimatedList = () => {
   const addElement = () => {
     const newButton = buttons.length ? Math.max(...buttons) + 1 : 1;
 
-    startTransition(
-      [`button-${newButton}`],
-      () => setButtons((prev) => [...prev, newButton])
-    );
+    startTransition([`button-${newButton}`], () => setButtons((prev) => [...prev, newButton]));
   };
 
   const removeElement = (element: number) => {
     startTransition(
-      buttons.filter(i => i >= element).map((i) => `button-${i}`),
+      buttons.filter((i) => i >= element).map((i) => `button-${i}`),
       () => setButtons((prev) => prev.filter((j) => j !== element))
     );
   };

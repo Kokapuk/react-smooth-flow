@@ -46,6 +46,7 @@ interface TransitionOptions {
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
+  transitionLayout?: boolean,
   disabled?: boolean;
 }
 
@@ -209,6 +210,12 @@ Additional style properties to capture and apply to snapshot content.
 Default: `true`
 
 Determines whether to capture bounds of pre-DOM update snapshot from active mutation transition snapshot, if possible. (Mutation transition only)
+
+#### `transitionLayout`
+
+Default: `false`
+
+Determines whether to animate layout
 
 #### `disabled`
 
@@ -386,6 +393,7 @@ interface TransitionOptions {
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
+  transitionLayout?: boolean;
   disabled?: boolean;
 }
 
@@ -437,6 +445,7 @@ const defaults: ConfigurableDefaults = {
     clip: true,
     relevantStyleProperties: [],
     persistBounds: true,
+    transitionLayout: false,
     disabled: false,
   },
 };

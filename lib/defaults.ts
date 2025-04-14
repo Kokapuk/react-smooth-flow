@@ -20,7 +20,25 @@ export const STYLE_PROPERTIES_TO_CAPTURE = [
   'borderColor',
   'borderStyle',
   'pointerEvents',
+  'margin',
+  'display',
 ] as const satisfies Readonly<(keyof Properties)[]>;
+
+export const STYLE_PROPERTIES_TO_APPLY_TO_IMAGE = [
+  'opacity',
+  'backgroundColor',
+  'boxShadow',
+  'backdropFilter',
+  'borderRadius',
+  'borderWidth',
+  'borderTopWidth',
+  'borderRightWidth',
+  'borderBottomWidth',
+  'borderLeftWidth',
+  'borderColor',
+  'borderStyle',
+  'pointerEvents',
+] as const satisfies Readonly<(typeof STYLE_PROPERTIES_TO_CAPTURE)[number][]>;
 
 export const STYLE_PROPERTIES_TO_ANIMATE = [
   'opacity',
@@ -42,6 +60,7 @@ export const CONSISTENT_TRANSITION_OPTIONS = [
   'transitionRootTag',
   'forcePresenceTransition',
   'clip',
+  'transitionLayout',
 ] as const satisfies Readonly<(keyof TransitionOptions)[]>;
 
 export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag', 'transitionRoot'] as const satisfies Readonly<(keyof Snapshot)[]>;
@@ -65,6 +84,7 @@ const defaults: ConfigurableDefaults = {
     clip: true,
     relevantStyleProperties: [],
     persistBounds: true,
+    transitionLayout: false,
     disabled: false,
   },
 };

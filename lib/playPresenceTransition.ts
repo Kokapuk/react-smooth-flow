@@ -1,12 +1,12 @@
 import getInitialKeyframe from './getInitialKeyframe';
 import hideElementNoTransition from './hideElementNoTransition';
-import { Keyframes, PresenceSnapshotPair, Tag, Transition } from './types';
+import { Keyframes, PresenceSnapshotPair, Transition } from './types';
 
 const playTransition = (
   image: HTMLDivElement,
   keyframes: Keyframes,
   pair: PresenceSnapshotPair,
-  transitions: Record<Tag, Transition[]>,
+  transitions: Transition[],
   resetTargetStyles?: (() => void) | null
 ) => {
   const { shared } = pair;
@@ -24,7 +24,7 @@ const playTransition = (
     fill: 'forwards',
   });
 
-  transitions[shared.tag].push({
+  transitions.push({
     snapshotPair: pair,
     animation: transition,
     cleanup: () => {
@@ -36,10 +36,9 @@ const playTransition = (
   return transition.finished;
 };
 
-const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: Record<Tag, Transition[]>) => {
-  const { shared, prevSnapshot, nextSnapshot, prevImage, nextImage } = pair;
+const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: Transition[]) => {
+  const { prevSnapshot, nextSnapshot, prevImage, nextImage } = pair;
   const resetTargetStyles = nextSnapshot?.targetElement ? hideElementNoTransition(nextSnapshot.targetElement) : null;
-  transitions[shared.tag] = [];
 
   if (prevSnapshot && prevImage) {
     playTransition(prevImage, prevSnapshot.transitionOptions.exitKeyframes, pair, transitions, resetTargetStyles);
