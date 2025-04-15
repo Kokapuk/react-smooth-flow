@@ -1,4 +1,4 @@
-import { DependencyList, useMemo, useRef } from 'react';
+import { DependencyList, useEffect, useMemo, useRef } from 'react';
 
 const usePreCommitEffect = (effect: (isInitialRender: boolean) => void | (() => void), deps?: DependencyList) => {
   const initialRender = useRef(true);
@@ -16,6 +16,12 @@ const usePreCommitEffect = (effect: (isInitialRender: boolean) => void | (() => 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps ?? [{}]);
+
+  useEffect(() => {
+    return () => {
+      cleanup.current?.();
+    };
+  }, []);
 };
 
 export default usePreCommitEffect;

@@ -463,7 +463,7 @@ defaults.transitionOptions.ignoreReducedMotion = true;
 
 ## usePreCommitEffect
 
-`usePreCommitEffect` is a hook similar to [useEffect](https://react.dev/reference/react/useEffect). It is not recommended to use this hook as it has less control over transition flow. Callback gets executed before react [commit](https://react.dev/learn/render-and-commit) stage, which allows us to use it for snapshot capturing as DOM it not updated yet. Callback also accepts boolean argument which represent wether it is first render.
+`usePreCommitEffect` is a hook similar to [useEffect](https://react.dev/reference/react/useEffect). It is not recommended to use this hook as it has less control over transition flow. Callback gets executed before [commit step](https://react.dev/learn/render-and-commit), which allows us to use it for snapshot capturing as DOM it not updated yet. Callback also accepts boolean argument which represent wether it is first render.
 
 ### Type declaration
 

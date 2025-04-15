@@ -27,24 +27,18 @@ const segregateIds = (targetElement: HTMLElement, excludeTags: Tag[]) => {
     element.id = newId;
   });
 
-  targetElement.querySelectorAll('[clip-path^="url(#"]').forEach((element) => {
-    const id = element.getAttribute('clip-path')?.match(/url\(#(.+)\)/)?.[1];
+  const idUrlAttributes = ['clip-path', 'mask', 'fill', 'stroke'];
 
-    if (!id) {
-      return;
-    }
+  idUrlAttributes.forEach((attr) => {
+    targetElement.querySelectorAll(`[${attr}^="url(#"]`).forEach((element) => {
+      const id = element.getAttribute(attr)?.match(/url\(#(.+)\)/)?.[1];
 
-    element.setAttribute('clip-path', `url(#${idMap[id]})`);
-  });
+      if (!id) {
+        return;
+      }
 
-  targetElement.querySelectorAll('[mask^="url(#"]').forEach((element) => {
-    const id = element.getAttribute('mask')?.match(/url\(#(.+)\)/)?.[1];
-
-    if (!id) {
-      return;
-    }
-
-    element.setAttribute('mask', `url(#${idMap[id]})`);
+      element.setAttribute(attr, `url(#${idMap[id]})`);
+    });
   });
 
   targetElement.querySelectorAll('use[href^="#"]').forEach((element) => {
