@@ -1,5 +1,4 @@
-import constructTransition from '@lib/constructTransition';
-import constructTransitionRoot from '@lib/constructTransitionRoot';
+import Binder from '@lib/registry/Binder';
 import startTransition from '@lib/startTransition';
 import { useState } from 'react';
 import Button from '../../components/Button';
@@ -18,43 +17,43 @@ const TransitioningRoot = () => {
         Toggle
       </Button>
       <div className={styles.wrapper}>
-        <div
-          className={styles.modal}
-          {...constructTransitionRoot('modal')}
-          {...constructTransition({ modal: { duration: 800 } })}
-        >
-          <h3>Modal Title</h3>
-          <p
-            {...constructTransition({
-              modalContent: {
-                duration: 800,
-                forcePresenceTransition: true,
-                enterKeyframes: { transform: ['translateX(-115%)', 'translateX(0)'] },
-                exitKeyframes: { transform: ['translateX(0)', 'translateX(115%)'] },
-                relevantStyleProperties: ['color'],
-                transitionRootTag: 'modal',
-              },
-            })}
-          >
-            {isToggled
-              ? 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima vitae cumque voluptas? Libero placeat earum recusandae et, hic ipsa sed possimus, aliquam sapiente accusantium voluptate natus autem molestias necessitatibus similique. Harum dolorem, perspiciatis quae reprehenderit quis accusantium dignissimos'
-              : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, placeat sequi architecto delectus sint cumque dolor dicta, nam nulla atque qui molestiae et sapiente odit molestias mollitia perspiciatis error voluptatibus.'}
-          </p>
-          <div
-            style={{ backgroundColor: isToggled ? 'green' : 'red' }}
-            className={styles.indicator}
-            {...constructTransition({
-              modalIndicator: {
-                duration: 800,
-                forcePresenceTransition: true,
-                enterKeyframes: { transform: ['scale(0)', 'scale(0)', 'scale(1)'] },
-                exitKeyframes: 'reversedEnter',
-                transitionRootTag: 'modal',
-                positionAnchor: 'bottomRight',
-              },
-            })}
-          />
-        </div>
+        <Binder root="modal" transitions={{ modal: { duration: 800 } }}>
+          <div className={styles.modal}>
+            <h3>Modal Title</h3>
+            <Binder
+              transitions={{
+                modalContent: {
+                  duration: 800,
+                  forcePresenceTransition: true,
+                  enterKeyframes: { transform: ['translateX(-115%)', 'translateX(0)'] },
+                  exitKeyframes: { transform: ['translateX(0)', 'translateX(115%)'] },
+                  relevantStyleProperties: ['color'],
+                  transitionRootTag: 'modal',
+                },
+              }}
+            >
+              <p>
+                {isToggled
+                  ? 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima vitae cumque voluptas? Libero placeat earum recusandae et, hic ipsa sed possimus, aliquam sapiente accusantium voluptate natus autem molestias necessitatibus similique. Harum dolorem, perspiciatis quae reprehenderit quis accusantium dignissimos'
+                  : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam, placeat sequi architecto delectus sint cumque dolor dicta, nam nulla atque qui molestiae et sapiente odit molestias mollitia perspiciatis error voluptatibus.'}
+              </p>
+            </Binder>
+            <Binder
+              transitions={{
+                modalIndicator: {
+                  duration: 800,
+                  forcePresenceTransition: true,
+                  enterKeyframes: { transform: ['scale(0)', 'scale(0)', 'scale(1)'] },
+                  exitKeyframes: 'reversedEnter',
+                  transitionRootTag: 'modal',
+                  positionAnchor: 'bottomRight',
+                },
+              }}
+            >
+              <div style={{ backgroundColor: isToggled ? 'green' : 'red' }} className={styles.indicator} />
+            </Binder>
+          </div>
+        </Binder>
       </div>
     </Example>
   );

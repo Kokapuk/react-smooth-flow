@@ -1,4 +1,4 @@
-import constructTransition from '@lib/constructTransition';
+import Binder from '@lib/registry/Binder';
 import startTransition from '@lib/startTransition';
 import { useState } from 'react';
 import Button from '../../components/Button';
@@ -14,19 +14,24 @@ const Layout = () => {
     <Example title="Layout" style={{ display: 'flex', flexDirection: 'column', gap: 25 }}>
       <div className={styles.container}>
         <Button>Surrounding</Button>
-        <Button
-          style={{ marginInline: isExpanded ? 25 : 0 }}
-          onClick={() => startTransition(['layoutTarget-1'], () => setExpanded((prev) => !prev))}
-          {...constructTransition({ 'layoutTarget-1': { transitionLayout: true } })}
-        >
-          {isExpanded ? 'Expanded - Shrink' : 'Expand'}
-        </Button>
+        <Binder transitions={{ 'layoutTarget-1': { transitionLayout: true } }}>
+          <Button
+            style={{ marginInline: isExpanded ? 25 : 0 }}
+            onClick={() => startTransition(['layoutTarget-1'], () => setExpanded((prev) => !prev))}
+          >
+            {isExpanded ? 'Expanded - Shrink' : 'Expand'}
+          </Button>
+        </Binder>
         <Button>Surrounding</Button>
       </div>
 
       <div className={styles.container}>
         <Button>Surrounding</Button>
-        {isAdded && <Button {...constructTransition({ 'layoutTarget-2': { transitionLayout: true } })}>Added</Button>}
+        {isAdded && (
+          <Binder transitions={{ 'layoutTarget-2': { transitionLayout: true } }}>
+            <Button>Added</Button>
+          </Binder>
+        )}
         <Button onClick={() => startTransition(['layoutTarget-2'], () => setAdded((prev) => !prev))}>
           Toggle added
         </Button>
@@ -35,24 +40,18 @@ const Layout = () => {
       <div className={styles.advancedContainer}>
         <div className={styles.wrapper}>
           {!isJumped && (
-            <Button
-              {...constructTransition({ 'layoutTarget-3': { transitionLayout: true } })}
-              onClick={() => startTransition(['layoutTarget-3'], () => setJumped(true))}
-            >
-              Jump
-            </Button>
+            <Binder transitions={{ 'layoutTarget-3': { transitionLayout: true } }}>
+              <Button onClick={() => startTransition(['layoutTarget-3'], () => setJumped(true))}>Jump</Button>
+            </Binder>
           )}
           <Button>Test</Button>
         </div>
         <div className={styles.wrapper}>
           <Button>Test</Button>
           {isJumped && (
-            <Button
-              {...constructTransition({ 'layoutTarget-3': { transitionLayout: true } })}
-              onClick={() => startTransition(['layoutTarget-3'], () => setJumped(false))}
-            >
-              Jump
-            </Button>
+            <Binder transitions={{ 'layoutTarget-3': { transitionLayout: true } }}>
+              <Button onClick={() => startTransition(['layoutTarget-3'], () => setJumped(false))}>Jump</Button>
+            </Binder>
           )}
         </div>
       </div>

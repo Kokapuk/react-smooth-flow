@@ -1,10 +1,9 @@
-import constructTransition from './constructTransition';
-import constructTransitionRoot from './constructTransitionRoot';
 import defaults, { ConfigurableDefaults } from './defaults';
 import startTransition from './startTransition';
 import './style.scss';
 import usePreCommitEffect from './usePreCommitEffect';
 
+import Binder from './registry/Binder';
 import { cancelTransition } from './store';
 import {
   FalsyArray,
@@ -15,14 +14,7 @@ import {
   TransitionOptions,
 } from './types';
 
-export {
-  cancelTransition,
-  constructTransition,
-  constructTransitionRoot,
-  defaults,
-  startTransition,
-  usePreCommitEffect,
-};
+export { Binder, cancelTransition, defaults, startTransition, usePreCommitEffect };
 
 export type {
   ConfigurableDefaults,

@@ -1,9 +1,10 @@
-import { constructTransition, startTransition } from '@lib/main';
+import { startTransition } from '@lib/main';
 import cn from 'classnames';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
 import styles from './ContentAlignment.module.scss';
+import Binder from '@lib/registry/Binder';
 
 const springEasing =
   'linear(0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938, 1.077 20.4%, 1.121,1.149 24.3%, 1.163 27%, 1.154, 1.129 32.8%, 1.017 43.1%, 0.991, 0.977 51%,0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1)';
@@ -15,9 +16,8 @@ const ContentAlignment = () => {
   return (
     <Example title="Content alignment" style={{ width: 250, height: 300 }}>
       <div className={styles.container}>
-        <div
-          className={cn(styles.panel, isExpanded && styles.expanded)}
-          {...constructTransition({
+        <Binder
+          transitions={{
             contentAlignmentPanel: {
               contentAlign: 'bottomCenter',
               duration: 800,
@@ -25,28 +25,33 @@ const ContentAlignment = () => {
               contentEnterKeyframes: { transform: ['translateY(75px)', 'translateY(0)'], opacity: [0, 1] },
               contentExitKeyframes: 'reversedEnter',
             },
-          })}
+          }}
         >
-          {isExpanded && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-              <Button>1</Button>
-              <Button>2</Button>
-              <Button>3</Button>
-            </div>
-          )}
-          <Button
-            onClick={() =>
-              startTransition(['contentAlignmentPanel', 'contentAlignmentPanelButton'], () =>
-                setExpanded((prev) => !prev)
-              )
-            }
-            {...constructTransition({
-              contentAlignmentPanelButton: { duration: 800, easing: springEasing },
-            })}
-          >
-            ...
-          </Button>
-        </div>
+          <div className={cn(styles.panel, isExpanded && styles.expanded)}>
+            {isExpanded && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                <Button>1</Button>
+                <Button>2</Button>
+                <Button>3</Button>
+              </div>
+            )}
+            <Binder
+              transitions={{
+                contentAlignmentPanelButton: { duration: 800, easing: springEasing },
+              }}
+            >
+              <Button
+                onClick={() =>
+                  startTransition(['contentAlignmentPanel', 'contentAlignmentPanelButton'], () =>
+                    setExpanded((prev) => !prev)
+                  )
+                }
+              >
+                ...
+              </Button>
+            </Binder>
+          </div>
+        </Binder>
       </div>
     </Example>
   );

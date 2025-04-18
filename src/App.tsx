@@ -8,7 +8,7 @@ import Gallery from './Examples/Gallery';
 import Layout from './Examples/Layout';
 import Playground from './Examples/Playground';
 import PreserveAspectRatio from './Examples/PreserveAspectRatio';
-import ScaleContent from './Examples/ScaleContent/ScaleContent';
+import ScaleContent from './Examples/ScaleContent';
 import TransitioningRoot from './Examples/TransitioningRoot';
 
 const App = () => {
@@ -22,10 +22,10 @@ const App = () => {
       <Clipping />
       <Gallery />
       <ContentAlignment />
-      <Benchmark />
       <TransitioningRoot />
       <ScaleContent />
       <Layout />
+      <Benchmark />
     </>
   );
 };

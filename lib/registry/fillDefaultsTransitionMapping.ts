@@ -1,15 +1,11 @@
-import defaults, { ConfigurableDefaults } from './defaults';
-import getReversedKeyframes from './getReversedKeyframes';
-import { ParsedTransitionOptions, TransitionMapping } from './types';
+import defaults, { ConfigurableDefaults } from '../defaults';
+import getReversedKeyframes from '../getReversedKeyframes';
+import { TransitionMapping } from '../types';
 
-const getElementTransitionMapping = (element: HTMLElement) => {
-  if (!element.dataset.transition) {
-    return null;
-  }
+const fillDefaultsTransitionMapping = (transitionMapping: TransitionMapping) => {
+  const tags = Object.keys(transitionMapping);
 
-  const transitionMapping = JSON.parse(element.dataset.transition) as TransitionMapping;
-
-  Object.keys(transitionMapping).forEach((tag) => {
+  tags.forEach((tag) => {
     const transitionOptions = transitionMapping[tag];
 
     if (transitionOptions.exitKeyframes === 'reversedEnter') {
@@ -32,9 +28,7 @@ const getElementTransitionMapping = (element: HTMLElement) => {
       transitionOptions.contentExitKeyframes = getReversedKeyframes(transitionOptions.contentEnterKeyframes);
     }
 
-    const properties = Object.keys(
-      defaults.transitionOptions
-    ) as (keyof ConfigurableDefaults['transitionOptions'])[];
+    const properties = Object.keys(defaults.transitionOptions) as (keyof ConfigurableDefaults['transitionOptions'])[];
 
     properties.forEach((property) => {
       if (transitionOptions[property] === undefined) {
@@ -43,8 +37,6 @@ const getElementTransitionMapping = (element: HTMLElement) => {
       }
     });
   });
-
-  return transitionMapping as TransitionMapping<ParsedTransitionOptions>;
 };
 
-export default getElementTransitionMapping;
+export default fillDefaultsTransitionMapping;

@@ -1,4 +1,5 @@
-import { constructTransition, startTransition } from '@lib/main';
+import { startTransition } from '@lib/main';
+import Binder from '@lib/registry/Binder';
 import { useState } from 'react';
 import Example from '../../components/Example';
 import styles from './PreserveAspectRatio.module.scss';
@@ -13,72 +14,76 @@ const PreserveAspectRatio = () => {
 
   return (
     <Example title="Preserve Aspect Ratio" style={{ width: 500 }}>
-      <div
-        className={styles.container}
-        {...constructTransition({
+      <Binder
+        transitions={{
           container: {
             contentAlign: 'topRight',
             duration: 750,
             easing: materialDesignEmphasizedEasing,
             positionAnchor: 'topRight',
           },
-        })}
+        }}
       >
-        {activePanel !== null && (
-          <p
-            className={styles.panel}
-            data-panelnumber={activePanel}
-            {...constructTransition({
-              [`panel-${activePanel}`]: {
-                duration: 750,
-                easing: materialDesignEmphasizedEasing,
-                // contentEnterKeyframes: { opacity: [0, 0, 1] },
-                contentEnterKeyframes: { transform: ['translateX(100%)', 'translateX(0)'] },
-                contentExitKeyframes: 'reversedEnter',
-              },
-            })}
-          >
-            <button
-              style={{ float: 'right', height: 22, width: 22, border: 'none', borderRadius: 5, cursor: 'pointer' }}
-              onClick={() => startTransition(['container', `panel-${activePanel}`], () => setActivePanel(null))}
-            >
-              X
-            </button>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error accusantium sequi cum minima, enim dolor
-            commodi dolore quae? Itaque explicabo velit voluptatibus sint excepturi animi, deserunt laboriosam sit quas
-            dolorum?
-          </p>
-        )}
-
-        <div className={styles.buttonsContainer}>
-          {buttons.map((i) => (
-            <button
-              onClick={() =>
-                startTransition(['container', activePanel && `panel-${activePanel}`, `panel-${i}`], () =>
-                  setActivePanel(i)
-                )
-              }
-              data-panelnumber={i}
-              className={styles.button}
-              key={i}
-              style={{ visibility: activePanel === i ? 'hidden' : undefined }}
-              {...constructTransition({
-                [`panel-${i}`]: {
+        <div className={styles.container}>
+          {activePanel !== null && (
+            <Binder
+              transitions={{
+                [`panel-${activePanel}`]: {
                   duration: 750,
                   easing: materialDesignEmphasizedEasing,
-                  relevantStyleProperties: ['font-size', 'color'],
-                  disabled: activePanel === i,
                   // contentEnterKeyframes: { opacity: [0, 0, 1] },
-                  contentEnterKeyframes: { transform: ['translateX(-100%)', 'translateX(0)'] },
+                  contentEnterKeyframes: { transform: ['translateX(100%)', 'translateX(0)'] },
                   contentExitKeyframes: 'reversedEnter',
                 },
-              })}
+              }}
             >
-              {i}
-            </button>
-          ))}
+              <p className={styles.panel} data-panelnumber={activePanel}>
+                <button
+                  style={{ float: 'right', height: 22, width: 22, border: 'none', borderRadius: 5, cursor: 'pointer' }}
+                  onClick={() => startTransition(['container', `panel-${activePanel}`], () => setActivePanel(null))}
+                >
+                  X
+                </button>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error accusantium sequi cum minima, enim dolor
+                commodi dolore quae? Itaque explicabo velit voluptatibus sint excepturi animi, deserunt laboriosam sit
+                quas dolorum?
+              </p>
+            </Binder>
+          )}
+
+          <div className={styles.buttonsContainer}>
+            {buttons.map((i) => (
+              <Binder
+                key={i}
+                transitions={{
+                  [`panel-${i}`]: {
+                    duration: 750,
+                    easing: materialDesignEmphasizedEasing,
+                    relevantStyleProperties: ['font-size', 'color'],
+                    disabled: activePanel === i,
+                    // contentEnterKeyframes: { opacity: [0, 0, 1] },
+                    contentEnterKeyframes: { transform: ['translateX(-100%)', 'translateX(0)'] },
+                    contentExitKeyframes: 'reversedEnter',
+                  },
+                }}
+              >
+                <button
+                  onClick={() =>
+                    startTransition(['container', activePanel && `panel-${activePanel}`, `panel-${i}`], () =>
+                      setActivePanel(i)
+                    )
+                  }
+                  data-panelnumber={i}
+                  className={styles.button}
+                  style={{ visibility: activePanel === i ? 'hidden' : undefined }}
+                >
+                  {i}
+                </button>
+              </Binder>
+            ))}
+          </div>
         </div>
-      </div>
+      </Binder>
     </Example>
   );
 };

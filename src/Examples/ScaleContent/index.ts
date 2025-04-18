@@ -1,1 +1,1 @@
-export { default } from './Resize.module.scss';
+export { default } from './ScaleContent';

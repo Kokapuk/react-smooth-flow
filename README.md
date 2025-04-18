@@ -94,13 +94,13 @@ Now let's spice things up with a few lines of code
 
 ```diff
 import { useState } from 'react';
-+ import { constructTransition, startTransition, TransitionOptions } from 'react-smooth-flow';
++ import { Binder, startTransition, TransitionOptions } from 'react-smooth-flow';
 
-+ const sectionTransitionOptions: TransitionOptions = {
++ const sectionTransitionProperties: TransitionOptions = {
 +  duration: 500,
 +  contentEnterKeyframes: { opacity: [0, 0, 1] },
-+  contentExitKeyframes: 'reversedEnter', // { opacity: [1, 0, 0] }
-+};
++  contentExitKeyframes: 'reversedEnter',
++ };
 
 export default function ExpandableSection() {
   const [isExpanded, setExpanded] = useState(false);
@@ -108,54 +108,56 @@ export default function ExpandableSection() {
   return (
     <>
       {isExpanded ? (
-        <section
-          style={{
-            background: 'white',
-            color: 'black',
-            fontSize: 22,
-            width: 300,
-            padding: 25,
-            borderRadius: 25,
-          }}
-+         {...constructTransition({ section: sectionTransitionOptions })}
-        >
-          <button
--           onClick={() => setExpanded(false)}
-+           onClick={() => startTransition(['section'], () => setExpanded(false))}
++       <Binder transitions={{ section: sectionTransitionProperties }}>
+          <section
             style={{
-              float: 'right',
-              width: 25,
-              height: 25,
-              marginLeft: 5,
-              marginBottom: 5,
+              background: 'white',
+              color: 'black',
+              fontSize: 22,
+              width: 300,
+              padding: 25,
+              borderRadius: 25,
+            }}
+          >
+            <button
+-             onClick={() => setExpanded(false)}
++             onClick={() => startTransition(['section'], () => setExpanded(false))}
+              style={{
+                float: 'right',
+                width: 25,
+                height: 25,
+                marginLeft: 5,
+                marginBottom: 5,
+                border: 'none',
+                borderRadius: '50%',
+                cursor: 'pointer',
+              }}
+            >
+              X
+            </button>
+            <p>
+              Lorem...
+            </p>
+          </section>
++       </Binder>
+      ) : (
++       <Binder transitions={{ section: sectionTransitionProperties }}>
+          <button
+-           onClick={() => setExpanded(true)}
++           onClick={() => startTransition(['section'], () => setExpanded(true))}
+            style={{
+              background: 'white',
+              color: 'black',
+              fontSize: 18,
+              padding: '7px 10px',
               border: 'none',
-              borderRadius: '50%',
+              borderRadius: 5,
               cursor: 'pointer',
             }}
           >
-            X
+            Expand
           </button>
-          <p>
-            Lorem...
-          </p>
-        </section>
-      ) : (
-        <button
--         onClick={() => setExpanded(true)}
-+         onClick={() => startTransition(['section'], () => setExpanded(true))}
-          style={{
-            background: 'white',
-            color: 'black',
-            fontSize: 18,
-            padding: '7px 10px',
-            border: 'none',
-            borderRadius: 5,
-            cursor: 'pointer',
-          }}
-+         {...constructTransition({ section: sectionTransitionOptions })}
-        >
-          Expand
-        </button>
++       </Binder>
       )}
     </>
   );
@@ -180,7 +182,7 @@ export default function ExpandableSection() {
 
 - allows to specify a root for an element on animation
 
-  By default all animations get performed on so-called overlay root. This avoids issues with cross-container transitions where element moves between containers, but if at least one of these have `overflow` of any other value than `visible`, you'll get unexpected behavior of an animation. But in some cases you may want to intentionally restrict visibility of an element while animated. Or you may want your animation to tolerate complex-moving element, like with `position: sticky` or `translate` animation running on it. That's where [constructTransitionRoot](/DOCS.md#constructTransitionRoot) comes into play.
+  By default all animations get performed on so-called overlay root. This avoids issues with cross-container transitions where element moves between containers, but if at least one of these have `overflow` of any other value than `visible`, you'll get unexpected behavior of an animation. But in some cases you may want to intentionally restrict visibility of an element while animated. Or you may want your animation to tolerate complex-moving element, like with `position: sticky` or `translate` animation running on it. That's where [root](/DOCS.md#Root) comes into play.
 
 ## Disadvantages over [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
 

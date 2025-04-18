@@ -1,4 +1,5 @@
-import { constructTransition, constructTransitionRoot, startTransition } from '@lib/main';
+import { startTransition } from '@lib/main';
+import Binder from '@lib/registry/Binder';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
@@ -27,28 +28,31 @@ const Gallery = () => {
         >
           {'<-'}
         </Button>
-        <div className={styles.slideContainer} {...constructTransitionRoot('slideContainer')}>
-          <div
-            className={styles.slide}
-            data-index={activeSlideIndex}
-            {...constructTransition({
-              [`slideToLeft-${activeSlideIndex}`]: {
-                enterKeyframes: [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
-                exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }],
-                transitionRootTag: 'slideContainer',
-                duration: 500,
-              },
-              [`slideToRight-${activeSlideIndex}`]: {
-                enterKeyframes: [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
-                exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
-                transitionRootTag: 'slideContainer',
-                duration: 500,
-              },
-            })}
-          >
-            {activeSlideIndex + 1}
+        <Binder root="slideContainer">
+          <div className={styles.slideContainer}>
+            <Binder
+              transitions={{
+                [`slideToLeft-${activeSlideIndex}`]: {
+                  enterKeyframes: [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
+                  exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }],
+                  transitionRootTag: 'slideContainer',
+                  duration: 500,
+                },
+                [`slideToRight-${activeSlideIndex}`]: {
+                  enterKeyframes: [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
+                  exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
+                  transitionRootTag: 'slideContainer',
+                  duration: 500,
+                },
+              }}
+            >
+              <div className={styles.slide} data-index={activeSlideIndex}>
+                {activeSlideIndex + 1}
+              </div>
+            </Binder>
           </div>
-        </div>
+        </Binder>
+
         <Button
           onClick={() =>
             startTransition(

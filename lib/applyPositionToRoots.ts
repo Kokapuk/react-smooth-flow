@@ -17,7 +17,7 @@ const applyPositionToRoots = (pairs: SnapshotPair[]) => {
       return;
     }
 
-    root.setAttribute('data-savedposition', root.style.position);
+    root.dataset.savedposition = root.style.position;
     root.style.setProperty('position', 'relative', 'important');
   });
 
@@ -32,7 +32,7 @@ const applyPositionToRoots = (pairs: SnapshotPair[]) => {
       }
 
       root.style.setProperty('position', root.dataset.savedposition);
-      root.removeAttribute('data-savedposition');
+      delete root.dataset.savedposition;
     });
   };
 };

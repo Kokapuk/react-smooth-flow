@@ -1,27 +1,18 @@
-import getElementByTransitionTag from './getElementByTransitionTag';
-import getElementTransitionMapping from './getElementTransitionMapping';
+import { getTransitioned } from './registry/store';
 import { Tag } from './types';
 
 const getAllTags = (tags: Tag[]) => {
   const allTags: Tag[] = [];
 
   tags.forEach((tag) => {
-    const element = getElementByTransitionTag(tag);
+    const element = getTransitioned(tag);
 
-    if (!element) {
+    if (!element || !element.dataset.transitioned) {
       allTags.push(tag);
       return;
     }
 
-    const transitionMapping = getElementTransitionMapping(element);
-
-    if (!transitionMapping) {
-      allTags.push(tag);
-      return;
-    }
-
-    const allElementTags = Object.keys(transitionMapping);
-    allTags.push(...allElementTags);
+    allTags.push(...element.dataset.transitioned.split(' '));
   });
 
   return allTags;

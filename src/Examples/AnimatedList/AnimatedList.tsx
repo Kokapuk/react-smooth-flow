@@ -1,4 +1,5 @@
-import { constructTransition, startTransition } from '@lib/main';
+import { startTransition } from '@lib/main';
+import Binder from '@lib/registry/Binder';
 import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
@@ -66,8 +67,9 @@ const AnimatedList = () => {
       </div>
       <div className={styles.grid}>
         {buttons.map((i) => (
-          <Button
-            {...constructTransition({
+          <Binder
+            key={i}
+            transitions={{
               [`button-${i}`]: {
                 enterKeyframes: [
                   { transform: 'translateY(-75px)', opacity: '0' },
@@ -76,13 +78,12 @@ const AnimatedList = () => {
                 exitKeyframes: 'reversedEnter',
                 duration: 300,
               },
-            })}
-            key={i}
-            onClick={() => removeElement(i)}
-            style={{ width: 92 }}
+            }}
           >
-            Delete {i}
-          </Button>
+            <Button onClick={() => removeElement(i)} style={{ width: 92 }}>
+              Delete {i}
+            </Button>
+          </Binder>
         ))}
       </div>
     </Example>

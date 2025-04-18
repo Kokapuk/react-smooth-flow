@@ -14,16 +14,30 @@ graph
 
 # API Reference
 
-## constructTransition
+## Binder
 
-`constructTransition` is used to specify transition options by multiple tags.
+`Binder` is used to specify transitions and root.
 
 ### Type declaration
 
 ```ts
-declare const constructTransition: (mapping: TransitionMapping) => {
-  'data-transition': string;
-};
+declare const Binder: ({
+  children,
+  transitionMapping,
+  root,
+}: TransitionedProps) => React.ReactElement<
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>,
+  string | React.JSXElementConstructor<any>
+>;
+
+interface TransitionedProps {
+  children: ReactElement<
+    DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    string | JSXElementConstructor<any>
+  >;
+  transitions?: TransitionMapping;
+  root?: string;
+}
 
 type TransitionMapping = Record<Tag, TransitionOptions>;
 
@@ -46,7 +60,7 @@ interface TransitionOptions {
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
-  transitionLayout?: boolean,
+  transitionLayout?: boolean;
   disabled?: boolean;
 }
 
@@ -81,8 +95,8 @@ type RelevantStyleProperties = Exclude<keyof CSS.PropertiesHyphen, 'pointer-even
 ### Usage
 
 ```tsx
-<div
-  {...constructTransition({
+<Binder
+  transitions={{
     tagA: {
       duration: 400,
       enterKeyframes: {
@@ -106,9 +120,15 @@ type RelevantStyleProperties = Exclude<keyof CSS.PropertiesHyphen, 'pointer-even
       enterKeyframes: { transform: ['scale(0)', 'scale(1)'] },
       exitKeyframes: 'reversedEnter',
     },
-  })}
-/>
+  }}
+  root="rootTagA"
+>
+  <div />
+</Binder>
 ```
+
+> [!WARNING]
+> If you're using a custom component, make sure it properly forwards the ref to an underlying HTML element — otherwise, `Binder` won't be able to apply transitions or register the node correctly
 
 ### `TransitionOptions` options
 
@@ -124,8 +144,7 @@ Default: `'ease'`
 
 Transition easing function. [<easing-function\>](https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function)
 
-> [!TIP]
-> [Create complex animation curves in CSS with the linear() easing function](https://developer.chrome.com/docs/css-ui/css-linear-easing-function)
+> [!TIP] > [Create complex animation curves in CSS with the linear() easing function](https://developer.chrome.com/docs/css-ui/css-linear-easing-function)
 
 #### `delay`
 
@@ -223,32 +242,21 @@ Default: `false`
 
 Whether snapshot should not be captured.
 
-## constructTransitionRoot
+## Root
 
-`constructTransitionRoot` is used to specify custom transition root. By default all transitions perform on screen-wide overlay root to make sure cross-container transitions look valid even with `overflow` property set to something other than `visible` on parent containers. But in some cases you may want to intentionally restrict visibility of an element while transitioning. Or you may want your transitioning element to tolerate complex-moving element, like with `position: sticky` or `translate` animation running on it.
-
-### Type declaration
-
-```ts
-declare const constructTransitionRoot: (tag: Tag) => {
-  'data-transitionroot': string;
-};
-
-type Tag = string;
-```
+`Binder` is used to specify custom transition root. By default all transitions perform on screen-wide overlay root to make sure cross-container transitions look valid even with `overflow` property set to something other than `visible` on parent containers. But in some cases you may want to intentionally restrict visibility of an element while transitioning. Or you may want your transitioning element to tolerate complex-moving element, like with `position: sticky` or `translate` animation running on it
 
 ### Usage
 
 ```html
-<div {...constructTransitionRoot('rootTagA')} style={{ overflow: 'hidden' }}>
-  <div
-    {...constructTransition({
-      tagA: {
-        transitionRootTag: 'rootTagA',
-      },
-    })}
-  />
-</div>
+<Binder root="rootTagA">
+  <div style={{ overflow: 'hidden' }}>
+    <Binder transitions={{ tagA: { transitionRootTag: 'rootTagA' } }}>
+      <div />
+    </Binder>
+  </div>
+</Binder>
+
 ```
 
 ## startTransition
@@ -489,9 +497,9 @@ usePreCommitEffect(
 );
 
 return (
-  <div {...constructTransition({ tagA: {} })} onClick={() => setState(someNewStateValue)}>
-    {state}
-  </div>
+  <Binder transitions={{ tagA: {} }}>
+    <div onClick={() => setState(someNewStateValue)}>{state}</div>
+  </Binder>
 );
 
 // INSTEAD OF
@@ -499,11 +507,10 @@ return (
 const [state, setState] = useState(someState);
 
 return (
-  <div
-    {...constructTransition({ tagA: {} })}
-    onClick={() => startTransition(['tagA'], () => setState(someNewStateValue))}
-  >
-    {state}
-  </div>
+  <Binder transitions={{ tagA: {} }}>
+    <div onClick={() => startTransition(['tagA'], () => setState(someNewStateValue))}>
+      {state}
+    </div>
+  </Binder>
 );
 ```

@@ -1,9 +1,9 @@
-import getElementByTransitionTag from './getElementByTransitionTag';
+import findTransitionedByTag from './findTransitionedByTag';
 import { Tag } from './types';
 
 const hideElementsWithTags = (tags: Tag[], targetElement: HTMLElement) => {
   tags.forEach((tag) => {
-    const element = getElementByTransitionTag(tag, targetElement);
+    const element = findTransitionedByTag(tag, targetElement);
 
     if (!element) {
       return;

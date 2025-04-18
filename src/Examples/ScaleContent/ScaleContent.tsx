@@ -1,4 +1,4 @@
-import constructTransition from '@lib/constructTransition';
+import Binder from '@lib/registry/Binder';
 import startTransition from '@lib/startTransition';
 import { TransitionOptions } from '@lib/types';
 import { useState } from 'react';
@@ -12,13 +12,11 @@ const ToggleTarget = ({ tag, transitionOptions }: { tag: string; transitionOptio
 
   return (
     <div className={styles.wrapper}>
-      <Button
-        className={styles.button}
-        onClick={() => startTransition([tag], () => setExpanded((prev) => !prev))}
-        {...constructTransition({ [tag]: transitionOptions })}
-      >
-        <Icon height={isExpanded ? 156 : 64} width={isExpanded ? 156 : 64} />
-      </Button>
+      <Binder transitions={{ [tag]: transitionOptions }}>
+        <Button className={styles.button} onClick={() => startTransition([tag], () => setExpanded((prev) => !prev))}>
+          <Icon height={isExpanded ? 156 : 64} width={isExpanded ? 156 : 64} />
+        </Button>
+      </Binder>
     </div>
   );
 };

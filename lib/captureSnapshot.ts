@@ -3,11 +3,10 @@ import copyRelevantStyles from './copyRelevantStyles';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';
-import getElementByTransitionRootTag from './getElementByTransitionRootTag';
-import getElementTransitionMapping from './getElementTransitionMapping';
 import getTotalOpacity from './getTotalOpacity';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementsWithTags from './hideElementsWithTags';
+import { getRoot, getTransitionMapping } from './registry/store';
 import segregateIds from './segregateIds';
 import { Snapshot, Tag } from './types';
 
@@ -16,11 +15,9 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     return null;
   }
 
-  const transitionMapping = getElementTransitionMapping(targetElement)!;
+  const transitionMapping = getTransitionMapping(targetElement)!;
   const transitionOptions = transitionMapping[targetTag];
-  const transitionRoot = transitionOptions.transitionRootTag
-    ? getElementByTransitionRootTag(transitionOptions.transitionRootTag)
-    : null;
+  const transitionRoot = transitionOptions.transitionRootTag ? getRoot(transitionOptions.transitionRootTag) : null;
 
   if (transitionOptions.transitionRootTag && !transitionRoot) {
     throw Error(`Failed to find transition root with tag "${transitionOptions.transitionRootTag}"`);
@@ -67,7 +64,7 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   transformContainer.style.height = `${bounds.height}px`;
 
   transformContainer.innerHTML = targetElementClone.outerHTML
-    .replace(/\sdata-transition=".+?"/gm, '')
+    .replace(/\sdata-transitioned=".+?"/gm, '')
     .replace(/\sdata-transitionroot=".+?"/gm, '');
 
   snapshotContainer.append(transformContainer);
