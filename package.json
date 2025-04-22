@@ -1,6 +1,6 @@
 {
   "name": "react-smooth-flow",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Effortless React animations for entering, exiting, and updating elements",
   "keywords": [
     "react",
@@ -50,8 +50,8 @@
     "pub": "pnpm build & pnpm publish"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.8",
