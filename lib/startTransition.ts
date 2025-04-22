@@ -19,8 +19,6 @@ import { Bounds, FalsyArray, Tag, TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
 const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, config?: TransitionConfig) => {
-  const finalConfig = { flushSync: true, ...config };
-
   const validTags = getTruthyArray(tags);
   const allTags = getAllTags(validTags);
 
@@ -59,7 +57,7 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
   applyMaxZIndexToSnapshotPairs(snapshotParis);
   const resetRootsPositions = applyPositionToRoots(snapshotParis);
 
-  finalConfig.onBegin?.();
+  config?.onBegin?.();
 
   const transitionId = setupRecord();
 
@@ -74,7 +72,10 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
         playPresenceTransition(pair, storeRecord[pair.shared.tag]);
       }
 
-      if (pair.shared.transitionOptions.transitionLayout) {
+      if (
+        pair.prevSnapshot?.transitionOptions.transitionLayout ||
+        pair.nextSnapshot?.transitionOptions.transitionLayout
+      ) {
         playLayoutTransition(pair, storeRecord[pair.shared.tag]);
       }
     }
@@ -87,11 +88,11 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
 
     finishTransition(transitionId);
     resetRootsPositions();
-    finalConfig.onFinish?.();
+    config?.onFinish?.();
   } catch (err: unknown) {
     if ((err as Error).name === 'AbortError') {
       resetRootsPositions();
-      finalConfig.onCancel?.();
+      config?.onCancel?.();
       return;
     }
 

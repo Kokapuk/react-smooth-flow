@@ -1,7 +1,7 @@
 import { Snapshot, SnapshotPair } from './types';
 
 const applyPositionToImage = (
-  image: HTMLDivElement,
+  image: HTMLElement,
   position: 'absolute' | 'fixed',
   snapshot: Snapshot,
   hasCustomRoot: boolean
@@ -53,8 +53,8 @@ const applyPositionToSnapshotPairs = (pairs: SnapshotPair[]) => {
       const { prevSnapshot, nextSnapshot, image, shared } = pair;
 
       const lastValidSnapshot = (nextSnapshot ?? prevSnapshot) as Snapshot;
-      const position = lastValidSnapshot.hasFixedPosition && !lastValidSnapshot.transitionRoot ? 'fixed' : 'absolute';
-      applyPositionToImage(image, position, lastValidSnapshot, !!shared.transitionRoot);
+      const position = lastValidSnapshot.hasFixedPosition && !lastValidSnapshot.root ? 'fixed' : 'absolute';
+      applyPositionToImage(image, position, lastValidSnapshot, !!shared.root);
     } else if (pair.transitionType === 'presence') {
       const { prevSnapshot, nextSnapshot, prevImage, nextImage, shared } = pair;
       const snapshotImagePairs = [
@@ -66,8 +66,8 @@ const applyPositionToSnapshotPairs = (pairs: SnapshotPair[]) => {
       }[];
 
       snapshotImagePairs.forEach(({ snapshot, image }) => {
-        const position = snapshot.hasFixedPosition && !snapshot.transitionRoot ? 'fixed' : 'absolute';
-        applyPositionToImage(image, position, snapshot, !!shared.transitionRoot);
+        const position = snapshot.hasFixedPosition && !snapshot.root ? 'fixed' : 'absolute';
+        applyPositionToImage(image, position, snapshot, !!shared.root);
       });
     }
   });

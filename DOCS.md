@@ -56,7 +56,7 @@ interface TransitionOptions {
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
-  transitionRootTag?: Tag;
+  root?: Tag;
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
@@ -144,7 +144,8 @@ Default: `'ease'`
 
 Transition easing function. [<easing-function\>](https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function)
 
-> [!TIP] > [Create complex animation curves in CSS with the linear() easing function](https://developer.chrome.com/docs/css-ui/css-linear-easing-function)
+> [!TIP]
+> [Create complex animation curves in CSS with the linear() easing function](https://developer.chrome.com/docs/css-ui/css-linear-easing-function)
 
 #### `delay`
 
@@ -206,7 +207,7 @@ Default: `false`
 
 Whether `presence` transition should be played instead of `mutation`.
 
-#### `transitionRootTag`
+#### `root`
 
 Default: `null`
 
@@ -251,7 +252,7 @@ Whether snapshot should not be captured.
 ```html
 <Binder root="rootTagA">
   <div style={{ overflow: 'hidden' }}>
-    <Binder transitions={{ tagA: { transitionRootTag: 'rootTagA' } }}>
+    <Binder transitions={{ tagA: { root: 'rootTagA' } }}>
       <div />
     </Binder>
   </div>
@@ -277,7 +278,6 @@ type FalsyArray<T> = (T | Falsy)[];
 type Falsy = false | 0 | '' | null | undefined;
 
 interface TransitionConfig {
-  flushSync?: boolean;
   onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
@@ -288,26 +288,12 @@ interface TransitionConfig {
 
 ```ts
 startTransition(['tagA', 'tagB'], () => setState(newStateValue));
-
-startTransition(
-  ['tagC'],
-  () => {
-    flushSync(() => setState(newStateValue));
-  },
-  { flushSync: false }
-);
 ```
 
 > [!IMPORTANT]
 > Order of the provided tags represents the order of corresponding snapshots in the DOM. It may be crucial in some cases, when transitioning elements intersect with each other and you want them to be ordered correctly.
 
 ### `TransitionConfig` options
-
-#### `flushSync`
-
-Default: `true`
-
-Whether `updateDOM` callback should be wrapped with [flushSync](https://react.dev/reference/react-dom/flushSync). By default `updateDOM` callback is wrapped with [flushSync](https://react.dev/reference/react-dom/flushSync) as `setState` is asynchronous, but library requires instant DOM updates between snapshot capturing steps.
 
 #### `onBegin`
 
@@ -363,11 +349,11 @@ interface ConfigurableDefaults {
 }
 
 type ParsedTransitionOptions = Required<
-  Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'transitionRootTag'>
+  Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'root'>
 > & {
   exitKeyframes: Keyframes;
   contentExitKeyframes: Keyframes;
-  transitionRootTag: Tag | null;
+  root: Tag | null;
 };
 
 type Keyframes = Keyframe[] | PropertyIndexedKeyframes;
@@ -397,7 +383,7 @@ interface TransitionOptions {
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
-  transitionRootTag?: Tag;
+  root?: Tag;
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
@@ -449,7 +435,7 @@ const defaults: ConfigurableDefaults = {
     contentAlign: 'topLeft',
     positionAnchor: 'topLeft',
     forcePresenceTransition: false,
-    transitionRootTag: null,
+    root: null,
     clip: true,
     relevantStyleProperties: [],
     persistBounds: true,

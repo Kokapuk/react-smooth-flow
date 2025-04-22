@@ -17,7 +17,7 @@ const Clipping = () => {
               nonClipped: {
                 enterKeyframes: { transform: ['translateX(-125%)', 'translateX(0)'] },
                 exitKeyframes: 'reversedEnter',
-                transitionRootTag: 'clippingContainer',
+                root: 'clippingContainer',
                 duration: 600,
                 disabled: !isToggled,
               },

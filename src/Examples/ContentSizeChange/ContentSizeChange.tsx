@@ -34,7 +34,7 @@ const ContentSizeChange = () => {
             {isLoading ? 'Loading...' : 'Load'}
           </Button>
         </Binder>
-        <Binder transitions={{ 'size-container': { duration: 300 } }}>
+        <Binder transitions={{ 'size-container': { duration: 300, transitionLayout: true } }}>
           <div ref={listRef} className={styles.list}>
             {list.map((i) => (
               <Binder

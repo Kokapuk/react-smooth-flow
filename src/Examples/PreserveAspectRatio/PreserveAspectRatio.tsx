@@ -34,6 +34,7 @@ const PreserveAspectRatio = () => {
                   // contentEnterKeyframes: { opacity: [0, 0, 1] },
                   contentEnterKeyframes: { transform: ['translateX(100%)', 'translateX(0)'] },
                   contentExitKeyframes: 'reversedEnter',
+                  scaleContent: true
                 },
               }}
             >
@@ -62,8 +63,9 @@ const PreserveAspectRatio = () => {
                     relevantStyleProperties: ['font-size', 'color'],
                     disabled: activePanel === i,
                     // contentEnterKeyframes: { opacity: [0, 0, 1] },
-                    contentEnterKeyframes: { transform: ['translateX(-100%)', 'translateX(0)'] },
+                    contentEnterKeyframes: { transform: ['translateX(-325%)', 'translateX(0)'] },
                     contentExitKeyframes: 'reversedEnter',
+                    scaleContent: true
                   },
                 }}
               >

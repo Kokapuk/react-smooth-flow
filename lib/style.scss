@@ -1,4 +1,4 @@
-#transitionRoot {
+rsf-overlay-root {
   position: absolute;
   inset: 0;
   min-height: 100vh;
@@ -6,11 +6,11 @@
   pointer-events: none;
 }
 
-.rsf-image {
+rsf-image {
   user-select: none;
 }
 
-.rsf-snapshotContainer {
+rsf-snapshot-container {
   display: flex;
   position: absolute;
 
@@ -19,7 +19,7 @@
   $leftXOffset: calc(var(--borderLeftWidth) * -1);
   $topYOffset: calc(var(--borderTopWidth) * -1);
 
-  .rsf-transformContainer {
+  rsf-transform-container {
     display: flex;
     padding: var(--borderTopWidth) var(--borderRightWidth) var(--borderBottomWidth) var(--borderBottomWidth);
 
@@ -37,7 +37,7 @@
     top: 0;
     left: 0;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate($leftXOffset, $topYOffset);
     }
   }
@@ -46,7 +46,7 @@
     top: 0;
     left: $verticalCenterLeft;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate(-50%, $topYOffset);
     }
   }
@@ -55,7 +55,7 @@
     top: 0;
     right: 0;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate(var(--borderRightWidth), $topYOffset);
     }
   }
@@ -64,7 +64,7 @@
     top: $horizontalCenterTop;
     right: 0;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate(var(--borderRightWidth), -50%);
     }
   }
@@ -73,7 +73,7 @@
     right: 0;
     bottom: 0;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate(var(--borderRightWidth), var(--borderBottomWidth));
     }
   }
@@ -82,7 +82,7 @@
     bottom: 0;
     left: $verticalCenterLeft;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate(-50%, var(--borderBottomWidth));
     }
   }
@@ -91,7 +91,7 @@
     bottom: 0;
     left: 0;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate($leftXOffset, var(--borderBottomWidth));
     }
   }
@@ -100,7 +100,7 @@
     top: $horizontalCenterTop;
     left: 0;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate($leftXOffset, -50%);
     }
   }
@@ -109,7 +109,7 @@
     top: $horizontalCenterTop;
     left: $verticalCenterLeft;
 
-    .rsf-transformContainer {
+    rsf-transform-container {
       transform: translate(-50%, -50%);
     }
   }

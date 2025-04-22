@@ -28,7 +28,7 @@ const TransitioningRoot = () => {
                   enterKeyframes: { transform: ['translateX(-115%)', 'translateX(0)'] },
                   exitKeyframes: { transform: ['translateX(0)', 'translateX(115%)'] },
                   relevantStyleProperties: ['color'],
-                  transitionRootTag: 'modal',
+                  root: 'modal',
                 },
               }}
             >
@@ -45,7 +45,7 @@ const TransitioningRoot = () => {
                   forcePresenceTransition: true,
                   enterKeyframes: { transform: ['scale(0)', 'scale(0)', 'scale(1)'] },
                   exitKeyframes: 'reversedEnter',
-                  transitionRootTag: 'modal',
+                  root: 'modal',
                   positionAnchor: 'bottomRight',
                 },
               }}

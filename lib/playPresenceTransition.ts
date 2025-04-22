@@ -3,7 +3,7 @@ import hideElementNoTransition from './hideElementNoTransition';
 import { Keyframes, PresenceSnapshotPair, Transition } from './types';
 
 const playTransition = (
-  image: HTMLDivElement,
+  image: HTMLElement,
   keyframes: Keyframes,
   pair: PresenceSnapshotPair,
   transitions: Transition[],

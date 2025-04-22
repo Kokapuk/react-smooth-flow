@@ -33,7 +33,7 @@ const Benchmark = () => {
                 forcePresenceTransition: true,
                 enterKeyframes: { opacity: [0, 0, 1], scale: [0.5, 0.5, 1] },
                 exitKeyframes: 'reversedEnter',
-                transitionRootTag: 'benchmarkRoot',
+                root: 'benchmarkRoot',
                 duration: 2000,
               },
             }}
@@ -47,7 +47,7 @@ const Benchmark = () => {
                       forcePresenceTransition: true,
                       enterKeyframes: { opacity: [0, 0, 1], scale: [0.5, 0.5, 1], background: ['red', 'red'] },
                       exitKeyframes: 'reversedEnter',
-                      transitionRootTag: 'benchmarkRoot',
+                      root: 'benchmarkRoot',
                       duration: 2000,
                       relevantStyleProperties: ['display', 'place-items'],
                     },

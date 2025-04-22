@@ -5,8 +5,8 @@ const applyPositionToRoots = (pairs: SnapshotPair[]) => {
   const uniqueRoots: HTMLElement[] = [];
 
   for (const { shared } of pairs) {
-    if (shared.transitionRoot && !uniqueRoots.includes(shared.transitionRoot)) {
-      uniqueRoots.push(shared.transitionRoot);
+    if (shared.root && !uniqueRoots.includes(shared.root)) {
+      uniqueRoots.push(shared.root);
     }
   }
 

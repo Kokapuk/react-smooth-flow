@@ -17,19 +17,19 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
 
   const transitionMapping = getTransitionMapping(targetElement)!;
   const transitionOptions = transitionMapping[targetTag];
-  const transitionRoot = transitionOptions.transitionRootTag ? getRoot(transitionOptions.transitionRootTag) : null;
+  const root = transitionOptions.root ? getRoot(transitionOptions.root) : null;
 
-  if (transitionOptions.transitionRootTag && !transitionRoot) {
-    throw Error(`Failed to find transition root with tag "${transitionOptions.transitionRootTag}"`);
+  if (transitionOptions.root && !root) {
+    throw Error(`Failed to find root with tag "${transitionOptions.root}"`);
   }
 
   const computedStyle = getComputedStyleNoRef(targetElement);
-  computedStyle.opacity = `${getTotalOpacity(targetElement, transitionRoot ?? undefined)}`;
+  computedStyle.opacity = `${getTotalOpacity(targetElement, root ?? undefined)}`;
 
   const bounds = getElementBounds(targetElement);
 
-  if (transitionRoot) {
-    adjustBoundsToRoot(bounds, transitionRoot);
+  if (root) {
+    adjustBoundsToRoot(bounds, root);
   }
 
   const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
@@ -50,22 +50,21 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
   targetElementClone.style.setProperty('box-shadow', 'none', 'important');
   targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
 
-  const snapshotContainer = document.createElement('div');
+  const snapshotContainer = document.createElement('rsf-snapshot-container');
   snapshotContainer.inert = true;
-  snapshotContainer.classList.add('rsf-snapshotContainer', `rsf-${transitionOptions.contentAlign}`);
+  snapshotContainer.className = `rsf-${transitionOptions.contentAlign}`;
   snapshotContainer.style.setProperty('--borderTopWidth', computedStyle.borderTopWidth);
   snapshotContainer.style.setProperty('--borderRightWidth', computedStyle.borderRightWidth);
   snapshotContainer.style.setProperty('--borderBottomWidth', computedStyle.borderBottomWidth);
   snapshotContainer.style.setProperty('--borderLeftWidth', computedStyle.borderLeftWidth);
 
-  const transformContainer = document.createElement('div');
-  transformContainer.className = 'rsf-transformContainer';
+  const transformContainer = document.createElement('rsf-transform-container');
   transformContainer.style.width = `${bounds.width}px`;
   transformContainer.style.height = `${bounds.height}px`;
 
   transformContainer.innerHTML = targetElementClone.outerHTML
     .replace(/\sdata-transitioned=".+?"/gm, '')
-    .replace(/\sdata-transitionroot=".+?"/gm, '');
+    .replace(/\sdata-root=".+?"/gm, '');
 
   snapshotContainer.append(transformContainer);
 
@@ -77,13 +76,13 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     transitionOptions,
     transitionMapping,
     hasFixedPosition: elementHasFixedPosition(targetElement),
-    transitionRoot,
+    root: root,
     targetElement,
     targetDOMPosition: {
       parentElement: targetElement.parentElement!,
       index: Array.from(targetElement.parentElement!.children).indexOf(targetElement),
     },
-    totalZIndex: getTotalZIndex(targetElement, transitionRoot ?? undefined),
+    totalZIndex: getTotalZIndex(targetElement, root ?? undefined),
   };
 };
 

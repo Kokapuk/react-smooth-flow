@@ -18,8 +18,8 @@ const getImageBoundsByTag = (tag: Tag) => {
 
   const bounds = getElementBounds(activeTransitionPair.image);
 
-  if (activeTransitionPair.shared.transitionRoot) {
-    adjustBoundsToRoot(bounds, activeTransitionPair.shared.transitionRoot);
+  if (activeTransitionPair.shared.root) {
+    adjustBoundsToRoot(bounds, activeTransitionPair.shared.root);
   }
 
   return bounds;

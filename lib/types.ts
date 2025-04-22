@@ -43,7 +43,7 @@ export interface TransitionOptions {
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
   forcePresenceTransition?: boolean;
-  transitionRootTag?: Tag;
+  root?: Tag;
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
@@ -52,11 +52,11 @@ export interface TransitionOptions {
 }
 
 export type ParsedTransitionOptions = Required<
-  Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'transitionRootTag'>
+  Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'root'>
 > & {
   exitKeyframes: Keyframes;
   contentExitKeyframes: Keyframes;
-  transitionRootTag: Tag | null;
+  root: Tag | null;
 };
 
 export type TransitionMapping<T extends TransitionOptions | ParsedTransitionOptions = TransitionOptions> = Record<
@@ -70,7 +70,6 @@ export interface DOMPosition {
 }
 
 export interface TransitionConfig {
-  flushSync?: boolean;
   onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
@@ -92,12 +91,12 @@ export interface Bounds {
 export interface Snapshot {
   tag: Tag;
   bounds: Bounds;
-  image: HTMLDivElement;
+  image: HTMLElement;
   computedStyle: ComputedStyle;
   transitionOptions: ParsedTransitionOptions;
   transitionMapping: TransitionMapping<ParsedTransitionOptions>;
   hasFixedPosition: boolean;
-  transitionRoot?: HTMLElement | null;
+  root?: HTMLElement | null;
   targetElement: HTMLElement;
   targetDOMPosition: DOMPosition;
   totalZIndex: number;
@@ -115,7 +114,7 @@ export interface MutationSnapshotPair {
   firstValidSnapshot: Snapshot;
   shared: SnapshotPairSharedData;
   transitionType: 'mutation';
-  image: HTMLDivElement;
+  image: HTMLElement;
 }
 
 export interface PresenceSnapshotPair {
@@ -124,8 +123,8 @@ export interface PresenceSnapshotPair {
   firstValidSnapshot: Snapshot;
   shared: SnapshotPairSharedData;
   transitionType: 'presence';
-  prevImage: HTMLDivElement | null;
-  nextImage: HTMLDivElement | null;
+  prevImage: HTMLElement | null;
+  nextImage: HTMLElement | null;
 }
 
 export type SnapshotPair = MutationSnapshotPair | PresenceSnapshotPair;

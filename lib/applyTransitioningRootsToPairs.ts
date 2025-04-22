@@ -10,34 +10,31 @@ const applyTransitioningRootsToPairs = (pairs: SnapshotPair[]) => {
 
     const { firstValidSnapshot, image } = pair;
 
-    const dataTransitionRoot = firstValidSnapshot.targetElement.dataset.transitionroot;
+    const dataRoot = firstValidSnapshot.targetElement.dataset.root;
 
-    if (dataTransitionRoot) {
-      rootsByTags[dataTransitionRoot] = image;
+    if (dataRoot) {
+      rootsByTags[dataRoot] = image;
     }
   });
 
   pairs.forEach((pair) => {
     const { shared, prevSnapshot, nextSnapshot } = pair;
 
-    if (
-      !shared.transitionOptions.transitionRootTag ||
-      !Object.keys(rootsByTags).includes(shared.transitionOptions.transitionRootTag)
-    ) {
+    if (!shared.transitionOptions.root || !Object.keys(rootsByTags).includes(shared.transitionOptions.root)) {
       return;
     }
 
-    const transitioningRoot = rootsByTags[shared.transitionOptions.transitionRootTag];
+    const transitioningRoot = rootsByTags[shared.transitionOptions.root];
 
     if (prevSnapshot) {
-      prevSnapshot.transitionRoot = transitioningRoot;
+      prevSnapshot.root = transitioningRoot;
     }
 
     if (nextSnapshot) {
-      nextSnapshot.transitionRoot = transitioningRoot;
+      nextSnapshot.root = transitioningRoot;
     }
 
-    shared.transitionRoot = transitioningRoot;
+    shared.root = transitioningRoot;
   });
 };
 

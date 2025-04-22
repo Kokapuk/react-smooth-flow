@@ -1,21 +1,21 @@
-import getTransitionRoot from './getTransitionRoot';
+import getOverlayRoot from './getOverlayRoot';
 import { SnapshotPair } from './types';
 
 const appendPairsToDOM = (pairs: SnapshotPair[]) => {
-  const overlayRoot = getTransitionRoot();
+  const overlayRoot = getOverlayRoot();
 
   pairs.forEach((pair) => {
-    const transitionRoot = pair.shared.transitionRoot ?? overlayRoot;
+    const root = pair.shared.root ?? overlayRoot;
 
     if (pair.transitionType === 'mutation') {
-      transitionRoot.append(pair.image);
+      root.append(pair.image);
     } else if (pair.transitionType === 'presence') {
       if (pair.prevImage) {
-        transitionRoot.append(pair.prevImage);
+        root.append(pair.prevImage);
       }
 
       if (pair.nextImage) {
-        transitionRoot.append(pair.nextImage);
+        root.append(pair.nextImage);
       }
     }
   });

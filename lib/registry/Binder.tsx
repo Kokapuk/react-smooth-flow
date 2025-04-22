@@ -1,6 +1,6 @@
 'use client';
 
-import React, { DetailedHTMLProps, HTMLAttributes, ReactElement, useEffect, useState } from 'react';
+import { cloneElement, DetailedHTMLProps, HTMLAttributes, ReactElement, useEffect, useState } from 'react';
 import { Tag, TransitionMapping } from '../types';
 import { registerRoot, registerTransitioned, unregisterRoot, unregisterTransitioned } from './store';
 
@@ -39,7 +39,7 @@ const Binder = ({ children, transitions, root }: TransitionedProps) => {
     };
   }, [element, syncedRootTag]);
 
-  return React.cloneElement(children, {
+  return cloneElement(children, {
     ref: (node: HTMLElement | null) => {
       setElement(node);
       setSyncedTransitions(transitions);

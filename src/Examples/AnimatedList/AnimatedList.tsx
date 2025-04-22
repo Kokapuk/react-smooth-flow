@@ -49,13 +49,12 @@ const AnimatedList = () => {
   const addElement = () => {
     const newButton = buttons.length ? Math.max(...buttons) + 1 : 1;
 
-    startTransition([`button-${newButton}`], () => setButtons((prev) => [...prev, newButton]));
+    startTransition(['animatedGrid', `button-${newButton}`], () => setButtons((prev) => [...prev, newButton]));
   };
 
   const removeElement = (element: number) => {
-    startTransition(
-      buttons.filter((i) => i >= element).map((i) => `button-${i}`),
-      () => setButtons((prev) => prev.filter((j) => j !== element))
+    startTransition(['animatedGrid', ...buttons.filter((i) => i >= element).map((i) => `button-${i}`)], () =>
+      setButtons((prev) => prev.filter((j) => j !== element))
     );
   };
 
@@ -65,27 +64,29 @@ const AnimatedList = () => {
         <Button onClick={shuffle}>Shuffle</Button>
         <Button onClick={addElement}>Add</Button>
       </div>
-      <div className={styles.grid}>
-        {buttons.map((i) => (
-          <Binder
-            key={i}
-            transitions={{
-              [`button-${i}`]: {
-                enterKeyframes: [
-                  { transform: 'translateY(-75px)', opacity: '0' },
-                  { transform: 'translateY(0)', opacity: '1' },
-                ],
-                exitKeyframes: 'reversedEnter',
-                duration: 300,
-              },
-            }}
-          >
-            <Button onClick={() => removeElement(i)} style={{ width: 92 }}>
-              Delete {i}
-            </Button>
-          </Binder>
-        ))}
-      </div>
+      <Binder transitions={{ animatedGrid: { transitionLayout: true } }}>
+        <div className={styles.grid}>
+          {buttons.map((i) => (
+            <Binder
+              key={i}
+              transitions={{
+                [`button-${i}`]: {
+                  enterKeyframes: [
+                    { transform: 'translateY(-75px)', opacity: '0' },
+                    { transform: 'translateY(0)', opacity: '1' },
+                  ],
+                  exitKeyframes: 'reversedEnter',
+                  duration: 300,
+                },
+              }}
+            >
+              <Button onClick={() => removeElement(i)} style={{ width: 92 }}>
+                Delete {i}
+              </Button>
+            </Binder>
+          ))}
+        </div>
+      </Binder>
     </Example>
   );
 };

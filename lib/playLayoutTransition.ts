@@ -1,5 +1,5 @@
 import getInitialKeyframe from './getInitialKeyframe';
-import { Keyframes, SnapshotPair, Transition } from './types';
+import { Keyframes, PropertyIndexedKeyframes, Snapshot, SnapshotPair, Transition } from './types';
 
 const createLayoutProxy = (display: string) => {
   const proxy = document.createElement('rsf-layout-proxy');
@@ -7,6 +7,18 @@ const createLayoutProxy = (display: string) => {
   proxy.style.display = display;
 
   return proxy;
+};
+
+const fillKeyframesWithSnapshot = (keyframes: PropertyIndexedKeyframes, snapshot: Snapshot) => {
+  if (snapshot.transitionOptions.transitionLayout) {
+    (keyframes.width as string[]).push(`${snapshot.bounds.width}px`);
+    (keyframes.height as string[]).push(`${snapshot.bounds.height}px`);
+    (keyframes.margin as string[]).push(snapshot.computedStyle.margin);
+  } else {
+    (keyframes.width as string[]).push('0px');
+    (keyframes.height as string[]).push('0px');
+    (keyframes.margin as string[]).push('0px');
+  }
 };
 
 const getFlexboxMarginCompensation = (target: HTMLElement) => {
@@ -39,10 +51,12 @@ const playMutationTransition = (
   targetElement.after(layoutProxy);
 
   const keyframes: Keyframes = {
-    width: [`${prevSnapshot?.bounds.width}px`, `${nextSnapshot.bounds.width}px`],
-    height: [`${prevSnapshot?.bounds.height}px`, `${nextSnapshot.bounds.height}px`],
-    margin: [prevSnapshot?.computedStyle.margin, nextSnapshot.computedStyle.margin],
+    width: [],
+    height: [],
+    margin: [],
   };
+  fillKeyframesWithSnapshot(keyframes, prevSnapshot);
+  fillKeyframesWithSnapshot(keyframes, nextSnapshot);
 
   if (shared.transitionOptions.delay) {
     layoutProxy.animate(getInitialKeyframe(keyframes), { fill: 'forwards' });
@@ -163,12 +177,12 @@ const playLayoutTransition = (pair: SnapshotPair, transitions: Transition[]) => 
   ) {
     playMutationTransition(pair, transitions, animationOptions);
   } else {
-    if (nextSnapshot) {
-      playEnterTransition(pair, transitions, animationOptions);
+    if (prevSnapshot?.transitionOptions.transitionLayout) {
+      playExitTransition(pair, transitions, animationOptions);
     }
 
-    if (prevSnapshot) {
-      playExitTransition(pair, transitions, animationOptions);
+    if (nextSnapshot?.transitionOptions.transitionLayout) {
+      playEnterTransition(pair, transitions, animationOptions);
     }
   }
 };

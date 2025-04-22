@@ -59,12 +59,12 @@ export const registerRoot = (tag: Tag, element: HTMLElement) => {
     );
   }
 
-  element.dataset.transitionroot = tag;
+  element.dataset.root = tag;
   rootElements.set(tag, element);
 };
 
 export const unregisterRoot = (tag: Tag) => {
-  delete getRoot(tag)?.dataset.transitionroot;
+  delete getRoot(tag)?.dataset.root;
   rootElements.delete(tag);
 };
 

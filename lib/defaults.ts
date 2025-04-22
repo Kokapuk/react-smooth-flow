@@ -55,15 +55,13 @@ export const CONSISTENT_TRANSITION_OPTIONS = [
   'easing',
   'delay',
   'ignoreReducedMotion',
-  'scaleContent',
   'positionAnchor',
-  'transitionRootTag',
+  'root',
   'forcePresenceTransition',
   'clip',
-  'transitionLayout',
 ] as const satisfies Readonly<(keyof TransitionOptions)[]>;
 
-export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag', 'transitionRoot'] as const satisfies Readonly<(keyof Snapshot)[]>;
+export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag', 'root'] as const satisfies Readonly<(keyof Snapshot)[]>;
 
 const defaults: ConfigurableDefaults = {
   debug: false,
@@ -80,7 +78,7 @@ const defaults: ConfigurableDefaults = {
     contentAlign: 'topLeft',
     positionAnchor: 'topLeft',
     forcePresenceTransition: false,
-    transitionRootTag: null,
+    root: null,
     clip: true,
     relevantStyleProperties: [],
     persistBounds: true,

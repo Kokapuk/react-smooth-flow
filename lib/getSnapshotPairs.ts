@@ -3,8 +3,7 @@ import isMotionReduced from './isMotionReduced';
 import { Bounds, SharedTransitionOptions, Snapshot, SnapshotPair } from './types';
 
 const createImage = (clip: boolean, bounds: Bounds) => {
-  const image = document.createElement('div');
-  image.className = 'rsf-image';
+  const image = document.createElement('rsf-image');
   image.style.overflow = clip ? 'hidden' : 'visible';
   image.style.width = `${bounds.width}px`;
   image.style.height = `${bounds.height}px`;
@@ -36,7 +35,7 @@ const getSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Sn
 
       const sharedData = {
         tag: firstValidSnapshot.tag,
-        transitionRoot: firstValidSnapshot.transitionRoot ?? null,
+        root: firstValidSnapshot.root ?? null,
         transitionOptions: sharedTransitionOptions,
       };
 
@@ -63,8 +62,8 @@ const getSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Sn
           transitionType: 'mutation',
         };
       } else {
-        let prevImage: HTMLDivElement | null = null;
-        let nextImage: HTMLDivElement | null = null;
+        let prevImage: HTMLElement | null = null;
+        let nextImage: HTMLElement | null = null;
 
         if (prevSnapshot) {
           prevImage = createImage(sharedData.transitionOptions.clip, prevSnapshot.bounds);

@@ -35,13 +35,13 @@ const Gallery = () => {
                 [`slideToLeft-${activeSlideIndex}`]: {
                   enterKeyframes: [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
                   exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }],
-                  transitionRootTag: 'slideContainer',
+                  root: 'slideContainer',
                   duration: 500,
                 },
                 [`slideToRight-${activeSlideIndex}`]: {
                   enterKeyframes: [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
                   exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
-                  transitionRootTag: 'slideContainer',
+                  root: 'slideContainer',
                   duration: 500,
                 },
               }}
