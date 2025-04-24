@@ -1,5 +1,5 @@
 import elementMatchesAnyTag from './elementMatchesAnyTag';
-import { Tag } from './types';
+import { Tag } from '../types';
 
 const segregateIds = (targetElement: HTMLElement, excludeTags: Tag[]) => {
   const elements: HTMLElement[] = [];

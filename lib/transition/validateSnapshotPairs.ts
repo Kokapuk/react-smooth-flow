@@ -1,5 +1,5 @@
-import { CONSISTENT_SNAPSHOT_PROPERTIES, CONSISTENT_TRANSITION_OPTIONS } from './defaults';
-import { SnapshotPair, Tag } from './types';
+import { CONSISTENT_SNAPSHOT_PROPERTIES, CONSISTENT_TRANSITION_OPTIONS } from '../defaults';
+import { SnapshotPair, Tag } from '../types';
 
 const validateSnapshotPairs = (pairs: SnapshotPair[], _tags: Tag[]) => {
   pairs.forEach(({ prevSnapshot, nextSnapshot }) => {

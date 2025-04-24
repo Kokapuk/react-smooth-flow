@@ -1,4 +1,4 @@
-import { getAllTransitions } from './store';
+import { getAllTransitions } from '../store';
 
 export const rootHasActiveTransition = (root: HTMLElement) => {
   const transitions = getAllTransitions();

@@ -1,6 +1,6 @@
-import getInitialKeyframe from './getInitialKeyframe';
+import getInitialKeyframe from '../getInitialKeyframe';
 import hideElementNoTransition from './hideElementNoTransition';
-import { Keyframes, PresenceSnapshotPair, Transition } from './types';
+import { Keyframes, PresenceSnapshotPair, Transition } from '../types';
 
 const playTransition = (
   image: HTMLElement,

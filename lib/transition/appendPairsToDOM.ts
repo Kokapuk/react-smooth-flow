@@ -1,5 +1,5 @@
 import getOverlayRoot from './getOverlayRoot';
-import { SnapshotPair } from './types';
+import { SnapshotPair } from '../types';
 
 const appendPairsToDOM = (pairs: SnapshotPair[]) => {
   const overlayRoot = getOverlayRoot();

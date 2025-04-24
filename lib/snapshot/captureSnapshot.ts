@@ -6,10 +6,10 @@ import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';
 import getTotalOpacity from './getTotalOpacity';
 import getTotalZIndex from './getTotalZIndex';
-import hideElementsWithTags from './hideElementsWithTags';
-import { getRoot, getTransitionMapping } from './registry/store';
+import hideElementWithTag from './hideElementsWithTags';
+import { getRoot, getTransitionMapping } from '../registry/store';
 import segregateIds from './segregateIds';
-import { Snapshot, Tag } from './types';
+import { Snapshot, Tag } from '../types';
 
 const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excludeTags: Tag[]): Snapshot | null => {
   if (!targetElement) {
@@ -39,7 +39,7 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     copyRelevantStyles(targetElement, targetElementClone, transitionOptions.relevantStyleProperties);
   }
 
-  hideElementsWithTags(excludeTags, targetElementClone);
+  excludeTags.forEach(tag => hideElementWithTag(tag, targetElementClone))
   segregateIds(targetElementClone, excludeTags);
 
   targetElementClone.style.setProperty('background-color', 'transparent', 'important');

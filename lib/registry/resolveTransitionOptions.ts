@@ -1,6 +1,6 @@
-import defaults, { ConfigurableDefaults } from '@lib/defaults';
-import getReversedKeyframes from '@lib/getReversedKeyframes';
-import { ResolvedTransitionOptions, TransitionOptions } from '@lib/types';
+import defaults, { ConfigurableDefaults } from '../defaults';
+import getReversedKeyframes from '../getReversedKeyframes';
+import { ResolvedTransitionOptions, TransitionOptions } from '../types';
 
 function resolveTransitionOptions(
   transitionOptions: TransitionOptions

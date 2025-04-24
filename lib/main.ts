@@ -1,5 +1,5 @@
 import defaults, { ConfigurableDefaults } from './defaults';
-import startTransition from './startTransition';
+import startTransition from './transition/startTransition';
 import './style.scss';
 import usePreCommitEffect from './usePreCommitEffect';
 

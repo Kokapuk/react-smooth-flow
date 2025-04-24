@@ -1,4 +1,4 @@
-import { SnapshotPair } from './types';
+import { SnapshotPair } from '../types';
 
 const applyMaxZIndexToSnapshotPairs = (pairs: SnapshotPair[]) => {
   const pairsMaxZIndex = pairs.map(({ prevSnapshot, nextSnapshot }) =>

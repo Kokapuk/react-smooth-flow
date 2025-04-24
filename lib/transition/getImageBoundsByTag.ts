@@ -1,7 +1,7 @@
-import adjustBoundsToRoot from './adjustBoundsToRoot';
-import getElementBounds from './getElementBounds';
-import { getRecordByTag } from './store';
-import { Tag } from './types';
+import adjustBoundsToRoot from '../snapshot/adjustBoundsToRoot';
+import getElementBounds from '../snapshot/getElementBounds';
+import { getRecordByTag } from '../store';
+import { Tag } from '../types';
 
 const getImageBoundsByTag = (tag: Tag) => {
   const record = getRecordByTag(tag);

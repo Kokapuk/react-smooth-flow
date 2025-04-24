@@ -1,4 +1,4 @@
-import { Bounds } from './types';
+import { Bounds } from '../types';
 
 const getElementBounds = (element: Element): Bounds => {
   const boundingRect = element.getBoundingClientRect();

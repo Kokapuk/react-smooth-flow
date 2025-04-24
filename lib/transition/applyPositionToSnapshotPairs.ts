@@ -1,4 +1,4 @@
-import { Snapshot, SnapshotPair } from './types';
+import { Snapshot, SnapshotPair } from '../types';
 
 const applyPositionToImage = (
   image: HTMLElement,

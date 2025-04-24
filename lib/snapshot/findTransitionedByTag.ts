@@ -1,4 +1,4 @@
-import { Tag } from './types';
+import { Tag } from '../types';
 
 const findTransitionedByTag = (tag: Tag, parent: Element | Document = document) => {
   const targets = parent.querySelectorAll('[data-transitioned]') as NodeListOf<HTMLElement>;

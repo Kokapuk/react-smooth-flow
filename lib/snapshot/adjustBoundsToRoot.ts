@@ -1,5 +1,5 @@
 import getElementBounds from './getElementBounds';
-import { Bounds } from './types';
+import { Bounds } from '../types';
 
 const adjustBoundsToRoot = (bounds: Bounds, root: HTMLElement) => {
   const rootBounds = getElementBounds(root);

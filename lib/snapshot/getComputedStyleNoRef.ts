@@ -1,5 +1,5 @@
-import { STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
-import { ComputedStyle } from './types';
+import { STYLE_PROPERTIES_TO_CAPTURE } from '../defaults';
+import { ComputedStyle } from '../types';
 
 const getComputedStyleNoRef = (element: HTMLElement): ComputedStyle => {
   const computedStyleWithRef = window.getComputedStyle(element);

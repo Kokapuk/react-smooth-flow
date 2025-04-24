@@ -1,5 +1,5 @@
-import { getTransitioned } from './registry/store';
-import { Tag } from './types';
+import { getTransitioned } from '../registry/store';
+import { Tag } from '../types';
 
 const getAllTags = (tags: Tag[]) => {
   const allTags: Tag[] = [];

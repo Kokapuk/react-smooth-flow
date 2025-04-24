@@ -1,17 +1,20 @@
-import { SnapshotPair } from './types';
+import { Snapshot, SnapshotPair } from '../types';
+
+const applyScrollPositionToSnapshot = (snapshot: Snapshot) => {
+  const { scrollLeft, scrollTop } = snapshot.dynamicStateData;
+  snapshot.targetElementClone.scrollTo({ top: scrollTop, left: scrollLeft, behavior: 'instant' });
+};
 
 const applyDynamicStateDataToPairs = (pairs: SnapshotPair[]) => {
   pairs.forEach((pair) => {
     const { prevSnapshot, nextSnapshot } = pair;
-    
+
     if (prevSnapshot?.dynamicStateData.scrollLeft || prevSnapshot?.dynamicStateData.scrollTop) {
-      const { scrollLeft, scrollTop } = prevSnapshot.dynamicStateData;
-      prevSnapshot.targetElementClone.scrollTo({ top: scrollTop, left: scrollLeft, behavior: 'instant' });
+      applyScrollPositionToSnapshot(prevSnapshot);
     }
 
     if (nextSnapshot?.dynamicStateData.scrollLeft || nextSnapshot?.dynamicStateData.scrollTop) {
-      const { scrollLeft, scrollTop } = nextSnapshot.dynamicStateData;
-      nextSnapshot.targetElementClone.scrollTo({ top: scrollTop, left: scrollLeft, behavior: 'instant' });
+      applyScrollPositionToSnapshot(nextSnapshot);
     }
   });
 };

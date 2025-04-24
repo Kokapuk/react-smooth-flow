@@ -1,4 +1,4 @@
-import { SnapshotPair, Tag } from './types';
+import { SnapshotPair, Tag } from '../types';
 
 const applyTransitioningRootsToPairs = (pairs: SnapshotPair[]) => {
   const rootsByTags: Record<Tag, HTMLElement> = {};

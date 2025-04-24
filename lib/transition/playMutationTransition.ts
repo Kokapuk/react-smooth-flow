@@ -1,8 +1,8 @@
-import { STYLE_PROPERTIES_TO_ANIMATE } from './defaults';
-import getInitialKeyframe from './getInitialKeyframe';
+import { STYLE_PROPERTIES_TO_ANIMATE } from '../defaults';
+import getInitialKeyframe from '../getInitialKeyframe';
 import hideElementNoTransition from './hideElementNoTransition';
-import parseTransformMatrix from './parseTransformMatrix';
-import { ContentAlign, Keyframes, MutationSnapshotPair, Transition } from './types';
+import parseTransformMatrix from '../parseTransformMatrix';
+import { ContentAlign, Keyframes, MutationSnapshotPair, Transition } from '../types';
 
 const playImageTransition = (
   pair: MutationSnapshotPair,

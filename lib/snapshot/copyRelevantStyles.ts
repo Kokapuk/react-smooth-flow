@@ -1,4 +1,4 @@
-import { RelevantStyleProperties } from './types';
+import { RelevantStyleProperties } from '../types';
 
 const copyRelevantStyles = (
   captureTarget: HTMLElement,

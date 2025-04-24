@@ -36,7 +36,7 @@ interface TransitionedProps {
     string | JSXElementConstructor<any>
   >;
   transitions?: TransitionMapping;
-  root?: string;
+  root?: Tag;
 }
 
 type TransitionMapping = Record<Tag, TransitionOptions>;
@@ -353,7 +353,7 @@ type ResolvedTransitionOptions = Required<
 > & {
   exitKeyframes: Keyframes;
   contentExitKeyframes: Keyframes;
-  root: Tag | null;
+  root: Tag | undefined;
 };
 
 type Keyframes = Keyframe[] | PropertyIndexedKeyframes;
@@ -435,7 +435,7 @@ const defaults: ConfigurableDefaults = {
     contentAlign: 'topLeft',
     positionAnchor: 'topLeft',
     forcePresenceTransition: false,
-    root: null,
+    root: undefined,
     clip: true,
     relevantStyleProperties: [],
     persistBounds: true,

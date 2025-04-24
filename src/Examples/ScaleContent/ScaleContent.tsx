@@ -1,5 +1,5 @@
 import Binder from '@lib/registry/Binder';
-import startTransition from '@lib/startTransition';
+import startTransition from '@lib/transition/startTransition';
 import { TransitionOptions } from '@lib/types';
 import { useState } from 'react';
 import Button from '../../components/Button';

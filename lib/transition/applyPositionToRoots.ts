@@ -1,5 +1,5 @@
 import { rootHasActiveTransition } from './rootHasActiveTransition';
-import { SnapshotPair } from './types';
+import { SnapshotPair } from '../types';
 
 const applyPositionToRoots = (pairs: SnapshotPair[]) => {
   const uniqueRoots: HTMLElement[] = [];

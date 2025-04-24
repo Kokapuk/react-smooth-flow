@@ -1,4 +1,4 @@
-import { DynamicStateData } from './types';
+import { DynamicStateData } from '../types';
 
 const captureDynamicStateData = (targetElement: HTMLElement) => {
   const dynamicStateData: DynamicStateData = {

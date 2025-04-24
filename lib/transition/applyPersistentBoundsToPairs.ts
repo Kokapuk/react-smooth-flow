@@ -1,4 +1,4 @@
-import { Bounds, SnapshotPair, Tag } from './types';
+import { Bounds, SnapshotPair, Tag } from '../types';
 
 const applyPersistentBoundsToPairs = (pairs: SnapshotPair[], persistentBounds: Record<Tag, Bounds | null>) => {
   pairs.forEach((pair) => {

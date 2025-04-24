@@ -1,5 +1,5 @@
-import getInitialKeyframe from './getInitialKeyframe';
-import { Keyframes, PropertyIndexedKeyframes, Snapshot, SnapshotPair, Transition } from './types';
+import getInitialKeyframe from '../getInitialKeyframe';
+import { Keyframes, PropertyIndexedKeyframes, Snapshot, SnapshotPair, Transition } from '../types';
 
 const createLayoutProxy = (display: string) => {
   const proxy = document.createElement('rsf-layout-proxy');

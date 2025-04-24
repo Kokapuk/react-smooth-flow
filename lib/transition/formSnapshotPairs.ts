@@ -1,6 +1,6 @@
-import { CONSISTENT_TRANSITION_OPTIONS, STYLE_PROPERTIES_TO_APPLY_TO_IMAGE } from './defaults';
-import isMotionReduced from './isMotionReduced';
-import { Bounds, SharedTransitionOptions, Snapshot, SnapshotPair } from './types';
+import { CONSISTENT_TRANSITION_OPTIONS, STYLE_PROPERTIES_TO_APPLY_TO_IMAGE } from '../defaults';
+import isMotionReduced from '../isMotionReduced';
+import { Bounds, SharedTransitionOptions, Snapshot, SnapshotPair } from '../types';
 
 const createImage = (clip: boolean, bounds: Bounds) => {
   const image = document.createElement('rsf-image');
@@ -11,7 +11,7 @@ const createImage = (clip: boolean, bounds: Bounds) => {
   return image;
 };
 
-const getSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Snapshot | null)[]): SnapshotPair[] => {
+const formSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Snapshot | null)[]): SnapshotPair[] => {
   const pairs = prevSnapshots
     .map((snapshot, index) => ({ prevSnapshot: snapshot, nextSnapshot: nextSnapshots[index] }))
     .filter(
@@ -101,4 +101,4 @@ const getSnapshotPairs = (prevSnapshots: (Snapshot | null)[], nextSnapshots: (Sn
   return structuredPairs;
 };
 
-export default getSnapshotPairs;
+export default formSnapshotPairs;

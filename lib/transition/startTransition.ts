@@ -1,3 +1,10 @@
+import defaults from '../defaults';
+import getTruthyArray from '../getTruthyArray';
+import { getTransitioned } from '../registry/store';
+import captureSnapshot from '../snapshot/captureSnapshot';
+import { cancelTransition, finishTransition, getRecordById, getTransitionsById, setupRecord } from '../store';
+import getPersistentBounds from '../transition/getPersistentBounds';
+import { FalsyArray, Tag, TransitionConfig } from '../types';
 import appendPairsToDOM from './appendPairsToDOM';
 import applyDynamicStateDataToPairs from './applyDynamicStateDataToPairs';
 import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
@@ -5,27 +12,18 @@ import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
 import applyPositionToSnapshotPairs from './applyPositionToSnapshotPairs';
 import applyTransitioningRootsToPairs from './applyTransitioningRootsToPairs';
-import captureSnapshot from './captureSnapshot';
-import defaults from './defaults';
+import formSnapshotPairs from './formSnapshotPairs';
 import getAllTags from './getAllTags';
-import getImageBoundsByTag from './getImageBoundsByTag';
-import getSnapshotPairs from './getSnapshotPairs';
-import getTruthyArray from './getTruthyArray';
 import playLayoutTransition from './playLayoutTransition';
 import playMutationTransition from './playMutationTransition';
 import playPresenceTransition from './playPresenceTransition';
-import { getTransitioned } from './registry/store';
-import { cancelTransition, finishTransition, getRecordById, getTransitionsById, setupRecord } from './store';
-import { Bounds, FalsyArray, Tag, TransitionConfig } from './types';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
 const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, config?: TransitionConfig) => {
   const validTags = getTruthyArray(tags);
   const allTags = getAllTags(validTags);
 
-  const persistentBounds: Record<Tag, Bounds | null> = Object.fromEntries(
-    allTags.map((tag) => [tag, getImageBoundsByTag(tag)])
-  );
+  const persistentBounds = getPersistentBounds(allTags);
   cancelTransition(...allTags);
 
   const prevSnapshots = validTags.map((targetTag) =>
@@ -49,7 +47,7 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
     )
   );
 
-  const snapshotPairs = getSnapshotPairs(prevSnapshots, nextSnapshots);
+  const snapshotPairs = formSnapshotPairs(prevSnapshots, nextSnapshots);
   validateSnapshotPairs(snapshotPairs, validTags);
   applyTransitioningRootsToPairs(snapshotPairs);
   appendPairsToDOM(snapshotPairs);
