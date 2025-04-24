@@ -10,4 +10,9 @@
   transition: scale 200ms;
   display: grid;
   place-items: center;
+
+  &:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
 }

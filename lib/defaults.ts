@@ -1,9 +1,9 @@
 import { Properties } from 'csstype';
-import { ParsedTransitionOptions, Snapshot, TransitionOptions } from './types';
+import { ResolvedTransitionOptions, Snapshot, TransitionOptions } from './types';
 
 export interface ConfigurableDefaults {
   debug: boolean;
-  transitionOptions: ParsedTransitionOptions;
+  transitionOptions: ResolvedTransitionOptions;
 }
 
 export const STYLE_PROPERTIES_TO_CAPTURE = [
@@ -78,7 +78,7 @@ const defaults: ConfigurableDefaults = {
     contentAlign: 'topLeft',
     positionAnchor: 'topLeft',
     forcePresenceTransition: false,
-    root: null,
+    root: undefined,
     clip: true,
     relevantStyleProperties: [],
     persistBounds: true,

@@ -1,13 +1,13 @@
-import { ParsedTransitionOptions, Tag, TransitionMapping } from '../types';
-import fillDefaultsTransitionMapping from './fillDefaultsTransitionMapping';
+import { ResolvedTransitionOptions, Tag, TransitionMapping, TransitionOptions } from '../types';
 import filterDisabled from './filterDisabled';
+import fillDefaultsTransitionMapping from './resolveDefaultsTransitionMapping';
 import validateTransitionMapping from './validateTransitionMapping';
 
-const transitionMappings = new Map<HTMLElement, TransitionMapping<ParsedTransitionOptions>>();
+const transitionMappings = new Map<HTMLElement, TransitionMapping<ResolvedTransitionOptions>>();
 const transitionedElements = new Map<Tag, HTMLElement>();
 const rootElements = new Map<Tag, HTMLElement>();
 
-export const registerTransitioned = (element: HTMLElement, transitions: TransitionMapping) => {
+export const registerTransitioned = (element: HTMLElement, transitions: TransitionMapping<TransitionOptions>) => {
   filterDisabled(transitions);
   validateTransitionMapping(transitions, Array.from(transitionMappings.values()));
 
@@ -19,11 +19,11 @@ export const registerTransitioned = (element: HTMLElement, transitions: Transiti
   }
 
   fillDefaultsTransitionMapping(transitions);
-  transitionMappings.set(element, transitions as TransitionMapping<ParsedTransitionOptions>);
+  transitionMappings.set(element, transitions);
 };
 
 export const unregisterTransitioned = (element: HTMLElement) => {
-  const transitionMapping = transitionMappings.get(element) as TransitionMapping<ParsedTransitionOptions> | undefined;
+  const transitionMapping = transitionMappings.get(element) as TransitionMapping<ResolvedTransitionOptions> | undefined;
 
   if (!transitionMapping) {
     return;

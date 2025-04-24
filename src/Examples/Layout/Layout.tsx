@@ -13,7 +13,7 @@ const Layout = () => {
   return (
     <Example title="Layout" style={{ display: 'flex', flexDirection: 'column', gap: 25 }}>
       <div className={styles.container}>
-        <Button>Surrounding</Button>
+        <Button disabled>Surrounding</Button>
         <Binder transitions={{ 'layoutTarget-1': { transitionLayout: true } }}>
           <Button
             style={{ marginInline: isExpanded ? 25 : 0 }}
@@ -22,14 +22,22 @@ const Layout = () => {
             {isExpanded ? 'Expanded - Shrink' : 'Expand'}
           </Button>
         </Binder>
-        <Button>Surrounding</Button>
+        <Button disabled>Surrounding</Button>
       </div>
 
       <div className={styles.container}>
-        <Button>Surrounding</Button>
+        <Button disabled>Surrounding</Button>
         {isAdded && (
-          <Binder transitions={{ 'layoutTarget-2': { transitionLayout: true } }}>
-            <Button>Added</Button>
+          <Binder
+            transitions={{
+              'layoutTarget-2': {
+                transitionLayout: true,
+                enterKeyframes: { opacity: [0, 0.5] },
+                exitKeyframes: 'reversedEnter',
+              },
+            }}
+          >
+            <Button disabled>Added</Button>
           </Binder>
         )}
         <Button onClick={() => startTransition(['layoutTarget-2'], () => setAdded((prev) => !prev))}>
@@ -44,10 +52,10 @@ const Layout = () => {
               <Button onClick={() => startTransition(['layoutTarget-3'], () => setJumped(true))}>Jump</Button>
             </Binder>
           )}
-          <Button>Test</Button>
+          <Button disabled>Test</Button>
         </div>
         <div className={styles.wrapper}>
-          <Button>Test</Button>
+          <Button disabled>Test</Button>
           {isJumped && (
             <Binder transitions={{ 'layoutTarget-3': { transitionLayout: true } }}>
               <Button onClick={() => startTransition(['layoutTarget-3'], () => setJumped(false))}>Jump</Button>

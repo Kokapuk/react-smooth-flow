@@ -1,8 +1,8 @@
-import { ParsedTransitionOptions, TransitionMapping } from '../types';
+import { ResolvedTransitionOptions, TransitionMapping, TransitionOptions } from '../types';
 
 const validateTransitionMapping = (
-  transitionMapping: TransitionMapping,
-  registeredTransitionMappings: TransitionMapping<ParsedTransitionOptions>[]
+  transitionMapping: TransitionMapping<TransitionOptions>,
+  registeredTransitionMappings: TransitionMapping<ResolvedTransitionOptions>[]
 ) => {
   const tags = Object.keys(transitionMapping);
   const tagFormat = '^[a-zA-Z-_0-9]+$';

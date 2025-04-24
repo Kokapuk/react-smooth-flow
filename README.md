@@ -190,10 +190,6 @@ export default function ExpandableSection() {
 
   Keep in mind that you can still implement animations between routes in [SPAs](https://developer.mozilla.org/en-US/docs/Glossary/SPA). React Smooth Flow even allows you to create shared element transitions.
 
-- losing some states on transition
-
-  React Smooth Flow has a simpler way of capturing snapshots of elements. It does not take a screenshot, but uses the [cloneNode](https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode) instead. That means that some states that are not represented as attributes will not be captured, e.g. input values without `value` attribute, scroll position of scrollable elements, etc. You can read more about snapshot capturing process [here](/DOCS.md#Concept).
-
 ## Known issues
 
 - Mutation transition behavior for **display: none** and **visibility: hidden** is unexpected

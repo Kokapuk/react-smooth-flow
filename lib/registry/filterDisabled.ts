@@ -1,6 +1,6 @@
-import { TransitionMapping } from '../types';
+import { TransitionMapping, TransitionOptions } from '../types';
 
-const filterDisabled = (transitionMapping: TransitionMapping) => {
+const filterDisabled = (transitionMapping: TransitionMapping<TransitionOptions>) => {
   const tags = Object.keys(transitionMapping);
 
   tags.forEach((tag) => {

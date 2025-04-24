@@ -145,7 +145,7 @@ Default: `'ease'`
 Transition easing function. [<easing-function\>](https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function)
 
 > [!TIP]
-> [Create complex animation curves in CSS with the linear() easing function](https://developer.chrome.com/docs/css-ui/css-linear-easing-function)
+> [Create complex animation curves in CSS with the linear() easing function](https://developer.chrome.com/docs/css-ui/css-linear-easing-function). Try [Easing Wizard](https://easingwizard.com)
 
 #### `delay`
 
@@ -345,10 +345,10 @@ cancelTransition('tagA', 'tagB');
 declare const defaults: ConfigurableDefaults;
 
 interface ConfigurableDefaults {
-  transitionOptions: ParsedTransitionOptions;
+  transitionOptions: ResolvedTransitionOptions;
 }
 
-type ParsedTransitionOptions = Required<
+type ResolvedTransitionOptions = Required<
   Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'root'>
 > & {
   exitKeyframes: Keyframes;

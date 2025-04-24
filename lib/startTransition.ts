@@ -1,4 +1,5 @@
 import appendPairsToDOM from './appendPairsToDOM';
+import applyDynamicStateDataToPairs from './applyDynamicStateDataToPairs';
 import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
 import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
@@ -48,21 +49,22 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
     )
   );
 
-  const snapshotParis = getSnapshotPairs(prevSnapshots, nextSnapshots);
-  validateSnapshotPairs(snapshotParis, validTags);
-  applyTransitioningRootsToPairs(snapshotParis);
-  appendPairsToDOM(snapshotParis);
-  applyPersistentBoundsToPairs(snapshotParis, persistentBounds);
-  applyPositionToSnapshotPairs(snapshotParis);
-  applyMaxZIndexToSnapshotPairs(snapshotParis);
-  const resetRootsPositions = applyPositionToRoots(snapshotParis);
+  const snapshotPairs = getSnapshotPairs(prevSnapshots, nextSnapshots);
+  validateSnapshotPairs(snapshotPairs, validTags);
+  applyTransitioningRootsToPairs(snapshotPairs);
+  appendPairsToDOM(snapshotPairs);
+  applyDynamicStateDataToPairs(snapshotPairs);
+  applyPersistentBoundsToPairs(snapshotPairs, persistentBounds);
+  applyPositionToSnapshotPairs(snapshotPairs);
+  applyMaxZIndexToSnapshotPairs(snapshotPairs);
+  const resetRootsPositions = applyPositionToRoots(snapshotPairs);
 
   config?.onBegin?.();
 
   const transitionId = setupRecord();
 
   try {
-    for (const pair of snapshotParis) {
+    for (const pair of snapshotPairs) {
       const storeRecord = getRecordById(transitionId);
       storeRecord[pair.shared.tag] = [];
 

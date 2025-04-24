@@ -51,31 +51,21 @@ export interface TransitionOptions {
   disabled?: boolean;
 }
 
-export type ParsedTransitionOptions = Required<
+export type ResolvedTransitionOptions = Required<
   Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'root'>
 > & {
   exitKeyframes: Keyframes;
   contentExitKeyframes: Keyframes;
-  root: Tag | null;
+  root: Tag | undefined;
 };
 
-export type TransitionMapping<T extends TransitionOptions | ParsedTransitionOptions = TransitionOptions> = Record<
-  Tag,
-  T
->;
-
-export interface DOMPosition {
-  parentElement: HTMLElement;
-  index: number;
-}
+export type TransitionMapping<T extends TransitionOptions | ResolvedTransitionOptions> = Record<Tag, T>;
 
 export interface TransitionConfig {
   onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
 }
-
-export type ComputedStyle = Record<(typeof STYLE_PROPERTIES_TO_CAPTURE)[number], string>;
 
 export interface Bounds {
   top: number;
@@ -88,21 +78,35 @@ export interface Bounds {
   scrollBarHeight: number;
 }
 
+export type ComputedStyle = Record<(typeof STYLE_PROPERTIES_TO_CAPTURE)[number], string>;
+
+export interface DOMPosition {
+  parentElement: HTMLElement;
+  index: number;
+}
+
+export interface DynamicStateData {
+  scrollTop: number;
+  scrollLeft: number;
+}
+
 export interface Snapshot {
   tag: Tag;
   bounds: Bounds;
   image: HTMLElement;
   computedStyle: ComputedStyle;
-  transitionOptions: ParsedTransitionOptions;
-  transitionMapping: TransitionMapping<ParsedTransitionOptions>;
+  transitionOptions: ResolvedTransitionOptions;
+  transitionMapping: TransitionMapping<ResolvedTransitionOptions>;
   hasFixedPosition: boolean;
   root?: HTMLElement | null;
   targetElement: HTMLElement;
+  targetElementClone: HTMLElement;
   targetDOMPosition: DOMPosition;
   totalZIndex: number;
+  dynamicStateData: DynamicStateData;
 }
 
-export type SharedTransitionOptions = Pick<ParsedTransitionOptions, (typeof CONSISTENT_TRANSITION_OPTIONS)[number]>;
+export type SharedTransitionOptions = Pick<ResolvedTransitionOptions, (typeof CONSISTENT_TRANSITION_OPTIONS)[number]>;
 
 export type SnapshotPairSharedData = Required<Pick<Snapshot, (typeof CONSISTENT_SNAPSHOT_PROPERTIES)[number]>> & {
   transitionOptions: SharedTransitionOptions;

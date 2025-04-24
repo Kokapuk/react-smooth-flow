@@ -1,4 +1,5 @@
 import adjustBoundsToRoot from './adjustBoundsToRoot';
+import captureDynamicStateData from './captureDynamicStateData';
 import copyRelevantStyles from './copyRelevantStyles';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
@@ -78,11 +79,13 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     hasFixedPosition: elementHasFixedPosition(targetElement),
     root: root,
     targetElement,
+    targetElementClone: snapshotContainer.children[0].children[0] as HTMLElement,
     targetDOMPosition: {
       parentElement: targetElement.parentElement!,
       index: Array.from(targetElement.parentElement!.children).indexOf(targetElement),
     },
     totalZIndex: getTotalZIndex(targetElement, root ?? undefined),
+    dynamicStateData: captureDynamicStateData(targetElement),
   };
 };
 

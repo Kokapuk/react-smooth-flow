@@ -1,18 +1,18 @@
 'use client';
 
 import { cloneElement, DetailedHTMLProps, HTMLAttributes, ReactElement, useEffect, useState } from 'react';
-import { Tag, TransitionMapping } from '../types';
+import { Tag, TransitionMapping, TransitionOptions } from '../types';
 import { registerRoot, registerTransitioned, unregisterRoot, unregisterTransitioned } from './store';
 
 interface TransitionedProps {
   children: ReactElement<DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>>;
-  transitions?: TransitionMapping;
+  transitions?: TransitionMapping<TransitionOptions>;
   root?: Tag;
 }
 
 const Binder = ({ children, transitions, root }: TransitionedProps) => {
   const [element, setElement] = useState<HTMLElement | null>(null);
-  const [syncedTransitions, setSyncedTransitions] = useState<TransitionMapping>();
+  const [syncedTransitions, setSyncedTransitions] = useState<TransitionMapping<TransitionOptions>>();
   const [syncedRootTag, setSyncedRootTag] = useState<Tag>();
 
   useEffect(() => {
@@ -45,12 +45,12 @@ const Binder = ({ children, transitions, root }: TransitionedProps) => {
       setSyncedTransitions(transitions);
       setSyncedRootTag(root);
 
-      const { ref: originalRef } = children.props;
+      const { ref } = children.props;
 
-      if (typeof originalRef === 'function') {
-        originalRef(node);
-      } else if (originalRef && typeof originalRef === 'object') {
-        originalRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref && typeof ref === 'object') {
+        ref.current = node;
       }
     },
   });

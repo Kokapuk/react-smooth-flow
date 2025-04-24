@@ -7,7 +7,7 @@ import Binder from './registry/Binder';
 import { cancelTransition } from './store';
 import {
   FalsyArray,
-  ParsedTransitionOptions,
+  ResolvedTransitionOptions,
   Tag,
   TransitionConfig,
   TransitionMapping,
@@ -19,7 +19,7 @@ export { Binder, cancelTransition, defaults, startTransition, usePreCommitEffect
 export type {
   ConfigurableDefaults,
   FalsyArray,
-  ParsedTransitionOptions,
+  ResolvedTransitionOptions,
   Tag,
   TransitionConfig,
   TransitionMapping,
