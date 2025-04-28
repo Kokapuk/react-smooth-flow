@@ -19,7 +19,11 @@ import playMutationTransition from './playMutationTransition';
 import playPresenceTransition from './playPresenceTransition';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
-const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, config?: TransitionConfig) => {
+const startTransition = async (
+  tags: FalsyArray<Tag>,
+  updateDOM?: () => void | Promise<void>,
+  config?: TransitionConfig
+) => {
   const validTags = getTruthyArray(tags);
   const allTags = getAllTags(validTags);
 
@@ -40,7 +44,7 @@ const startTransition = async (tags: FalsyArray<Tag>, updateDOM?: () => void, co
     );
   });
 
-  updateDOM?.();
+  await updateDOM?.();
 
   // Wait for lifecycle
   await new Promise((res) => queueMicrotask(() => res(null)));

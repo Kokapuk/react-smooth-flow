@@ -297,7 +297,7 @@ Whether snapshot should not be captured.
 ```ts
 declare const startTransition: (
   tags: FalsyArray<Tag>,
-  updateDOM?: () => void,
+  updateDOM?: () => void | Promise<void>,
   config?: TransitionConfig
 ) => Promise<void>;
 
