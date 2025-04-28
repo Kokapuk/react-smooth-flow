@@ -1,8 +1,8 @@
 import { STYLE_PROPERTIES_TO_ANIMATE } from '../defaults';
 import getInitialKeyframe from '../getInitialKeyframe';
-import hideElementNoTransition from './hideElementNoTransition';
-import parseTransformMatrix from '../parseTransformMatrix';
+import TransformMatrix from '../transformMatrix';
 import { ContentAlign, Keyframes, MutationSnapshotPair, Transition } from '../types';
+import hideElementNoTransition from './hideElementNoTransition';
 
 const playImageTransition = (
   pair: MutationSnapshotPair,
@@ -22,7 +22,7 @@ const playImageTransition = (
     return keyframe;
   });
 
-  let transform = '';
+  const translate = { x: 0, y: 0 };
   const translateYTop = prevSnapshot.bounds.top - nextSnapshot.bounds.top;
   const translateRight = nextSnapshot.bounds.right - prevSnapshot.bounds.right;
   const translateYBottom = nextSnapshot.bounds.bottom - prevSnapshot.bounds.bottom;
@@ -30,22 +30,36 @@ const playImageTransition = (
 
   switch (shared.transitionOptions.positionAnchor) {
     case 'topLeft':
-      transform = `translate(${translateXLeft}px, ${translateYTop}px)`;
+      translate.x = translateXLeft;
+      translate.y = translateYTop;
       break;
     case 'topRight':
-      transform = `translate(${translateRight}px, ${translateYTop}px)`;
+      translate.x = translateRight;
+      translate.y = translateYTop;
       break;
     case 'bottomRight':
-      transform = `translate(${translateRight}px, ${translateYBottom}px)`;
+      translate.x = translateRight;
+      translate.y = translateYBottom;
       break;
     case 'bottomLeft':
-      transform = `translate(${translateXLeft}px, ${translateYBottom}px)`;
+      translate.x = translateXLeft;
+      translate.y = translateYBottom;
       break;
   }
 
+  const transformMatrixFrom = new TransformMatrix({
+    ...prevSnapshot.bounds.transform?.options,
+    translateX: translate.x,
+    translateY: translate.y,
+  });
+
+  const transformMatrixTo = new TransformMatrix({
+    ...nextSnapshot.bounds.transform?.options,
+  });
+
   const keyframes: Keyframes = [
-    { ...generalKeyframes[0], transform: transform },
-    { ...generalKeyframes[1], transform: 'translate(0, 0)' },
+    { ...generalKeyframes[0], transform: transformMatrixFrom.toString() },
+    { ...generalKeyframes[1], transform: transformMatrixTo.toString() },
   ];
 
   if (shared.transitionOptions.delay) {
@@ -64,8 +78,7 @@ const playImageTransition = (
 const playContentTransition = (
   pair: MutationSnapshotPair,
   animationOptions: KeyframeAnimationOptions,
-  transitions: Transition[],
-  cleanup: () => void
+  transitions: Transition[]
 ) => {
   const { image, shared, prevSnapshot, nextSnapshot } = pair;
   const exitContent = image.children[0] as HTMLDivElement;
@@ -90,8 +103,8 @@ const playContentTransition = (
   );
 
   transitions.push(
-    { animation: exitContentTransition, snapshotPair: pair, cleanup },
-    { animation: enterContentTransition, snapshotPair: pair, cleanup }
+    { animation: exitContentTransition, snapshotPair: pair },
+    { animation: enterContentTransition, snapshotPair: pair }
   );
 };
 
@@ -130,8 +143,7 @@ const applyTransformOriginToContent = (contentAlign: ContentAlign, target: HTMLD
 const playContentScaleTransition = (
   pair: MutationSnapshotPair,
   animationOptions: KeyframeAnimationOptions,
-  transitions: Transition[],
-  cleanup: () => void
+  transitions: Transition[]
 ) => {
   const { prevSnapshot, nextSnapshot, image, shared } = pair;
 
@@ -139,7 +151,7 @@ const playContentScaleTransition = (
     const exitContentTransformContainer = image.children[0].children[0] as HTMLDivElement;
     applyTransformOriginToContent(prevSnapshot.transitionOptions.contentAlign, exitContentTransformContainer);
 
-    const exitContentMatrix = parseTransformMatrix(getComputedStyle(exitContentTransformContainer).transform);
+    const exitContentMatrix = new TransformMatrix(getComputedStyle(exitContentTransformContainer).transform);
     const exitContentFrom = exitContentMatrix.toString();
     exitContentMatrix.scaleX = nextSnapshot.bounds.width / prevSnapshot.bounds.width;
     exitContentMatrix.scaleY = nextSnapshot.bounds.height / prevSnapshot.bounds.height;
@@ -156,7 +168,7 @@ const playContentScaleTransition = (
       animationOptions
     );
 
-    transitions.push({ animation: exitContentScaleTransition, snapshotPair: pair, cleanup });
+    transitions.push({ animation: exitContentScaleTransition, snapshotPair: pair });
   }
 
   if (nextSnapshot.transitionOptions.scaleContent) {
@@ -164,7 +176,7 @@ const playContentScaleTransition = (
 
     applyTransformOriginToContent(nextSnapshot.transitionOptions.contentAlign, enterContentTransformContainer);
 
-    const enterContentMatrix = parseTransformMatrix(getComputedStyle(enterContentTransformContainer).transform);
+    const enterContentMatrix = new TransformMatrix(getComputedStyle(enterContentTransformContainer).transform);
     const enterContentTo = enterContentMatrix.toString();
     enterContentMatrix.scaleX = prevSnapshot.bounds.width / nextSnapshot.bounds.width;
     enterContentMatrix.scaleY = prevSnapshot.bounds.height / nextSnapshot.bounds.height;
@@ -181,13 +193,13 @@ const playContentScaleTransition = (
       animationOptions
     );
 
-    transitions.push({ animation: enterContentScaleTransition, snapshotPair: pair, cleanup });
+    transitions.push({ animation: enterContentScaleTransition, snapshotPair: pair });
   }
 };
 
 const playMutationTransition = (pair: MutationSnapshotPair, transitions: Transition[]) => {
   const { prevSnapshot, nextSnapshot, image, shared } = pair;
-  const resetTargetStyles = hideElementNoTransition(nextSnapshot.targetElement);
+  const resetTarget = hideElementNoTransition(nextSnapshot.targetElement);
 
   const animationOptions: KeyframeAnimationOptions = {
     duration: shared.transitionOptions.duration,
@@ -198,14 +210,14 @@ const playMutationTransition = (pair: MutationSnapshotPair, transitions: Transit
 
   const removeSnapshotsAndResetTarget = () => {
     image.remove();
-    resetTargetStyles();
+    resetTarget();
   };
 
   playImageTransition(pair, animationOptions, transitions, removeSnapshotsAndResetTarget);
-  playContentTransition(pair, animationOptions, transitions, removeSnapshotsAndResetTarget);
+  playContentTransition(pair, animationOptions, transitions);
 
   if (prevSnapshot.transitionOptions.scaleContent || nextSnapshot.transitionOptions.scaleContent) {
-    playContentScaleTransition(pair, animationOptions, transitions, removeSnapshotsAndResetTarget);
+    playContentScaleTransition(pair, animationOptions, transitions);
   }
 };
 

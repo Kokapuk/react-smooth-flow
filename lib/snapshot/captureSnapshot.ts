@@ -1,22 +1,23 @@
+import { STYLE_PROPERTIES_TO_RESET_ON_IMAGE } from '@lib/defaults';
+import { getRoot, getTransitionMapping } from '../registry/store';
+import { Tag } from '../types';
 import adjustBoundsToRoot from './adjustBoundsToRoot';
-import captureDynamicStateData from './captureDynamicStateData';
+import captureDynamicStates from './captureDynamicStates';
 import copyRelevantStyles from './copyRelevantStyles';
+import elementDisableMotion from './elementDisableMotion';
 import elementHasFixedPosition from './elementHasFixedPosition';
 import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';
 import getTotalOpacity from './getTotalOpacity';
 import getTotalZIndex from './getTotalZIndex';
 import hideElementWithTag from './hideElementsWithTags';
-import { getRoot, getTransitionMapping } from '../registry/store';
 import segregateIds from './segregateIds';
-import { Snapshot, Tag } from '../types';
+import segregateNames from './segregateNames';
 
-const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excludeTags: Tag[]): Snapshot | null => {
-  if (!targetElement) {
-    return null;
-  }
+const captureSnapshot = (element: HTMLElement, targetTag: Tag, excludeTags: Tag[]) => {
+  const resetElementMotion = elementDisableMotion(element);
 
-  const transitionMapping = getTransitionMapping(targetElement)!;
+  const transitionMapping = getTransitionMapping(element)!;
   const transitionOptions = transitionMapping[targetTag];
   const root = transitionOptions.root ? getRoot(transitionOptions.root) : null;
 
@@ -24,32 +25,34 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     throw Error(`Failed to find root with tag "${transitionOptions.root}"`);
   }
 
-  const computedStyle = getComputedStyleNoRef(targetElement);
-  computedStyle.opacity = `${getTotalOpacity(targetElement, root ?? undefined)}`;
+  const computedStyle = getComputedStyleNoRef(element);
+  computedStyle.opacity = `${getTotalOpacity(element, root ?? undefined)}`;
 
-  const bounds = getElementBounds(targetElement);
+  const bounds = getElementBounds(element, transitionOptions.captureTransform);
 
   if (root) {
     adjustBoundsToRoot(bounds, root);
   }
 
-  const targetElementClone = targetElement.cloneNode(true) as HTMLElement;
+  const targetElementClone = element.cloneNode(true) as HTMLElement;
 
   if (transitionOptions.relevantStyleProperties.length) {
-    copyRelevantStyles(targetElement, targetElementClone, transitionOptions.relevantStyleProperties);
+    copyRelevantStyles(element, targetElementClone, transitionOptions.relevantStyleProperties);
   }
 
-  excludeTags.forEach(tag => hideElementWithTag(tag, targetElementClone))
-  segregateIds(targetElementClone, excludeTags);
+  resetElementMotion();
 
-  targetElementClone.style.setProperty('background-color', 'transparent', 'important');
-  targetElementClone.style.setProperty('border-radius', '0', 'important');
-  targetElementClone.style.setProperty('border-width', '0', 'important');
-  targetElementClone.style.setProperty('position', 'static', 'important');
-  targetElementClone.style.setProperty('margin', '0', 'important');
-  targetElementClone.style.setProperty('opacity', '1', 'important');
-  targetElementClone.style.setProperty('box-shadow', 'none', 'important');
-  targetElementClone.style.setProperty('backdrop-filter', 'none', 'important');
+  excludeTags.forEach((tag) => hideElementWithTag(tag, targetElementClone));
+  segregateIds(targetElementClone, excludeTags);
+  segregateNames(targetElementClone, excludeTags);
+
+  Object.keys(STYLE_PROPERTIES_TO_RESET_ON_IMAGE).forEach((property) => {
+    targetElementClone.style.setProperty(
+      property,
+      STYLE_PROPERTIES_TO_RESET_ON_IMAGE[property as keyof typeof STYLE_PROPERTIES_TO_RESET_ON_IMAGE],
+      'important'
+    );
+  });
 
   const snapshotContainer = document.createElement('rsf-snapshot-container');
   snapshotContainer.inert = true;
@@ -76,16 +79,16 @@ const captureSnapshot = (targetElement: HTMLElement | null, targetTag: Tag, excl
     computedStyle,
     transitionOptions,
     transitionMapping,
-    hasFixedPosition: elementHasFixedPosition(targetElement),
+    hasFixedPosition: elementHasFixedPosition(element),
     root: root,
-    targetElement,
+    targetElement: element,
     targetElementClone: snapshotContainer.children[0].children[0] as HTMLElement,
     targetDOMPosition: {
-      parentElement: targetElement.parentElement!,
-      index: Array.from(targetElement.parentElement!.children).indexOf(targetElement),
+      parentElement: element.parentElement!,
+      index: Array.from(element.parentElement!.children).indexOf(element),
     },
-    totalZIndex: getTotalZIndex(targetElement, root ?? undefined),
-    dynamicStateData: captureDynamicStateData(targetElement),
+    totalZIndex: getTotalZIndex(element, root ?? undefined),
+    dynamicStates: transitionOptions.captureDynamicStates ? captureDynamicStates(element) : undefined,
   };
 };
 

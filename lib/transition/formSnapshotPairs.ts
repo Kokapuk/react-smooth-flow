@@ -8,6 +8,10 @@ const createImage = (clip: boolean, bounds: Bounds) => {
   image.style.width = `${bounds.width}px`;
   image.style.height = `${bounds.height}px`;
 
+  if (bounds.transform) {
+    image.style.transform = bounds.transform.toString();
+  }
+
   return image;
 };
 

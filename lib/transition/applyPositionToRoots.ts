@@ -1,5 +1,5 @@
-import { rootHasActiveTransition } from './rootHasActiveTransition';
 import { SnapshotPair } from '../types';
+import { rootHasActiveTransition } from './rootHasActiveTransition';
 
 const applyPositionToRoots = (pairs: SnapshotPair[]) => {
   const uniqueRoots: HTMLElement[] = [];
@@ -17,7 +17,9 @@ const applyPositionToRoots = (pairs: SnapshotPair[]) => {
       return;
     }
 
-    root.dataset.savedposition = root.style.position;
+    root.dataset.savedposition = `${root.style.getPropertyPriority('position')} ${root.style.getPropertyPriority(
+      'position'
+    )}`;
     root.style.setProperty('position', 'relative', 'important');
   });
 
@@ -31,7 +33,9 @@ const applyPositionToRoots = (pairs: SnapshotPair[]) => {
         return;
       }
 
-      root.style.setProperty('position', root.dataset.savedposition);
+      const [savedPositionValue, savedPositionPriority] = root.dataset.savedposition.split(' ');
+
+      root.style.setProperty('position', savedPositionValue, savedPositionPriority);
       delete root.dataset.savedposition;
     });
   };

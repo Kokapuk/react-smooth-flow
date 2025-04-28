@@ -1,5 +1,6 @@
 import { PropertiesHyphen } from 'csstype';
 import { CONSISTENT_SNAPSHOT_PROPERTIES, CONSISTENT_TRANSITION_OPTIONS, STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
+import TransformMatrix from './transformMatrix';
 
 export type Tag = string;
 
@@ -48,6 +49,8 @@ export interface TransitionOptions {
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
   transitionLayout?: boolean;
+  captureDynamicStates?: boolean;
+  captureTransform?: boolean;
   disabled?: boolean;
 }
 
@@ -74,6 +77,7 @@ export interface Bounds {
   left: number;
   width: number;
   height: number;
+  transform: TransformMatrix | null;
   scrollBarWidth: number;
   scrollBarHeight: number;
 }
@@ -85,9 +89,13 @@ export interface DOMPosition {
   index: number;
 }
 
-export interface DynamicStateData {
-  scrollTop: number;
-  scrollLeft: number;
+export interface DynamicState {
+  path?: number[];
+  scrollTop?: number;
+  scrollLeft?: number;
+  value?: string;
+  checked?: true;
+  selectedIndex?: number;
 }
 
 export interface Snapshot {
@@ -103,7 +111,7 @@ export interface Snapshot {
   targetElementClone: HTMLElement;
   targetDOMPosition: DOMPosition;
   totalZIndex: number;
-  dynamicStateData: DynamicStateData;
+  dynamicStates?: DynamicState[];
 }
 
 export type SharedTransitionOptions = Pick<ResolvedTransitionOptions, (typeof CONSISTENT_TRANSITION_OPTIONS)[number]>;
@@ -145,12 +153,3 @@ export type FalsyArray<T> = (T | Falsy)[];
 export type StoreRecord = Record<Tag, Transition[]>;
 export type Id = string;
 export type Store = Record<Id, StoreRecord>;
-
-export interface TransformMatrix {
-  scaleX: number;
-  skewY: number;
-  skewX: number;
-  scaleY: number;
-  translateX: number;
-  translateY: number;
-}

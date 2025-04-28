@@ -61,6 +61,8 @@ interface TransitionOptions {
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
   transitionLayout?: boolean;
+  captureDynamicStates?: boolean;
+  captureTransform?: boolean;
   disabled?: boolean;
 }
 
@@ -223,7 +225,10 @@ Whether to clip snapshot content on overflow.
 
 Default: `[]`
 
-Additional style properties to capture and apply to snapshot content.
+Additional style properties to capture and apply to snapshot content. If you have relevant css selectors for element styling, those styles will not apply for transitioned "shell", if element is not transitioned in it's original root
+
+> [!NOTE]
+> By default capturing necessary styles only for performance reasons
 
 #### `persistBounds`
 
@@ -236,6 +241,29 @@ Determines whether to capture bounds of pre-DOM update snapshot from active muta
 Default: `false`
 
 Determines whether to animate layout
+
+#### `captureDynamicStates`
+
+Default: `false`
+
+Determines whether to capture dynamic states. States that will get captured for target element and all descendants if enabled:
+
+- scroll position
+- input and textarea `value`
+- checkbox and radio inputs `checked`
+- select `selectedIndex`
+
+> [!NOTE]
+> Disabled by default for performance reasons
+
+#### `captureTransform`
+
+Default: `false`
+
+Determines whether to capture transform for bounds.
+
+> [!NOTE]
+> Disabled by default for performance reasons
 
 #### `disabled`
 
@@ -388,6 +416,8 @@ interface TransitionOptions {
   relevantStyleProperties?: RelevantStyleProperties;
   persistBounds?: boolean;
   transitionLayout?: boolean;
+  captureDynamicStates?: boolean;
+  captureTransform?: boolean;
   disabled?: boolean;
 }
 
@@ -440,6 +470,8 @@ const defaults: ConfigurableDefaults = {
     relevantStyleProperties: [],
     persistBounds: true,
     transitionLayout: false,
+    captureDynamicStates: false,
+    captureTransform: false,
     disabled: false,
   },
 };

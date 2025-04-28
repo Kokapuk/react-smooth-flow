@@ -46,7 +46,9 @@ const playMutationTransition = (
   const { targetElement } = nextSnapshot;
   const layoutProxy = createLayoutProxy(nextSnapshot.computedStyle.display);
 
-  const resetDisplay = targetElement.style.display;
+  const resetDisplayValue = targetElement.style.getPropertyValue('display');
+  const resetDisplayPriority = targetElement.style.getPropertyPriority('display');
+
   targetElement.style.setProperty('display', 'none', 'important');
   targetElement.after(layoutProxy);
 
@@ -68,7 +70,7 @@ const playMutationTransition = (
     animation: transition,
     snapshotPair: pair,
     cleanup: () => {
-      targetElement.style.setProperty('display', resetDisplay);
+      targetElement.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
       layoutProxy.remove();
     },
   });
@@ -89,7 +91,9 @@ const playEnterTransition = (
 
   const layoutProxy = createLayoutProxy(nextSnapshot.computedStyle.display);
 
-  const resetDisplay = targetElement.style.display;
+  const resetDisplayValue = targetElement.style.getPropertyValue('display');
+  const resetDisplayPriority = targetElement.style.getPropertyPriority('display');
+
   targetElement.style.setProperty('display', 'none', 'important');
   targetElement.after(layoutProxy);
 
@@ -112,7 +116,7 @@ const playEnterTransition = (
     animation: transition,
     snapshotPair: pair,
     cleanup: () => {
-      targetElement.style.setProperty('display', resetDisplay);
+      targetElement.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
       layoutProxy.remove();
     },
   });

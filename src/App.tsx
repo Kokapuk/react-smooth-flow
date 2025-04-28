@@ -4,12 +4,13 @@ import Benchmark from './Examples/Benchmark';
 import Clipping from './Examples/Clipping';
 import ContentAlignment from './Examples/ContentAlignment';
 import ContentSizeChange from './Examples/ContentSizeChange';
-import DynamicStateData from './Examples/DynamicStateData';
+import DynamicStates from './Examples/DynamicStates';
 import Gallery from './Examples/Gallery';
 import Layout from './Examples/Layout';
 import Playground from './Examples/Playground';
 import PreserveAspectRatio from './Examples/PreserveAspectRatio';
 import ScaleContent from './Examples/ScaleContent';
+import Transform from './Examples/Transform';
 import TransitioningRoot from './Examples/TransitioningRoot';
 
 const App = () => {
@@ -27,7 +28,8 @@ const App = () => {
       <TransitioningRoot />
       <ScaleContent />
       <Layout />
-      <DynamicStateData />
+      <DynamicStates />
+      <Transform />
     </>
   );
 };

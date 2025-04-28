@@ -1,0 +1,74 @@
+.switchContainer {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid grey;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.scrollArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 150px;
+  overflow: auto;
+  width: fit-content;
+  width: 50%;
+
+  button {
+    flex-shrink: 0;
+  }
+}
+
+.input {
+  display: block;
+  width: 70%;
+  font-size: 16px;
+  padding: 6px;
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  border-radius: 4px;
+}
+
+.checkbox {
+  accent-color: white;
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.radios {
+  display: flex;
+  gap: 15px;
+  width: fit-content;
+}
+
+.select {
+  display: block;
+  width: 50%;
+  font-size: 16px;
+  padding: 6px;
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  border-radius: 4px;
+}
+
+.video {
+  width: 75%;
+  border-radius: 4px;
+}
+
+.buttonContainer {
+  padding-top: 15px;
+  margin-top: 15px;
+  border-top: 1px solid grey;
+}

@@ -16,10 +16,12 @@ const getImageBoundsByTag = (tag: Tag) => {
     return null;
   }
 
-  const bounds = getElementBounds(activeTransitionPair.image);
+  const { shared, image } = activeTransitionPair;
 
-  if (activeTransitionPair.shared.root) {
-    adjustBoundsToRoot(bounds, activeTransitionPair.shared.root);
+  const bounds = getElementBounds(image, shared.transitionOptions.captureTransform);
+
+  if (shared.root) {
+    adjustBoundsToRoot(bounds, shared.root);
   }
 
   return bounds;

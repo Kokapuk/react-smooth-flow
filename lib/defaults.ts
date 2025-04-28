@@ -1,4 +1,4 @@
-import { Properties } from 'csstype';
+import { Properties, PropertiesHyphen } from 'csstype';
 import { ResolvedTransitionOptions, Snapshot, TransitionOptions } from './types';
 
 export interface ConfigurableDefaults {
@@ -22,6 +22,7 @@ export const STYLE_PROPERTIES_TO_CAPTURE = [
   'pointerEvents',
   'margin',
   'display',
+  'transformOrigin',
 ] as const satisfies Readonly<(keyof Properties)[]>;
 
 export const STYLE_PROPERTIES_TO_APPLY_TO_IMAGE = [
@@ -38,7 +39,20 @@ export const STYLE_PROPERTIES_TO_APPLY_TO_IMAGE = [
   'borderColor',
   'borderStyle',
   'pointerEvents',
+  'transformOrigin',
 ] as const satisfies Readonly<(typeof STYLE_PROPERTIES_TO_CAPTURE)[number][]>;
+
+export const STYLE_PROPERTIES_TO_RESET_ON_IMAGE = {
+  'background-color': 'transparent',
+  'border-radius': '0',
+  'border-width': '0',
+  position: 'static',
+  margin: '0',
+  opacity: '1',
+  'box-shadow': 'none',
+  'backdrop-filter': 'none',
+  transform: 'none',
+} as const satisfies Readonly<PropertiesHyphen<string>>;
 
 export const STYLE_PROPERTIES_TO_ANIMATE = [
   'opacity',
@@ -48,6 +62,7 @@ export const STYLE_PROPERTIES_TO_ANIMATE = [
   'borderWidth',
   'borderColor',
   'borderStyle',
+  'transformOrigin',
 ] as const satisfies Readonly<(typeof STYLE_PROPERTIES_TO_CAPTURE)[number][]>;
 
 export const CONSISTENT_TRANSITION_OPTIONS = [
@@ -59,6 +74,7 @@ export const CONSISTENT_TRANSITION_OPTIONS = [
   'root',
   'forcePresenceTransition',
   'clip',
+  'captureTransform',
 ] as const satisfies Readonly<(keyof TransitionOptions)[]>;
 
 export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag', 'root'] as const satisfies Readonly<(keyof Snapshot)[]>;
@@ -83,6 +99,8 @@ const defaults: ConfigurableDefaults = {
     relevantStyleProperties: [],
     persistBounds: true,
     transitionLayout: false,
+    captureDynamicStates: false,
+    captureTransform: false,
     disabled: false,
   },
 };
