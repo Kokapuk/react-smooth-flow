@@ -108,34 +108,34 @@ const playContentTransition = (
   );
 };
 
-const applyTransformOriginToContent = (contentAlign: ContentAlign, target: HTMLDivElement) => {
+const applyTransformOriginToContent = (contentAlign: ContentAlign, element: HTMLDivElement) => {
   switch (contentAlign) {
     case 'topLeft':
-      target.style.transformOrigin = 'top left';
+      element.style.transformOrigin = 'top left';
       break;
     case 'topCenter':
-      target.style.transformOrigin = 'top center';
+      element.style.transformOrigin = 'top center';
       break;
     case 'topRight':
-      target.style.transformOrigin = 'top right';
+      element.style.transformOrigin = 'top right';
       break;
     case 'centerRight':
-      target.style.transformOrigin = 'center right';
+      element.style.transformOrigin = 'center right';
       break;
     case 'bottomRight':
-      target.style.transformOrigin = 'bottom right';
+      element.style.transformOrigin = 'bottom right';
       break;
     case 'bottomCenter':
-      target.style.transformOrigin = 'bottom center';
+      element.style.transformOrigin = 'bottom center';
       break;
     case 'bottomLeft':
-      target.style.transformOrigin = 'bottom left';
+      element.style.transformOrigin = 'bottom left';
       break;
     case 'centerLeft':
-      target.style.transformOrigin = 'center left';
+      element.style.transformOrigin = 'center left';
       break;
     case 'center':
-      target.style.transformOrigin = 'center';
+      element.style.transformOrigin = 'center';
       break;
   }
 };
@@ -151,7 +151,7 @@ const playContentScaleTransition = (
     const exitContentTransformContainer = image.children[0].children[0] as HTMLDivElement;
     applyTransformOriginToContent(prevSnapshot.transitionOptions.contentAlign, exitContentTransformContainer);
 
-    const exitContentMatrix = new TransformMatrix(getComputedStyle(exitContentTransformContainer).transform);
+    const exitContentMatrix = new TransformMatrix(window.getComputedStyle(exitContentTransformContainer).transform);
     const exitContentFrom = exitContentMatrix.toString();
     exitContentMatrix.scaleX = nextSnapshot.bounds.width / prevSnapshot.bounds.width;
     exitContentMatrix.scaleY = nextSnapshot.bounds.height / prevSnapshot.bounds.height;
@@ -176,7 +176,7 @@ const playContentScaleTransition = (
 
     applyTransformOriginToContent(nextSnapshot.transitionOptions.contentAlign, enterContentTransformContainer);
 
-    const enterContentMatrix = new TransformMatrix(getComputedStyle(enterContentTransformContainer).transform);
+    const enterContentMatrix = new TransformMatrix(window.getComputedStyle(enterContentTransformContainer).transform);
     const enterContentTo = enterContentMatrix.toString();
     enterContentMatrix.scaleX = prevSnapshot.bounds.width / nextSnapshot.bounds.width;
     enterContentMatrix.scaleY = prevSnapshot.bounds.height / nextSnapshot.bounds.height;
@@ -199,7 +199,7 @@ const playContentScaleTransition = (
 
 const playMutationTransition = (pair: MutationSnapshotPair, transitions: Transition[]) => {
   const { prevSnapshot, nextSnapshot, image, shared } = pair;
-  const resetTarget = hideElementNoTransition(nextSnapshot.targetElement);
+  const resetTarget = hideElementNoTransition(nextSnapshot.target);
 
   const animationOptions: KeyframeAnimationOptions = {
     duration: shared.transitionOptions.duration,

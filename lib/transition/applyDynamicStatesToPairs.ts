@@ -1,12 +1,12 @@
 import { Snapshot, SnapshotPair } from '../types';
 
-const getElementByPath = (targetElement: HTMLElement, path: number[]) => {
+const getElementByPath = (element: HTMLElement, path: number[]) => {
   if (!path.length) {
-    return targetElement;
+    return element;
   }
 
   const clonedPath = [...path];
-  const child = targetElement.children[clonedPath.shift()!] as HTMLElement;
+  const child = element.children[clonedPath.shift()!] as HTMLElement;
 
   return getElementByPath(child, clonedPath);
 };
@@ -17,7 +17,7 @@ const applyDynamicStateToSnapshot = (snapshot: Snapshot) => {
   }
 
   snapshot.dynamicStates.forEach((state) => {
-    const element = getElementByPath(snapshot.targetElementClone, state.path ?? []);
+    const element = getElementByPath(snapshot.targetClone, state.path ?? []);
 
     if (state.scrollTop || state.scrollLeft) {
       element.scrollTo({ top: state.scrollTop, left: state.scrollLeft, behavior: 'instant' });

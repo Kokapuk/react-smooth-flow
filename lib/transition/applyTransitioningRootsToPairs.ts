@@ -10,7 +10,7 @@ const applyTransitioningRootsToPairs = (pairs: SnapshotPair[]) => {
 
     const { firstValidSnapshot, image } = pair;
 
-    const dataRoot = firstValidSnapshot.targetElement.dataset.root;
+    const dataRoot = firstValidSnapshot.target.dataset.root;
 
     if (dataRoot) {
       rootsByTags[dataRoot] = image;

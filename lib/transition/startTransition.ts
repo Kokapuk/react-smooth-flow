@@ -30,8 +30,8 @@ const startTransition = async (
   const persistentBounds = getPersistentBounds(allTags);
   cancelTransition(...allTags);
 
-  const prevSnapshots = validTags.map((targetTag) => {
-    const transitioned = getTransitioned(targetTag);
+  const prevSnapshots = validTags.map((tag) => {
+    const transitioned = getTransitioned(tag);
 
     if (!transitioned) {
       return null;
@@ -39,8 +39,8 @@ const startTransition = async (
 
     return captureSnapshot(
       transitioned,
-      targetTag,
-      validTags.filter((tag) => tag !== targetTag)
+      tag,
+      validTags.filter((validTag) => validTag !== tag)
     );
   });
 
@@ -49,8 +49,8 @@ const startTransition = async (
   // Wait for lifecycle
   await new Promise((res) => queueMicrotask(() => res(null)));
 
-  const nextSnapshots = validTags.map((targetTag) => {
-    const transitioned = getTransitioned(targetTag);
+  const nextSnapshots = validTags.map((tag) => {
+    const transitioned = getTransitioned(tag);
 
     if (!transitioned) {
       return null;
@@ -58,8 +58,8 @@ const startTransition = async (
 
     return captureSnapshot(
       transitioned,
-      targetTag,
-      validTags.filter((tag) => tag !== targetTag)
+      tag,
+      validTags.filter((validTag) => validTag !== tag)
     );
   });
 

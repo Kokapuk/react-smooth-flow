@@ -1,6 +1,6 @@
 import { STYLE_PROPERTIES_TO_RESET_ON_IMAGE } from '@lib/defaults';
 import { getRoot, getTransitionMapping } from '../registry/store';
-import { Tag } from '../types';
+import { Snapshot, Tag } from '../types';
 import adjustBoundsToRoot from './adjustBoundsToRoot';
 import captureDynamicStates from './captureDynamicStates';
 import copyRelevantStyles from './copyRelevantStyles';
@@ -10,15 +10,15 @@ import getComputedStyleNoRef from './getComputedStyleNoRef';
 import getElementBounds from './getElementBounds';
 import getTotalOpacity from './getTotalOpacity';
 import getTotalZIndex from './getTotalZIndex';
-import hideElementWithTag from './hideElementsWithTags';
+import hideElementWithTag from './hideElementWithTag';
 import segregateIds from './segregateIds';
 import segregateNames from './segregateNames';
 
-const captureSnapshot = (element: HTMLElement, targetTag: Tag, excludeTags: Tag[]) => {
+const captureSnapshot = (element: HTMLElement, tag: Tag, excludeTags: Tag[]): Snapshot | null => {
   const resetElementMotion = elementDisableMotion(element);
 
   const transitionMapping = getTransitionMapping(element)!;
-  const transitionOptions = transitionMapping[targetTag];
+  const transitionOptions = transitionMapping[tag];
   const root = transitionOptions.root ? getRoot(transitionOptions.root) : null;
 
   if (transitionOptions.root && !root) {
@@ -26,7 +26,16 @@ const captureSnapshot = (element: HTMLElement, targetTag: Tag, excludeTags: Tag[
   }
 
   const computedStyle = getComputedStyleNoRef(element);
+
+  if (computedStyle.display === 'none') {
+    return null;
+  }
+
   computedStyle.opacity = `${getTotalOpacity(element, root ?? undefined)}`;
+
+  if (computedStyle.visibility === 'hidden') {
+    computedStyle.opacity = '0';
+  }
 
   const bounds = getElementBounds(element, transitionOptions.captureTransform);
 
@@ -34,20 +43,20 @@ const captureSnapshot = (element: HTMLElement, targetTag: Tag, excludeTags: Tag[
     adjustBoundsToRoot(bounds, root);
   }
 
-  const targetElementClone = element.cloneNode(true) as HTMLElement;
+  const elementClone = element.cloneNode(true) as HTMLElement;
 
   if (transitionOptions.relevantStyleProperties.length) {
-    copyRelevantStyles(element, targetElementClone, transitionOptions.relevantStyleProperties);
+    copyRelevantStyles(element, elementClone, transitionOptions.relevantStyleProperties);
   }
 
   resetElementMotion();
 
-  excludeTags.forEach((tag) => hideElementWithTag(tag, targetElementClone));
-  segregateIds(targetElementClone, excludeTags);
-  segregateNames(targetElementClone, excludeTags);
+  excludeTags.forEach((tag) => hideElementWithTag(tag, elementClone));
+  segregateIds(elementClone, excludeTags);
+  segregateNames(elementClone, excludeTags);
 
   Object.keys(STYLE_PROPERTIES_TO_RESET_ON_IMAGE).forEach((property) => {
-    targetElementClone.style.setProperty(
+    elementClone.style.setProperty(
       property,
       STYLE_PROPERTIES_TO_RESET_ON_IMAGE[property as keyof typeof STYLE_PROPERTIES_TO_RESET_ON_IMAGE],
       'important'
@@ -66,14 +75,14 @@ const captureSnapshot = (element: HTMLElement, targetTag: Tag, excludeTags: Tag[
   transformContainer.style.width = `${bounds.width}px`;
   transformContainer.style.height = `${bounds.height}px`;
 
-  transformContainer.innerHTML = targetElementClone.outerHTML
+  transformContainer.innerHTML = elementClone.outerHTML
     .replace(/\sdata-transitioned=".+?"/gm, '')
     .replace(/\sdata-root=".+?"/gm, '');
 
   snapshotContainer.append(transformContainer);
 
   return {
-    tag: targetTag,
+    tag: tag,
     bounds,
     image: snapshotContainer,
     computedStyle,
@@ -81,8 +90,8 @@ const captureSnapshot = (element: HTMLElement, targetTag: Tag, excludeTags: Tag[
     transitionMapping,
     hasFixedPosition: elementHasFixedPosition(element),
     root: root,
-    targetElement: element,
-    targetElementClone: snapshotContainer.children[0].children[0] as HTMLElement,
+    target: element,
+    targetClone: snapshotContainer.children[0].children[0] as HTMLElement,
     targetDOMPosition: {
       parentElement: element.parentElement!,
       index: Array.from(element.parentElement!.children).indexOf(element),

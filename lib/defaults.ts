@@ -22,6 +22,7 @@ export const STYLE_PROPERTIES_TO_CAPTURE = [
   'pointerEvents',
   'margin',
   'display',
+  'visibility',
   'transformOrigin',
 ] as const satisfies Readonly<(keyof Properties)[]>;
 

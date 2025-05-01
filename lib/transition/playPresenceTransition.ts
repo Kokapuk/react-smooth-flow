@@ -65,7 +65,7 @@ const playTransition = (
 
 const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: Transition[]) => {
   const { prevSnapshot, nextSnapshot, prevImage, nextImage } = pair;
-  const resetTarget = nextSnapshot?.targetElement ? hideElementNoTransition(nextSnapshot.targetElement) : null;
+  const resetTarget = nextSnapshot?.target ? hideElementNoTransition(nextSnapshot.target) : null;
 
   if (prevSnapshot && prevImage) {
     playTransition(

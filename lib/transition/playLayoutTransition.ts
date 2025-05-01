@@ -21,8 +21,8 @@ const fillKeyframesWithSnapshot = (keyframes: PropertyIndexedKeyframes, snapshot
   }
 };
 
-const getFlexboxMarginCompensation = (target: HTMLElement) => {
-  const computedStyle = window.getComputedStyle(target);
+const getFlexboxMarginCompensation = (element: HTMLElement) => {
+  const computedStyle = window.getComputedStyle(element);
   const rowGap = computedStyle.rowGap;
   const columnGap = computedStyle.columnGap;
 
@@ -43,14 +43,14 @@ const playMutationTransition = (
     return;
   }
 
-  const { targetElement } = nextSnapshot;
+  const { target } = nextSnapshot;
   const layoutProxy = createLayoutProxy(nextSnapshot.computedStyle.display);
 
-  const resetDisplayValue = targetElement.style.getPropertyValue('display');
-  const resetDisplayPriority = targetElement.style.getPropertyPriority('display');
+  const resetDisplayValue = target.style.getPropertyValue('display');
+  const resetDisplayPriority = target.style.getPropertyPriority('display');
 
-  targetElement.style.setProperty('display', 'none', 'important');
-  targetElement.after(layoutProxy);
+  target.style.setProperty('display', 'none', 'important');
+  target.after(layoutProxy);
 
   const keyframes: Keyframes = {
     width: [],
@@ -70,7 +70,7 @@ const playMutationTransition = (
     animation: transition,
     snapshotPair: pair,
     cleanup: () => {
-      targetElement.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
+      target.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
       layoutProxy.remove();
     },
   });
@@ -87,15 +87,15 @@ const playEnterTransition = (
     return;
   }
 
-  const { targetElement } = nextSnapshot;
+  const { target } = nextSnapshot;
 
   const layoutProxy = createLayoutProxy(nextSnapshot.computedStyle.display);
 
-  const resetDisplayValue = targetElement.style.getPropertyValue('display');
-  const resetDisplayPriority = targetElement.style.getPropertyPriority('display');
+  const resetDisplayValue = target.style.getPropertyValue('display');
+  const resetDisplayPriority = target.style.getPropertyPriority('display');
 
-  targetElement.style.setProperty('display', 'none', 'important');
-  targetElement.after(layoutProxy);
+  target.style.setProperty('display', 'none', 'important');
+  target.after(layoutProxy);
 
   const keyframes: Keyframes = {
     width: [`0px`, `${nextSnapshot.bounds.width}px`],
@@ -116,7 +116,7 @@ const playEnterTransition = (
     animation: transition,
     snapshotPair: pair,
     cleanup: () => {
-      targetElement.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
+      target.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
       layoutProxy.remove();
     },
   });

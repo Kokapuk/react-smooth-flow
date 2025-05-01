@@ -1,11 +1,11 @@
 import { Tag } from '../types';
 
 const findTransitionedByTag = (tag: Tag, parent: Element | Document = document) => {
-  const targets = parent.querySelectorAll('[data-transitioned]') as NodeListOf<HTMLElement>;
+  const elements = parent.querySelectorAll('[data-transitioned]') as NodeListOf<HTMLElement>;
 
-  for (const target of targets) {
-    if (target.dataset.transitioned!.match(new RegExp(`${tag}(?:\\s|$)`))) {
-      return target;
+  for (const element of elements) {
+    if (element.dataset.transitioned!.match(new RegExp(`${tag}(?:\\s|$)`))) {
+      return element;
     }
   }
 

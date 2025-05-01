@@ -1,6 +1,5 @@
 import { startTransition } from '@lib/main';
 import Binder from '@lib/registry/Binder';
-import cn from 'classnames';
 import { useState } from 'react';
 import Button from '../../components/Button';
 import Example from '../../components/Example';
@@ -68,7 +67,7 @@ const Playground = () => {
               },
             }}
           >
-            <div className={cn(styles.indicator, !isOn && styles.inactive)} />
+            <div className={styles.indicator} />
           </Binder>
         )}
         <Binder transitions={{ switchBtn: { duration: 600 } }}>

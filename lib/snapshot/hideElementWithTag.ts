@@ -1,8 +1,8 @@
 import { Tag } from '../types';
 import findTransitionedByTag from './findTransitionedByTag';
 
-const hideElementWithTag = (tag: Tag, targetElement: HTMLElement) => {
-  const element = findTransitionedByTag(tag, targetElement);
+const hideElementWithTag = (tag: Tag, parent: HTMLElement) => {
+  const element = findTransitionedByTag(tag, parent);
 
   if (!element) {
     return;

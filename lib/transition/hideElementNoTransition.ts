@@ -13,55 +13,58 @@ interface ResetProperties {
 const originalTransitions = new WeakMap<HTMLElement, ResetStyleProperty>();
 const transitionResetTimeouts = new WeakMap<HTMLElement, number>();
 
-const hideElementNoTransition = (target: HTMLElement) => {
-  const transitionResetTimeout = transitionResetTimeouts.get(target);
+const hideElementNoTransition = (element: HTMLElement) => {
+  const transitionResetTimeout = transitionResetTimeouts.get(element);
 
   if (transitionResetTimeout) {
     clearTimeout(transitionResetTimeout);
-    transitionResetTimeouts.delete(target);
+    transitionResetTimeouts.delete(element);
   }
 
-  const originalTransition = originalTransitions.get(target);
+  const originalTransition = originalTransitions.get(element);
 
   const resetProperties: ResetProperties = {
-    opacity: { value: target.style.getPropertyValue('opacity'), priority: target.style.getPropertyPriority('opacity') },
+    opacity: {
+      value: element.style.getPropertyValue('opacity'),
+      priority: element.style.getPropertyPriority('opacity'),
+    },
     transition: originalTransition ?? {
-      value: target.style.getPropertyValue('transition'),
-      priority: target.style.getPropertyPriority('transition'),
+      value: element.style.getPropertyValue('transition'),
+      priority: element.style.getPropertyPriority('transition'),
     },
     pointerEvents: {
-      value: target.style.getPropertyValue('pointer-events'),
-      priority: target.style.getPropertyPriority('pointer-events'),
+      value: element.style.getPropertyValue('pointer-events'),
+      priority: element.style.getPropertyPriority('pointer-events'),
     },
-    ariaDisabled: target.ariaDisabled,
+    ariaDisabled: element.ariaDisabled,
   };
 
   if (!originalTransition) {
-    originalTransitions.set(target, resetProperties.transition);
+    originalTransitions.set(element, resetProperties.transition);
   }
 
-  target.style.setProperty('opacity', '0', 'important');
-  target.style.setProperty('transition', 'none', 'important');
-  target.style.setProperty('pointer-events', 'none', 'important');
-  target.ariaDisabled = 'true';
+  element.style.setProperty('opacity', '0', 'important');
+  element.style.setProperty('transition', 'none', 'important');
+  element.style.setProperty('pointer-events', 'none', 'important');
+  element.ariaDisabled = 'true';
 
   return () => {
-    target.style.setProperty('opacity', resetProperties.opacity.value, resetProperties.opacity.priority);
-    target.style.setProperty(
+    element.style.setProperty('opacity', resetProperties.opacity.value, resetProperties.opacity.priority);
+    element.style.setProperty(
       'pointer-events',
       resetProperties.pointerEvents.value,
       resetProperties.pointerEvents.priority
     );
-    target.ariaDisabled = resetProperties.ariaDisabled;
+    element.ariaDisabled = resetProperties.ariaDisabled;
 
     const transitionResetTimeout = setTimeout(() => {
-      target.style.setProperty('transition', resetProperties.transition.value, resetProperties.transition.priority);
+      element.style.setProperty('transition', resetProperties.transition.value, resetProperties.transition.priority);
 
-      originalTransitions.delete(target);
-      transitionResetTimeouts.delete(target);
+      originalTransitions.delete(element);
+      transitionResetTimeouts.delete(element);
     }) as unknown as number;
 
-    transitionResetTimeouts.set(target, transitionResetTimeout);
+    transitionResetTimeouts.set(element, transitionResetTimeout);
   };
 };
 

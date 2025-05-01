@@ -1,14 +1,14 @@
 import { Tag } from '../types';
 import elementMatchesAnyTag from './elementMatchesAnyTag';
 
-const segregateNames = (targetElement: HTMLElement, excludeTags: Tag[]) => {
+const segregateNames = (element: HTMLElement, excludeTags: Tag[]) => {
   const elements: HTMLInputElement[] = [];
 
-  if (targetElement.matches('[name]')) {
-    elements.push(targetElement as HTMLInputElement);
+  if (element.matches('[name]')) {
+    elements.push(element as HTMLInputElement);
   }
 
-  elements.push(...(targetElement.querySelectorAll('[name]') as NodeListOf<HTMLInputElement>));
+  elements.push(...(element.querySelectorAll('[name]') as NodeListOf<HTMLInputElement>));
 
   const nameMap: Record<string, string> = {};
 

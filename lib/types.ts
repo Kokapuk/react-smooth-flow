@@ -107,8 +107,8 @@ export interface Snapshot {
   transitionMapping: TransitionMapping<ResolvedTransitionOptions>;
   hasFixedPosition: boolean;
   root?: HTMLElement | null;
-  targetElement: HTMLElement;
-  targetElementClone: HTMLElement;
+  target: HTMLElement;
+  targetClone: HTMLElement;
   targetDOMPosition: DOMPosition;
   totalZIndex: number;
   dynamicStates?: DynamicState[];

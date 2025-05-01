@@ -7,7 +7,7 @@ const getElementBounds = (element: HTMLElement, captureTransform?: boolean): Bou
   let computedStyle: CSSStyleDeclaration | null = null;
 
   if (captureTransform) {
-    computedStyle = getComputedStyle(element);
+    computedStyle = window.getComputedStyle(element);
 
     const transform = new TransformMatrix(computedStyle.transform);
     transform.scaleX = 1;

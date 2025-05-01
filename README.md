@@ -190,10 +190,6 @@ export default function ExpandableSection() {
 
   Keep in mind that you can still implement animations between routes in [SPAs](https://developer.mozilla.org/en-US/docs/Glossary/SPA). React Smooth Flow even allows you to create shared element transitions.
 
-## Known issues
-
-- Mutation transition behavior for **display: none** and **visibility: hidden** is unexpected
-
 ## License
 
 React Smooth Flow is [MIT-licensed](/LICENSE) open-source software by Kokapuk.

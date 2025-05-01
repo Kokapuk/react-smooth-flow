@@ -1,31 +1,31 @@
 import { DynamicState } from '../types';
 
-const captureDynamicStates = (targetElement: HTMLElement, path?: number[]): DynamicState[] => {
+const captureDynamicStates = (element: HTMLElement, path?: number[]): DynamicState[] => {
   const dynamicState: DynamicState = {};
 
-  if (targetElement.scrollTop) {
-    dynamicState.scrollTop = targetElement.scrollTop;
+  if (element.scrollTop) {
+    dynamicState.scrollTop = element.scrollTop;
   }
 
-  if (targetElement.scrollLeft) {
-    dynamicState.scrollLeft = targetElement.scrollLeft;
+  if (element.scrollLeft) {
+    dynamicState.scrollLeft = element.scrollLeft;
   }
 
-  if (targetElement instanceof HTMLInputElement || targetElement instanceof HTMLTextAreaElement) {
-    dynamicState.value = targetElement.value;
+  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    dynamicState.value = element.value;
   }
 
-  if (targetElement instanceof HTMLInputElement) {
-    if (targetElement.checked) {
+  if (element instanceof HTMLInputElement) {
+    if (element.checked) {
       dynamicState.checked = true;
     }
   }
 
-  if (targetElement instanceof HTMLSelectElement) {
-    dynamicState.selectedIndex = targetElement.selectedIndex;
+  if (element instanceof HTMLSelectElement) {
+    dynamicState.selectedIndex = element.selectedIndex;
   }
 
-  const children = Array.from(targetElement.children) as HTMLElement[];
+  const children = Array.from(element.children) as HTMLElement[];
 
   const states = children.flatMap((child) => captureDynamicStates(child, [...(path ?? []), children.indexOf(child)]));
 
