@@ -17,7 +17,7 @@ const Gallery = () => {
         <Button
           onClick={() =>
             startTransition(
-              Array.from({ length: 4 }).map((_, index) => `slideToRight-${index}`),
+              ['slideToRight'],
               () => {
                 setActiveSlideIndex((prev) => (prev - 1 < 0 ? galleryLength - 1 : prev - 1));
               },
@@ -32,13 +32,15 @@ const Gallery = () => {
           <div className={styles.slideContainer}>
             <Binder
               transitions={{
-                [`slideToLeft-${activeSlideIndex}`]: {
+                slideToLeft: {
+                  forcePresenceTransition: true,
                   enterKeyframes: [{ transform: 'translateX(100%)' }, { transform: 'translateX(0)' }],
                   exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }],
                   root: 'slideContainer',
                   duration: 500,
                 },
-                [`slideToRight-${activeSlideIndex}`]: {
+                slideToRight: {
+                  forcePresenceTransition: true,
                   enterKeyframes: [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
                   exitKeyframes: [{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }],
                   root: 'slideContainer',
@@ -56,7 +58,7 @@ const Gallery = () => {
         <Button
           onClick={() =>
             startTransition(
-              Array.from({ length: 4 }).map((_, index) => `slideToLeft-${index}`),
+              ['slideToLeft'],
               () => {
                 setActiveSlideIndex((prev) => (prev + 1 > galleryLength - 1 ? 0 : prev + 1));
               },

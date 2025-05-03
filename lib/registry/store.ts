@@ -39,7 +39,7 @@ export const unregisterTransitioned = (element: HTMLElement) => {
 export const getTransitioned = (tag: Tag) => {
   const foundElement = transitionedElements.get(tag);
 
-  if (!foundElement) {
+  if (!foundElement?.isConnected) {
     return null;
   }
 
@@ -69,5 +69,11 @@ export const unregisterRoot = (tag: Tag) => {
 };
 
 export const getRoot = (tag: Tag) => {
-  return rootElements.get(tag);
+  const foundElement = rootElements.get(tag);
+
+  if (!foundElement?.isConnected) {
+    return null;
+  }
+
+  return foundElement;
 };

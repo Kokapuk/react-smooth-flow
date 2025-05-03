@@ -31,28 +31,37 @@ export type PositionAnchor = 'topLeft' | 'topRight' | 'bottomRight' | 'bottomLef
 
 export type RelevantStyleProperties = Exclude<keyof PropertiesHyphen, 'pointer-events'>[];
 
-export interface TransitionOptions {
+export interface CommonTransitionOptions {
   duration?: number;
   easing?: string;
   delay?: number;
   ignoreReducedMotion?: boolean;
-  enterKeyframes?: Keyframes;
-  exitKeyframes?: Keyframes | 'reversedEnter';
-  contentEnterKeyframes?: Keyframes;
-  contentExitKeyframes?: Keyframes | 'reversedEnter';
-  scaleContent?: boolean;
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
-  forcePresenceTransition?: boolean;
   root?: Tag;
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
-  persistBounds?: boolean;
   transitionLayout?: boolean;
   captureDynamicStates?: boolean;
   captureTransform?: boolean;
   disabled?: boolean;
 }
+
+export interface MutationTransitionOptions {
+  contentEnterKeyframes?: Keyframes;
+  contentExitKeyframes?: Keyframes | 'reversedEnter';
+  scaleContent?: boolean;
+  contentAlign?: ContentAlign;
+  forcePresenceTransition?: boolean;
+  persistBounds?: boolean;
+}
+
+export interface PresenceTransitionOptions {
+  enterKeyframes?: Keyframes;
+  exitKeyframes?: Keyframes | 'reversedEnter';
+}
+
+export type TransitionOptions = CommonTransitionOptions & MutationTransitionOptions & PresenceTransitionOptions;
 
 export type ResolvedTransitionOptions = Required<
   Omit<TransitionOptions, 'exitKeyframes' | 'contentExitKeyframes' | 'root'>

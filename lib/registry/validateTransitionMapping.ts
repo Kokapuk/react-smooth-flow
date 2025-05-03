@@ -5,13 +5,10 @@ const validateTransitionMapping = (
   registeredTransitionMappings: TransitionMapping<ResolvedTransitionOptions>[]
 ) => {
   const tags = Object.keys(transitionMapping);
-  const tagFormat = '^[a-zA-Z-_0-9]+$';
-  const invalidTag = tags.find((tag) => !new RegExp(tagFormat).test(tag));
+  const invalidTag = tags.find((tag) => tag.includes(' '));
 
   if (invalidTag) {
-    throw Error(
-      `Failed to register transitioned element, following tag has invalid format: "${invalidTag}".\nExpected format: "${tagFormat}"`
-    );
+    throw Error(`Failed to register transitioned element.\nTag must not contain spaces: "${invalidTag}"`);
   }
 
   registeredTransitionMappings.forEach((mapping) => {
