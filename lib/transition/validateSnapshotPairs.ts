@@ -1,8 +1,14 @@
-import { CONSISTENT_SNAPSHOT_PROPERTIES, CONSISTENT_TRANSITION_OPTIONS } from '../defaults';
-import { SnapshotPair, Tag } from '../types';
+import {
+  CONSISTENT_MUTATION_PAIR_SNAPSHOT_PROPERTIES,
+  CONSISTENT_SNAPSHOT_PROPERTIES,
+  CONSISTENT_TRANSITION_OPTIONS,
+} from '../defaults';
+import { SnapshotPair } from '../types';
 
-const validateSnapshotPairs = (pairs: SnapshotPair[], _tags: Tag[]) => {
-  pairs.forEach(({ prevSnapshot, nextSnapshot }) => {
+const validateSnapshotPairs = (pairs: SnapshotPair[]) => {
+  pairs.forEach((pair) => {
+    const { prevSnapshot, nextSnapshot, transitionType } = pair;
+
     if (prevSnapshot && nextSnapshot) {
       CONSISTENT_TRANSITION_OPTIONS.forEach((property) => {
         if (prevSnapshot.transitionOptions[property] !== nextSnapshot.transitionOptions[property]) {
@@ -19,6 +25,16 @@ const validateSnapshotPairs = (pairs: SnapshotPair[], _tags: Tag[]) => {
           );
         }
       });
+
+      if (transitionType === 'mutation') {
+        CONSISTENT_MUTATION_PAIR_SNAPSHOT_PROPERTIES.forEach((property) => {
+          if (prevSnapshot[property] !== nextSnapshot[property]) {
+            throw Error(
+              `"${property}" snapshot property differ for previous and next snapshots and pair use "mutation" transition type. It should never update while snapshots are being captured for that type of transition. Transition tag: ${prevSnapshot.tag}`
+            );
+          }
+        });
+      }
     }
   });
 };

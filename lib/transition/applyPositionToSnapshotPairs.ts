@@ -53,10 +53,10 @@ const applyPositionToSnapshotPairs = (pairs: SnapshotPair[]) => {
       const { prevSnapshot, nextSnapshot, image, shared } = pair;
 
       const lastValidSnapshot = (nextSnapshot ?? prevSnapshot) as Snapshot;
-      const position = lastValidSnapshot.hasFixedPosition && !lastValidSnapshot.root ? 'fixed' : 'absolute';
+      const position = lastValidSnapshot.hasFixedPosition && !shared.root ? 'fixed' : 'absolute';
       applyPositionToImage(image, position, lastValidSnapshot, !!shared.root);
     } else if (pair.transitionType === 'presence') {
-      const { prevSnapshot, nextSnapshot, prevImage, nextImage, shared } = pair;
+      const { prevSnapshot, nextSnapshot, prevImage, nextImage } = pair;
       const snapshotImagePairs = [
         { snapshot: prevSnapshot, image: prevImage },
         { snapshot: nextSnapshot, image: nextImage },
@@ -67,7 +67,13 @@ const applyPositionToSnapshotPairs = (pairs: SnapshotPair[]) => {
 
       snapshotImagePairs.forEach(({ snapshot, image }) => {
         const position = snapshot.hasFixedPosition && !snapshot.root ? 'fixed' : 'absolute';
-        applyPositionToImage(image, position, snapshot, !!shared.root);
+        applyPositionToImage(
+          image,
+          position,
+          snapshot,
+          !!snapshot.root ||
+            (snapshot.transitionOptions.transitionLayout && snapshot.transitionOptions.useLayoutProxyAsRoot)
+        );
       });
     }
   });

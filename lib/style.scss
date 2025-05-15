@@ -10,6 +10,11 @@ rsf-image {
   user-select: none;
 }
 
+rsf-layout-proxy {
+  flex-shrink: 0;
+  position: relative;
+}
+
 rsf-snapshot-container {
   display: flex;
   position: absolute;
@@ -29,7 +34,6 @@ rsf-snapshot-container {
     }
 
     & * {
-      animation: none !important;
       transition: none !important;
     }
   }

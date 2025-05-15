@@ -6,7 +6,7 @@ import { cancelTransition, finishTransition, getRecordById, getTransitionsById, 
 import getPersistentBounds from '../transition/getPersistentBounds';
 import { FalsyArray, Tag, TransitionConfig } from '../types';
 import appendPairsToDOM from './appendPairsToDOM';
-import applyDynamicStateDataToPairs from './applyDynamicStatesToPairs';
+import applyDynamicStatesToPairs from './applyDynamicStatesToPairs';
 import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
 import applyPersistentBoundsToPairs from './applyPersistentBoundsToPairs';
 import applyPositionToRoots from './applyPositionToRoots';
@@ -24,7 +24,7 @@ const startTransition = async (
   updateDOM?: () => void | Promise<void>,
   config?: TransitionConfig
 ) => {
-  const validTags = getTruthyArray(tags);
+  const validTags = Array.from(new Set(getTruthyArray(tags)));
   const allTags = getAllTags(validTags);
 
   const persistentBounds = getPersistentBounds(allTags);
@@ -46,9 +46,6 @@ const startTransition = async (
 
   await updateDOM?.();
 
-  // Wait for lifecycle
-  await new Promise((res) => queueMicrotask(() => res(null)));
-
   const nextSnapshots = validTags.map((tag) => {
     const transitioned = getTransitioned(tag);
 
@@ -64,10 +61,10 @@ const startTransition = async (
   });
 
   const snapshotPairs = formSnapshotPairs(prevSnapshots, nextSnapshots);
-  validateSnapshotPairs(snapshotPairs, validTags);
+  validateSnapshotPairs(snapshotPairs);
   applyTransitioningRootsToPairs(snapshotPairs);
   appendPairsToDOM(snapshotPairs);
-  applyDynamicStateDataToPairs(snapshotPairs);
+  applyDynamicStatesToPairs(snapshotPairs);
   applyPersistentBoundsToPairs(snapshotPairs, persistentBounds);
   applyPositionToSnapshotPairs(snapshotPairs);
   applyMaxZIndexToSnapshotPairs(snapshotPairs);

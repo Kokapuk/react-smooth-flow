@@ -1,5 +1,10 @@
 import { PropertiesHyphen } from 'csstype';
-import { CONSISTENT_SNAPSHOT_PROPERTIES, CONSISTENT_TRANSITION_OPTIONS, STYLE_PROPERTIES_TO_CAPTURE } from './defaults';
+import {
+  CONSISTENT_MUTATION_PAIR_SNAPSHOT_PROPERTIES,
+  CONSISTENT_SNAPSHOT_PROPERTIES,
+  CONSISTENT_TRANSITION_OPTIONS,
+  STYLE_PROPERTIES_TO_CAPTURE,
+} from './defaults';
 import TransformMatrix from './transformMatrix';
 
 export type Tag = string;
@@ -59,6 +64,7 @@ export interface MutationTransitionOptions {
 export interface PresenceTransitionOptions {
   enterKeyframes?: Keyframes;
   exitKeyframes?: Keyframes | 'reversedEnter';
+  useLayoutProxyAsRoot?: boolean;
 }
 
 export type TransitionOptions = CommonTransitionOptions & MutationTransitionOptions & PresenceTransitionOptions;
@@ -129,23 +135,28 @@ export type SnapshotPairSharedData = Required<Pick<Snapshot, (typeof CONSISTENT_
   transitionOptions: SharedTransitionOptions;
 };
 
-export interface MutationSnapshotPair {
-  prevSnapshot: Snapshot;
-  nextSnapshot: Snapshot;
+export type SnapshotPairMutationSharedData = SnapshotPairSharedData &
+  Required<Pick<Snapshot, (typeof CONSISTENT_MUTATION_PAIR_SNAPSHOT_PROPERTIES)[number]>>;
+
+export interface CommonSnapshotPair {
   firstValidSnapshot: Snapshot;
-  shared: SnapshotPairSharedData;
-  transitionType: 'mutation';
-  image: HTMLElement;
 }
 
-export interface PresenceSnapshotPair {
+export interface MutationSnapshotPair extends CommonSnapshotPair {
+  prevSnapshot: Snapshot;
+  nextSnapshot: Snapshot;
+  transitionType: 'mutation';
+  image: HTMLElement;
+  shared: SnapshotPairMutationSharedData;
+}
+
+export interface PresenceSnapshotPair extends CommonSnapshotPair {
   prevSnapshot: Snapshot | null;
   nextSnapshot: Snapshot | null;
-  firstValidSnapshot: Snapshot;
-  shared: SnapshotPairSharedData;
   transitionType: 'presence';
   prevImage: HTMLElement | null;
   nextImage: HTMLElement | null;
+  shared: SnapshotPairSharedData;
 }
 
 export type SnapshotPair = MutationSnapshotPair | PresenceSnapshotPair;

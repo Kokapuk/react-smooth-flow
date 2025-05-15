@@ -43,28 +43,38 @@ type TransitionMapping = Record<Tag, TransitionOptions>;
 
 type Tag = string;
 
-interface TransitionOptions {
+interface CommonTransitionOptions {
   duration?: number;
   easing?: string;
   delay?: number;
   ignoreReducedMotion?: boolean;
-  enterKeyframes?: Keyframes;
-  exitKeyframes?: Keyframes | 'reversedEnter';
-  contentEnterKeyframes?: Keyframes;
-  contentExitKeyframes?: Keyframes | 'reversedEnter';
-  scaleContent?: boolean;
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
-  forcePresenceTransition?: boolean;
   root?: Tag;
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
-  persistBounds?: boolean;
   transitionLayout?: boolean;
   captureDynamicStates?: boolean;
   captureTransform?: boolean;
   disabled?: boolean;
 }
+
+interface MutationTransitionOptions {
+  contentEnterKeyframes?: Keyframes;
+  contentExitKeyframes?: Keyframes | 'reversedEnter';
+  scaleContent?: boolean;
+  contentAlign?: ContentAlign;
+  forcePresenceTransition?: boolean;
+  persistBounds?: boolean;
+}
+
+interface PresenceTransitionOptions {
+  enterKeyframes?: Keyframes;
+  exitKeyframes?: Keyframes | 'reversedEnter';
+  useLayoutProxyAsRoot?: boolean;
+}
+
+type TransitionOptions = CommonTransitionOptions & MutationTransitionOptions & PresenceTransitionOptions;
 
 type Keyframes = Keyframe[] | PropertyIndexedKeyframes;
 
@@ -398,28 +408,38 @@ interface PropertyIndexedKeyframes {
 
 type Tag = string;
 
-interface TransitionOptions {
+interface CommonTransitionOptions {
   duration?: number;
   easing?: string;
   delay?: number;
   ignoreReducedMotion?: boolean;
-  enterKeyframes?: Keyframes;
-  exitKeyframes?: Keyframes | 'reversedEnter';
-  contentEnterKeyframes?: Keyframes;
-  contentExitKeyframes?: Keyframes | 'reversedEnter';
-  scaleContent?: boolean;
   contentAlign?: ContentAlign;
   positionAnchor?: PositionAnchor;
-  forcePresenceTransition?: boolean;
   root?: Tag;
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
-  persistBounds?: boolean;
   transitionLayout?: boolean;
   captureDynamicStates?: boolean;
   captureTransform?: boolean;
   disabled?: boolean;
 }
+
+interface MutationTransitionOptions {
+  contentEnterKeyframes?: Keyframes;
+  contentExitKeyframes?: Keyframes | 'reversedEnter';
+  scaleContent?: boolean;
+  contentAlign?: ContentAlign;
+  forcePresenceTransition?: boolean;
+  persistBounds?: boolean;
+}
+
+interface PresenceTransitionOptions {
+  enterKeyframes?: Keyframes;
+  exitKeyframes?: Keyframes | 'reversedEnter';
+  useLayoutProxyAsRoot?: boolean;
+}
+
+type TransitionOptions = CommonTransitionOptions & MutationTransitionOptions & PresenceTransitionOptions;
 
 type ContentAlign =
   | 'topLeft'
@@ -459,6 +479,7 @@ const defaults: ConfigurableDefaults = {
     ignoreReducedMotion: false,
     enterKeyframes: { opacity: [0, 1] },
     exitKeyframes: { opacity: [1, 0] },
+    useLayoutProxyAsRoot: false,
     contentEnterKeyframes: { opacity: [0, 1, 1] },
     contentExitKeyframes: { opacity: [1, 1, 0] },
     scaleContent: false,

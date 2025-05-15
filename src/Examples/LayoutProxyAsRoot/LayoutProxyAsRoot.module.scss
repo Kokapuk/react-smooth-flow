@@ -1,0 +1,20 @@
+.wrapper {
+  width: fit-content;
+  padding: 10px;
+  margin-bottom: 25px;
+  background-color: green;
+  height: 52px;
+  animation: move infinite linear 2s;
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

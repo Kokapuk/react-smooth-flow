@@ -1,5 +1,8 @@
+import adjustBoundsToRoot from '@lib/snapshot/adjustBoundsToRoot';
 import getInitialKeyframe from '../getInitialKeyframe';
 import { Keyframes, PropertyIndexedKeyframes, Snapshot, SnapshotPair, Transition } from '../types';
+import applyPositionToSnapshotPairs from './applyPositionToSnapshotPairs';
+import getOverlayRoot from './getOverlayRoot';
 
 const createLayoutProxy = (display: string) => {
   const proxy = document.createElement('rsf-layout-proxy');
@@ -76,7 +79,57 @@ const playMutationTransition = (
   });
 };
 
-const playEnterTransition = (
+const prepareExitTransition = (
+  pair: SnapshotPair,
+  transitions: Transition[],
+  animationOptions: KeyframeAnimationOptions
+) => {
+  const { prevSnapshot, shared } = pair;
+
+  if (!prevSnapshot) {
+    return {};
+  }
+
+  const {
+    targetDOMPosition: { parentElement, index },
+  } = prevSnapshot;
+  const layoutProxy = createLayoutProxy(prevSnapshot.computedStyle.display);
+
+  if (!parentElement) {
+    return {};
+  }
+
+  parentElement.insertBefore(layoutProxy, parentElement.children[index] ?? null);
+
+  layoutProxy.style.width = `${prevSnapshot.bounds.width}px`;
+  layoutProxy.style.height = `${prevSnapshot.bounds.height}px`;
+  layoutProxy.style.margin = prevSnapshot.computedStyle.margin;
+
+  return {
+    layoutProxy,
+    animate: () => {
+      const keyframes: Keyframes = {
+        width: [`${prevSnapshot.bounds.width}px`, `0px`],
+        height: [`${prevSnapshot.bounds.height}px`, `0px`],
+        margin: [prevSnapshot.computedStyle.margin, getFlexboxMarginCompensation(parentElement)],
+      };
+
+      if (shared.transitionOptions.delay) {
+        layoutProxy.animate(getInitialKeyframe(keyframes), { fill: 'forwards' });
+      }
+
+      const transition = layoutProxy.animate(keyframes, animationOptions);
+
+      transitions.push({
+        animation: transition,
+        snapshotPair: pair,
+        cleanup: () => layoutProxy.remove(),
+      });
+    },
+  };
+};
+
+const prepareEnterTransition = (
   pair: SnapshotPair,
   transitions: Transition[],
   animationOptions: KeyframeAnimationOptions
@@ -84,7 +137,7 @@ const playEnterTransition = (
   const { nextSnapshot, shared } = pair;
 
   if (!nextSnapshot) {
-    return;
+    return {};
   }
 
   const { target } = nextSnapshot;
@@ -97,70 +150,38 @@ const playEnterTransition = (
   target.style.setProperty('display', 'none', 'important');
   target.after(layoutProxy);
 
-  const keyframes: Keyframes = {
-    width: [`0px`, `${nextSnapshot.bounds.width}px`],
-    height: [`0px`, `${nextSnapshot.bounds.height}px`],
-    margin: [
-      getFlexboxMarginCompensation(nextSnapshot.targetDOMPosition.parentElement),
-      nextSnapshot.computedStyle.margin,
-    ],
-  };
+  layoutProxy.style.width = `${nextSnapshot.bounds.width}px`;
+  layoutProxy.style.height = `${nextSnapshot.bounds.height}px`;
+  layoutProxy.style.margin = nextSnapshot.computedStyle.margin;
 
-  if (shared.transitionOptions.delay) {
-    layoutProxy.animate(getInitialKeyframe(keyframes), { fill: 'forwards' });
-  }
+  return {
+    layoutProxy,
+    animate: () => {
+      const keyframes: Keyframes = {
+        width: [`0px`, `${nextSnapshot.bounds.width}px`],
+        height: [`0px`, `${nextSnapshot.bounds.height}px`],
+        margin: [
+          getFlexboxMarginCompensation(nextSnapshot.targetDOMPosition.parentElement),
+          nextSnapshot.computedStyle.margin,
+        ],
+      };
 
-  const transition = layoutProxy.animate(keyframes, animationOptions);
+      if (shared.transitionOptions.delay) {
+        layoutProxy.animate(getInitialKeyframe(keyframes), { fill: 'forwards' });
+      }
 
-  transitions.push({
-    animation: transition,
-    snapshotPair: pair,
-    cleanup: () => {
-      target.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
-      layoutProxy.remove();
+      const transition = layoutProxy.animate(keyframes, animationOptions);
+
+      transitions.push({
+        animation: transition,
+        snapshotPair: pair,
+        cleanup: () => {
+          target.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
+          layoutProxy.remove();
+        },
+      });
     },
-  });
-};
-
-const playExitTransition = (
-  pair: SnapshotPair,
-  transitions: Transition[],
-  animationOptions: KeyframeAnimationOptions
-) => {
-  const { prevSnapshot, shared } = pair;
-
-  if (!prevSnapshot) {
-    return;
-  }
-
-  const {
-    targetDOMPosition: { parentElement, index },
-  } = prevSnapshot;
-  const layoutProxy = createLayoutProxy(prevSnapshot.computedStyle.display);
-
-  if (!parentElement) {
-    return;
-  }
-
-  parentElement.insertBefore(layoutProxy, parentElement.children[index] ?? null);
-
-  const keyframes: Keyframes = {
-    width: [`${prevSnapshot.bounds.width}px`, `0px`],
-    height: [`${prevSnapshot.bounds.height}px`, `0px`],
-    margin: [prevSnapshot.computedStyle.margin, getFlexboxMarginCompensation(parentElement)],
   };
-
-  if (shared.transitionOptions.delay) {
-    layoutProxy.animate(getInitialKeyframe(keyframes), { fill: 'forwards' });
-  }
-
-  const transition = layoutProxy.animate(keyframes, animationOptions);
-
-  transitions.push({
-    animation: transition,
-    snapshotPair: pair,
-    cleanup: () => layoutProxy.remove(),
-  });
 };
 
 const playLayoutTransition = (pair: SnapshotPair, transitions: Transition[]) => {
@@ -181,12 +202,50 @@ const playLayoutTransition = (pair: SnapshotPair, transitions: Transition[]) => 
   ) {
     playMutationTransition(pair, transitions, animationOptions);
   } else {
+    const overlayRoot = getOverlayRoot();
+
     if (prevSnapshot?.transitionOptions.transitionLayout) {
-      playExitTransition(pair, transitions, animationOptions);
+      const { layoutProxy, animate } = prepareExitTransition(pair, transitions, animationOptions);
+
+      if (layoutProxy) {
+        if (pair.transitionType === 'presence' && prevSnapshot.transitionOptions.useLayoutProxyAsRoot) {
+          const { prevImage } = pair;
+          const root = prevSnapshot.root ?? overlayRoot;
+
+          if (prevImage) {
+            layoutProxy.appendChild(root.removeChild(prevImage));
+            adjustBoundsToRoot(prevSnapshot.bounds, layoutProxy);
+          }
+        }
+
+        animate();
+
+        if (prevSnapshot.transitionOptions.useLayoutProxyAsRoot) {
+          applyPositionToSnapshotPairs([pair]);
+        }
+      }
     }
 
     if (nextSnapshot?.transitionOptions.transitionLayout) {
-      playEnterTransition(pair, transitions, animationOptions);
+      const { layoutProxy, animate } = prepareEnterTransition(pair, transitions, animationOptions);
+
+      if (layoutProxy) {
+        if (pair.transitionType === 'presence' && nextSnapshot.transitionOptions.useLayoutProxyAsRoot) {
+          const { nextImage } = pair;
+          const root = nextSnapshot.root ?? overlayRoot;
+
+          if (nextImage) {
+            layoutProxy.appendChild(root.removeChild(nextImage));
+            adjustBoundsToRoot(nextSnapshot.bounds, layoutProxy);
+          }
+        }
+
+        animate();
+
+        if (nextSnapshot.transitionOptions.useLayoutProxyAsRoot) {
+          applyPositionToSnapshotPairs([pair]);
+        }
+      }
     }
   }
 };

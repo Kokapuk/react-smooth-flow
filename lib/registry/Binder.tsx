@@ -1,6 +1,7 @@
 'use client';
 
-import { cloneElement, DetailedHTMLProps, HTMLAttributes, ReactElement, useEffect, useState } from 'react';
+import stableStringify from 'json-stable-stringify';
+import { cloneElement, DetailedHTMLProps, HTMLAttributes, memo, ReactElement, useEffect, useState } from 'react';
 import { Tag, TransitionMapping, TransitionOptions } from '../types';
 import { registerRoot, registerTransitioned, unregisterRoot, unregisterTransitioned } from './store';
 
@@ -42,7 +43,15 @@ const Binder = ({ children, transitions, root }: TransitionedProps) => {
   return cloneElement(children, {
     ref: (node: HTMLElement | null) => {
       setElement(node);
-      setSyncedTransitions(transitions);
+
+      setSyncedTransitions((prev) => {
+        if (stableStringify(prev) === stableStringify(transitions)) {
+          return prev;
+        }
+
+        return transitions;
+      });
+
       setSyncedRootTag(root);
 
       const { ref } = children.props;
@@ -56,4 +65,4 @@ const Binder = ({ children, transitions, root }: TransitionedProps) => {
   });
 };
 
-export default Binder;
+export default memo(Binder);

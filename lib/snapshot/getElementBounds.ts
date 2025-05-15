@@ -19,8 +19,8 @@ const getElementBounds = (element: HTMLElement, captureTransform?: boolean): Bou
   }
 
   const boundingRect = element.getBoundingClientRect();
-  const scrollBarWidth = boundingRect.width - element.clientWidth;
-  const scrollBarHeight = boundingRect.height - element.clientHeight;
+  const scrollBarWidth = element.offsetWidth - element.clientWidth;
+  const scrollBarHeight = element.offsetHeight - element.clientHeight;
 
   element.style.setProperty('transform', resetTransform, resetTransformPriority);
 

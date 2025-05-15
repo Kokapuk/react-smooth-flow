@@ -4,9 +4,13 @@ import { rootHasActiveTransition } from './rootHasActiveTransition';
 const applyPositionToRoots = (pairs: SnapshotPair[]) => {
   const uniqueRoots: HTMLElement[] = [];
 
-  for (const { shared } of pairs) {
-    if (shared.root && !uniqueRoots.includes(shared.root)) {
-      uniqueRoots.push(shared.root);
+  for (const { prevSnapshot, nextSnapshot } of pairs) {
+    if (prevSnapshot?.root && !uniqueRoots.includes(prevSnapshot.root)) {
+      uniqueRoots.push(prevSnapshot.root);
+    }
+
+    if (nextSnapshot?.root && !uniqueRoots.includes(nextSnapshot.root)) {
+      uniqueRoots.push(nextSnapshot.root);
     }
   }
 

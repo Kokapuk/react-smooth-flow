@@ -96,7 +96,7 @@ Now let's spice things up with a few lines of code
 import { useState } from 'react';
 + import { Binder, startTransition, TransitionOptions } from 'react-smooth-flow';
 
-+ const sectionTransitionProperties: TransitionOptions = {
++ const sectionTransitionOptions: TransitionOptions = {
 +  duration: 500,
 +  contentEnterKeyframes: { opacity: [0, 0, 1] },
 +  contentExitKeyframes: 'reversedEnter',
@@ -108,7 +108,7 @@ export default function ExpandableSection() {
   return (
     <>
       {isExpanded ? (
-+       <Binder transitions={{ section: sectionTransitionProperties }}>
++       <Binder transitions={{ section: sectionTransitionOptions }}>
           <section
             style={{
               background: 'white',
@@ -141,7 +141,7 @@ export default function ExpandableSection() {
           </section>
 +       </Binder>
       ) : (
-+       <Binder transitions={{ section: sectionTransitionProperties }}>
++       <Binder transitions={{ section: sectionTransitionOptions }}>
           <button
 -           onClick={() => setExpanded(true)}
 +           onClick={() => startTransition(['section'], () => setExpanded(true))}

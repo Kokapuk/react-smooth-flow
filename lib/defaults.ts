@@ -78,7 +78,8 @@ export const CONSISTENT_TRANSITION_OPTIONS = [
   'captureTransform',
 ] as const satisfies Readonly<(keyof TransitionOptions)[]>;
 
-export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag', 'root'] as const satisfies Readonly<(keyof Snapshot)[]>;
+export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag'] as const satisfies Readonly<(keyof Snapshot)[]>;
+export const CONSISTENT_MUTATION_PAIR_SNAPSHOT_PROPERTIES = ['root'] as const satisfies Readonly<(keyof Snapshot)[]>;
 
 const defaults: ConfigurableDefaults = {
   debug: false,
@@ -89,6 +90,7 @@ const defaults: ConfigurableDefaults = {
     ignoreReducedMotion: false,
     enterKeyframes: { opacity: [0, 1] },
     exitKeyframes: { opacity: [1, 0] },
+    useLayoutProxyAsRoot: false,
     contentEnterKeyframes: { opacity: [0, 1, 1] },
     contentExitKeyframes: { opacity: [1, 1, 0] },
     scaleContent: false,

@@ -7,7 +7,11 @@ const transitionMappings = new Map<HTMLElement, TransitionMapping<ResolvedTransi
 const transitionedElements = new Map<Tag, HTMLElement>();
 const rootElements = new Map<Tag, HTMLElement>();
 
-export const registerTransitioned = (element: HTMLElement, transitions: TransitionMapping<TransitionOptions>) => {
+export const registerTransitioned = (
+  element: HTMLElement,
+  originalTransitions: TransitionMapping<TransitionOptions>
+) => {
+  const transitions = JSON.parse(JSON.stringify(originalTransitions)) as TransitionMapping<TransitionOptions>;
   filterDisabled(transitions);
   validateTransitionMapping(transitions, Array.from(transitionMappings.values()));
 
