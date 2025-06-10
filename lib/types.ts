@@ -47,7 +47,7 @@ export interface CommonTransitionOptions {
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   transitionLayout?: boolean;
-  captureDynamicStates?: boolean;
+  captureDynamicStatesDepth?: number;
   captureTransform?: boolean;
   disabled?: boolean;
 }

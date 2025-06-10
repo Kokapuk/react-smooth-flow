@@ -25,18 +25,17 @@ declare const Binder: ({
   children,
   transitionMapping,
   root,
-}: TransitionedProps) => React.ReactElement<
+  refPropName = 'ref',
+}: Props) => React.ReactElement<
   React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>,
   string | React.JSXElementConstructor<any>
 >;
 
-interface TransitionedProps {
-  children: ReactElement<
-    DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
-    string | JSXElementConstructor<any>
-  >;
-  transitions?: TransitionMapping;
+interface Props {
+  children: ReactElement<DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>>;
+  transitions?: TransitionMapping<TransitionOptions>;
   root?: Tag;
+  refPropName?: string;
 }
 
 type TransitionMapping = Record<Tag, TransitionOptions>;
@@ -54,7 +53,7 @@ interface CommonTransitionOptions {
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   transitionLayout?: boolean;
-  captureDynamicStates?: boolean;
+  captureDynamicStatesDepth?: number;
   captureTransform?: boolean;
   disabled?: boolean;
 }
@@ -252,11 +251,18 @@ Default: `false`
 
 Determines whether to animate layout
 
-#### `captureDynamicStates`
+#### `captureDynamicStatesDepth`
 
-Default: `false`
+Default: `0`
 
-Determines whether to capture dynamic states. States that will get captured for target element and all descendants if enabled:
+Determines depth of capturing dynamic states. 
+
+- `0` no capturing
+- `1` capture target element only
+- `2+` capture descendants at a given depth
+- `-1` for infinite depth (may hurt performance when used on elements with many children)
+
+States that will get captured for target element and all descendants at a given depth:
 
 - scroll position
 - input and textarea `value`
@@ -419,7 +425,7 @@ interface CommonTransitionOptions {
   clip?: boolean;
   relevantStyleProperties?: RelevantStyleProperties;
   transitionLayout?: boolean;
-  captureDynamicStates?: boolean;
+  captureDynamicStatesDepth?: number;
   captureTransform?: boolean;
   disabled?: boolean;
 }
@@ -491,7 +497,7 @@ const defaults: ConfigurableDefaults = {
     relevantStyleProperties: [],
     persistBounds: true,
     transitionLayout: false,
-    captureDynamicStates: false,
+    captureDynamicStatesDepth: 0,
     captureTransform: false,
     disabled: false,
   },

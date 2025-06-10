@@ -5,13 +5,14 @@ import { cloneElement, DetailedHTMLProps, HTMLAttributes, memo, ReactElement, us
 import { Tag, TransitionMapping, TransitionOptions } from '../types';
 import { registerRoot, registerTransitioned, unregisterRoot, unregisterTransitioned } from './store';
 
-interface TransitionedProps {
+interface Props {
   children: ReactElement<DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>>;
   transitions?: TransitionMapping<TransitionOptions>;
   root?: Tag;
+  refPropName?: string;
 }
 
-const Binder = ({ children, transitions, root }: TransitionedProps) => {
+const Binder = ({ children, transitions, root, refPropName = 'ref' }: Props) => {
   const [element, setElement] = useState<HTMLElement | null>(null);
   const [syncedTransitions, setSyncedTransitions] = useState<TransitionMapping<TransitionOptions>>();
   const [syncedRootTag, setSyncedRootTag] = useState<Tag>();
@@ -41,7 +42,7 @@ const Binder = ({ children, transitions, root }: TransitionedProps) => {
   }, [element, syncedRootTag]);
 
   return cloneElement(children, {
-    ref: (node: HTMLElement | null) => {
+    [refPropName]: (node: HTMLElement | null) => {
       setElement(node);
 
       setSyncedTransitions((prev) => {
@@ -54,7 +55,7 @@ const Binder = ({ children, transitions, root }: TransitionedProps) => {
 
       setSyncedRootTag(root);
 
-      const { ref } = children.props;
+      const { [refPropName as keyof typeof children.props]: ref } = children.props;
 
       if (typeof ref === 'function') {
         ref(node);

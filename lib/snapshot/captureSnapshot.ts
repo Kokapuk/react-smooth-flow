@@ -97,7 +97,10 @@ const captureSnapshot = (element: HTMLElement, tag: Tag, excludeTags: Tag[]): Sn
       index: Array.from(element.parentElement!.children).indexOf(element),
     },
     totalZIndex: getTotalZIndex(element, root ?? undefined),
-    dynamicStates: transitionOptions.captureDynamicStates ? captureDynamicStates(element) : undefined,
+    dynamicStates:
+      transitionOptions.captureDynamicStatesDepth !== 0
+        ? captureDynamicStates(element, transitionOptions.captureDynamicStatesDepth)
+        : undefined,
   };
 };
 

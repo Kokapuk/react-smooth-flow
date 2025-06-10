@@ -102,7 +102,7 @@ const defaults: ConfigurableDefaults = {
     relevantStyleProperties: [],
     persistBounds: true,
     transitionLayout: false,
-    captureDynamicStates: false,
+    captureDynamicStatesDepth: 0,
     captureTransform: false,
     disabled: false,
   },

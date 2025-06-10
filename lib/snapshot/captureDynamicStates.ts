@@ -1,6 +1,10 @@
 import { DynamicState } from '../types';
 
-const captureDynamicStates = (element: HTMLElement, path?: number[]): DynamicState[] => {
+const captureDynamicStates = (element: HTMLElement, remainingDepth: number, path?: number[]): DynamicState[] => {
+  if (remainingDepth === 0) {
+    return [];
+  }
+
   const dynamicState: DynamicState = {};
 
   if (element.scrollTop) {
@@ -27,7 +31,9 @@ const captureDynamicStates = (element: HTMLElement, path?: number[]): DynamicSta
 
   const children = Array.from(element.children) as HTMLElement[];
 
-  const states = children.flatMap((child) => captureDynamicStates(child, [...(path ?? []), children.indexOf(child)]));
+  const states = children.flatMap((child) =>
+    captureDynamicStates(child, remainingDepth - 1, [...(path ?? []), children.indexOf(child)])
+  );
 
   if (Object.keys(dynamicState).length) {
     states.unshift({ path, ...dynamicState });
