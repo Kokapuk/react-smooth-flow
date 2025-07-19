@@ -1,13 +1,13 @@
 import { STYLE_PROPERTIES_TO_ANIMATE } from '../defaults';
 import getInitialKeyframe from '../getInitialKeyframe';
 import TransformMatrix from '../transformMatrix';
-import { ContentAlign, Keyframes, MutationSnapshotPair, Transition } from '../types';
+import { ContentAlign, Keyframes, MutationSnapshotPair, TransitionsRecord } from '../types';
 import hideElementNoTransition from './hideElementNoTransition';
 
 const playImageTransition = (
   pair: MutationSnapshotPair,
   animationOptions: KeyframeAnimationOptions,
-  transitions: Transition[],
+  transitions: TransitionsRecord,
   cleanup: () => void
 ) => {
   const { prevSnapshot, nextSnapshot, shared, image } = pair;
@@ -68,17 +68,18 @@ const playImageTransition = (
 
   const transition = image.animate(keyframes, animationOptions);
 
-  transitions.push({
+  transitions['mutation_main'] = {
     animation: transition,
     snapshotPair: pair,
+    keyframes,
     cleanup,
-  });
+  };
 };
 
 const playContentTransition = (
   pair: MutationSnapshotPair,
   animationOptions: KeyframeAnimationOptions,
-  transitions: Transition[]
+  transitions: TransitionsRecord
 ) => {
   const { image, shared, prevSnapshot, nextSnapshot } = pair;
   const exitContent = image.children[0] as HTMLDivElement;
@@ -102,10 +103,16 @@ const playContentTransition = (
     animationOptions
   );
 
-  transitions.push(
-    { animation: exitContentTransition, snapshotPair: pair },
-    { animation: enterContentTransition, snapshotPair: pair }
-  );
+  transitions['mutation_contentExit'] = {
+    animation: exitContentTransition,
+    snapshotPair: pair,
+    keyframes: prevSnapshot.transitionOptions.contentExitKeyframes,
+  };
+  transitions['mutation_contentEnter'] = {
+    animation: enterContentTransition,
+    snapshotPair: pair,
+    keyframes: nextSnapshot.transitionOptions.contentEnterKeyframes,
+  };
 };
 
 const applyTransformOriginToContent = (contentAlign: ContentAlign, element: HTMLDivElement) => {
@@ -143,7 +150,7 @@ const applyTransformOriginToContent = (contentAlign: ContentAlign, element: HTML
 const playContentScaleTransition = (
   pair: MutationSnapshotPair,
   animationOptions: KeyframeAnimationOptions,
-  transitions: Transition[]
+  transitions: TransitionsRecord
 ) => {
   const { prevSnapshot, nextSnapshot, image, shared } = pair;
 
@@ -155,20 +162,24 @@ const playContentScaleTransition = (
     const exitContentFrom = exitContentMatrix.toString();
     exitContentMatrix.scaleX = nextSnapshot.bounds.width / prevSnapshot.bounds.width;
     exitContentMatrix.scaleY = nextSnapshot.bounds.height / prevSnapshot.bounds.height;
-    const exitContentScaleAnimation: Keyframes = { transform: [exitContentFrom, exitContentMatrix.toString()] };
+    const exitContentScaleKeyframes: Keyframes = { transform: [exitContentFrom, exitContentMatrix.toString()] };
 
     if (shared.transitionOptions.delay) {
-      exitContentTransformContainer.animate(getInitialKeyframe(exitContentScaleAnimation), {
+      exitContentTransformContainer.animate(getInitialKeyframe(exitContentScaleKeyframes), {
         fill: 'forwards',
       });
     }
 
     const exitContentScaleTransition = exitContentTransformContainer.animate(
-      exitContentScaleAnimation,
+      exitContentScaleKeyframes,
       animationOptions
     );
 
-    transitions.push({ animation: exitContentScaleTransition, snapshotPair: pair });
+    transitions['mutation_contentScaleExit'] = {
+      animation: exitContentScaleTransition,
+      snapshotPair: pair,
+      keyframes: exitContentScaleKeyframes,
+    };
   }
 
   if (nextSnapshot.transitionOptions.scaleContent) {
@@ -180,24 +191,28 @@ const playContentScaleTransition = (
     const enterContentTo = enterContentMatrix.toString();
     enterContentMatrix.scaleX = prevSnapshot.bounds.width / nextSnapshot.bounds.width;
     enterContentMatrix.scaleY = prevSnapshot.bounds.height / nextSnapshot.bounds.height;
-    const enterContentScaleAnimation: Keyframes = { transform: [enterContentMatrix.toString(), enterContentTo] };
+    const enterContentScaleKeyframes: Keyframes = { transform: [enterContentMatrix.toString(), enterContentTo] };
 
     if (shared.transitionOptions.delay) {
-      enterContentTransformContainer.animate(getInitialKeyframe(enterContentScaleAnimation), {
+      enterContentTransformContainer.animate(getInitialKeyframe(enterContentScaleKeyframes), {
         fill: 'forwards',
       });
     }
 
     const enterContentScaleTransition = enterContentTransformContainer.animate(
-      enterContentScaleAnimation,
+      enterContentScaleKeyframes,
       animationOptions
     );
 
-    transitions.push({ animation: enterContentScaleTransition, snapshotPair: pair });
+    transitions['mutation_contentScaleEnter'] = {
+      animation: enterContentScaleTransition,
+      snapshotPair: pair,
+      keyframes: enterContentScaleKeyframes,
+    };
   }
 };
 
-const playMutationTransition = (pair: MutationSnapshotPair, transitions: Transition[]) => {
+const playMutationTransition = (pair: MutationSnapshotPair, transitions: TransitionsRecord) => {
   const { prevSnapshot, nextSnapshot, image, shared } = pair;
   const resetTarget = hideElementNoTransition(nextSnapshot.target);
 

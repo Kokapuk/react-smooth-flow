@@ -259,7 +259,7 @@ Determines depth of capturing dynamic states.
 
 - `0` no capturing
 - `1` capture target element only
-- `2+` capture descendants at a given depth
+- `2+` capture target and descendants at a given depth
 - `-1` for infinite depth (may hurt performance when used on elements with many children)
 
 States that will get captured for target element and all descendants at a given depth:

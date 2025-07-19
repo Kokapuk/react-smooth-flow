@@ -161,15 +161,31 @@ export interface PresenceSnapshotPair extends CommonSnapshotPair {
 
 export type SnapshotPair = MutationSnapshotPair | PresenceSnapshotPair;
 
-export interface Transition {
-  snapshotPair: SnapshotPair;
-  animation: Animation;
-  cleanup?(): void;
-}
-
 export type Falsy = false | 0 | '' | null | undefined;
 export type FalsyArray<T> = (T | Falsy)[];
 
-export type StoreRecord = Record<Tag, Transition[]>;
+export type TransitionKey =
+  | 'mutation_main'
+  | 'mutation_contentEnter'
+  | 'mutation_contentExit'
+  | 'mutation_contentScaleEnter'
+  | 'mutation_contentScaleExit'
+  | 'presence_transformEnter'
+  | 'presence_transformExit'
+  | 'presence_restEnter'
+  | 'presence_restExit'
+  | 'layout_mutation'
+  | 'layout_enter'
+  | 'layout_exit';
+
+export interface Transition {
+  snapshotPair: SnapshotPair;
+  animation: Animation;
+  keyframes: Keyframes;
+  cleanup?(): void;
+}
+
+export type TransitionsRecord = Partial<Record<TransitionKey, Transition>>;
+export type StoreRecord = Record<Tag, TransitionsRecord>;
 export type Id = string;
 export type Store = Record<Id, StoreRecord>;

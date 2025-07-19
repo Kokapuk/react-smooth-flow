@@ -1,5 +1,5 @@
 import getInitialKeyframe from '../getInitialKeyframe';
-import { Keyframes, PresenceSnapshotPair, Snapshot, Transition } from '../types';
+import { Keyframes, PresenceSnapshotPair, Snapshot, TransitionsRecord } from '../types';
 import extractPropertyKeyframes from './extractPropertyKeyframes';
 import hideElementNoTransition from './hideElementNoTransition';
 
@@ -8,7 +8,8 @@ const playTransition = (
   snapshot: Snapshot,
   pair: PresenceSnapshotPair,
   keyframes: Keyframes,
-  transitions: Transition[],
+  transitions: TransitionsRecord,
+  type: 'enter' | 'exit',
   resetTarget?: (() => void) | null
 ) => {
   const { transitionOptions } = snapshot;
@@ -31,39 +32,47 @@ const playTransition = (
     const transformTransition = image.animate(transformKeyframes, { ...animationOptions, composite: 'add' });
     const restTransition = image.animate(restKeyframes, animationOptions);
 
-    transitions.push({
+    transitions[type === 'enter' ? 'presence_transformEnter' : 'presence_transformExit'] = {
       snapshotPair: pair,
       animation: transformTransition,
+      keyframes: transformKeyframes,
+    };
+
+    transitions[type === 'enter' ? 'presence_restEnter' : 'presence_restExit'] = {
+      snapshotPair: pair,
+      animation: restTransition,
+      keyframes: restKeyframes,
       cleanup: () => {
         image.remove();
         resetTarget?.();
       },
-    });
-
-    transitions.push({
-      snapshotPair: pair,
-      animation: restTransition,
-      cleanup: () => image.remove(),
-    });
+    };
   } else {
     if (snapshot.transitionOptions.delay) {
       image.animate(getInitialKeyframe(keyframes), { fill: 'forwards' });
     }
 
     const transition = image.animate(keyframes, animationOptions);
+    // applyTransitionStartTimeByCapturedProgress(
+    //   transition,
+    //   keyframes,
+    //   pair.shared.tag,
+    //   type === 'enter' ? 'presence_restEnter' : 'presence_restExit'
+    // );
 
-    transitions.push({
+    transitions[type === 'enter' ? 'presence_restExit' : 'presence_restEnter'] = {
       snapshotPair: pair,
       animation: transition,
+      keyframes,
       cleanup: () => {
         image.remove();
         resetTarget?.();
       },
-    });
+    };
   }
 };
 
-const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: Transition[]) => {
+const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: TransitionsRecord) => {
   const { prevSnapshot, nextSnapshot, prevImage, nextImage } = pair;
   const resetTarget = nextSnapshot?.target ? hideElementNoTransition(nextSnapshot.target) : null;
 
@@ -74,6 +83,7 @@ const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: Transit
       pair,
       prevSnapshot.transitionOptions.exitKeyframes,
       transitions,
+      'enter',
       resetTarget
     );
   }
@@ -85,6 +95,7 @@ const playPresenceTransition = (pair: PresenceSnapshotPair, transitions: Transit
       pair,
       nextSnapshot.transitionOptions.enterKeyframes,
       transitions,
+      'exit',
       !prevSnapshot ? resetTarget : null
     );
   }

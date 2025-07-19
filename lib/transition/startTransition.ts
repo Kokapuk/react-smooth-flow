@@ -28,6 +28,7 @@ const startTransition = async (
   const allTags = getAllTags(validTags);
 
   const persistentBounds = getPersistentBounds(allTags);
+  // captureTransitionProgresses(validTags);
   cancelTransition(...allTags);
 
   const prevSnapshots = validTags.map((tag) => {
@@ -77,7 +78,7 @@ const startTransition = async (
   try {
     for (const pair of snapshotPairs) {
       const storeRecord = getRecordById(transitionId);
-      storeRecord[pair.shared.tag] = [];
+      storeRecord[pair.shared.tag] = {};
 
       if (pair.transitionType === 'mutation') {
         playMutationTransition(pair, storeRecord[pair.shared.tag]);

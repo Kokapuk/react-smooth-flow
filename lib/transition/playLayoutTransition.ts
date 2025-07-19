@@ -1,6 +1,6 @@
 import adjustBoundsToRoot from '@lib/snapshot/adjustBoundsToRoot';
 import getInitialKeyframe from '../getInitialKeyframe';
-import { Keyframes, PropertyIndexedKeyframes, Snapshot, SnapshotPair, Transition } from '../types';
+import { Keyframes, PropertyIndexedKeyframes, Snapshot, SnapshotPair, TransitionsRecord } from '../types';
 import applyPositionToSnapshotPairs from './applyPositionToSnapshotPairs';
 import getOverlayRoot from './getOverlayRoot';
 
@@ -37,7 +37,7 @@ const getFlexboxMarginCompensation = (element: HTMLElement) => {
 
 const playMutationTransition = (
   pair: SnapshotPair,
-  transitions: Transition[],
+  transitions: TransitionsRecord,
   animationOptions: KeyframeAnimationOptions
 ) => {
   const { prevSnapshot, nextSnapshot, shared } = pair;
@@ -69,19 +69,20 @@ const playMutationTransition = (
 
   const transition = layoutProxy.animate(keyframes, animationOptions);
 
-  transitions.push({
+  transitions['layout_mutation'] = {
     animation: transition,
     snapshotPair: pair,
+    keyframes,
     cleanup: () => {
       target.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
       layoutProxy.remove();
     },
-  });
+  };
 };
 
 const prepareExitTransition = (
   pair: SnapshotPair,
-  transitions: Transition[],
+  transitions: TransitionsRecord,
   animationOptions: KeyframeAnimationOptions
 ) => {
   const { prevSnapshot, shared } = pair;
@@ -120,18 +121,19 @@ const prepareExitTransition = (
 
       const transition = layoutProxy.animate(keyframes, animationOptions);
 
-      transitions.push({
+      transitions['layout_exit'] = {
         animation: transition,
         snapshotPair: pair,
+        keyframes,
         cleanup: () => layoutProxy.remove(),
-      });
+      };
     },
   };
 };
 
 const prepareEnterTransition = (
   pair: SnapshotPair,
-  transitions: Transition[],
+  transitions: TransitionsRecord,
   animationOptions: KeyframeAnimationOptions
 ) => {
   const { nextSnapshot, shared } = pair;
@@ -172,19 +174,20 @@ const prepareEnterTransition = (
 
       const transition = layoutProxy.animate(keyframes, animationOptions);
 
-      transitions.push({
+      transitions['layout_enter'] = {
         animation: transition,
         snapshotPair: pair,
+        keyframes,
         cleanup: () => {
           target.style.setProperty('display', resetDisplayValue, resetDisplayPriority);
           layoutProxy.remove();
         },
-      });
+      };
     },
   };
 };
 
-const playLayoutTransition = (pair: SnapshotPair, transitions: Transition[]) => {
+const playLayoutTransition = (pair: SnapshotPair, transitions: TransitionsRecord) => {
   const { shared, prevSnapshot, nextSnapshot } = pair;
 
   const animationOptions: KeyframeAnimationOptions = {

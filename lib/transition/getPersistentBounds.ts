@@ -10,7 +10,7 @@ const getImageBoundsByTag = (tag: Tag) => {
     return null;
   }
 
-  const activeTransitionPair = record[tag][0].snapshotPair;
+  const activeTransitionPair = Object.values(record[tag])[0].snapshotPair;
 
   if (activeTransitionPair.transitionType === 'presence') {
     return null;

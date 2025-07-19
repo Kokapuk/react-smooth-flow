@@ -1,5 +1,5 @@
 import { Properties, PropertiesHyphen } from 'csstype';
-import { ResolvedTransitionOptions, Snapshot, TransitionOptions } from './types';
+import { ResolvedTransitionOptions, Snapshot, TransitionKey, TransitionOptions } from './types';
 
 export interface ConfigurableDefaults {
   debug: boolean;
@@ -80,6 +80,13 @@ export const CONSISTENT_TRANSITION_OPTIONS = [
 
 export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag'] as const satisfies Readonly<(keyof Snapshot)[]>;
 export const CONSISTENT_MUTATION_PAIR_SNAPSHOT_PROPERTIES = ['root'] as const satisfies Readonly<(keyof Snapshot)[]>;
+
+export const TRANSITION_KEYS_TO_CAPTURE_PROGRESS = {
+  presence_transformEnter: 'presence_transformExit',
+  presence_transformExit: 'presence_transformEnter',
+  presence_restEnter: 'presence_restExit',
+  presence_restExit: 'presence_restEnter',
+} as const satisfies Readonly<Partial<Record<TransitionKey, TransitionKey>>>;
 
 const defaults: ConfigurableDefaults = {
   debug: false,
