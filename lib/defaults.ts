@@ -47,7 +47,7 @@ export const STYLE_PROPERTIES_TO_RESET_ON_IMAGE = {
   'background-color': 'transparent',
   'border-radius': '0',
   'border-width': '0',
-  position: 'static',
+  position: 'relative',
   margin: '0',
   opacity: '1',
   'box-shadow': 'none',
