@@ -65,12 +65,14 @@ interface MutationTransitionOptions {
   contentAlign?: ContentAlign;
   forcePresenceTransition?: boolean;
   persistBounds?: boolean;
+  viewTransitionPlayMutationTransition?: boolean;
 }
 
 interface PresenceTransitionOptions {
   enterKeyframes?: Keyframes;
   exitKeyframes?: Keyframes | 'reversedEnter';
   useLayoutProxyAsRoot?: boolean;
+  viewTransitionPlayPresenceTransition?: boolean;
 }
 
 type TransitionOptions = CommonTransitionOptions & MutationTransitionOptions & PresenceTransitionOptions;
@@ -287,6 +289,18 @@ Default: `false`
 
 Whether snapshot should not be captured.
 
+#### `viewTransitionPlayMutationTransition`
+
+Default: `true`
+
+Whether to play view transition for view-transition-group.
+
+#### `viewTransitionPlayPresenceTransition`
+
+Default: `true`
+
+Whether to play view transition for view-transition-old/view-transition-new.
+
 ## Root
 
 `Binder` is used to specify custom transition root. By default all transitions perform on screen-wide overlay root to make sure cross-container transitions look valid even with `overflow` property set to something other than `visible` on parent containers. But in some cases you may want to intentionally restrict visibility of an element while transitioning. Or you may want your transitioning element to tolerate complex-moving element, like with `position: sticky` or `translate` animation running on it
@@ -311,15 +325,13 @@ Whether snapshot should not be captured.
 ### Type declaration
 
 ```ts
-declare const startTransition: (
-  tags: FalsyArray<Tag>,
-  updateDOM?: () => void | Promise<void>,
-  config?: TransitionConfig
-) => Promise<void>;
+declare const startTransition: (tags: FalsyArray<Tag>, update?: UpdateCallback, config?: TransitionConfig) => Promise<void>;
 
 type FalsyArray<T> = (T | Falsy)[];
 
 type Falsy = false | 0 | '' | null | undefined;
+
+type UpdateCallback = () => void | Promise<void>;
 
 interface TransitionConfig {
   onBegin?(): void;
@@ -336,6 +348,40 @@ startTransition(['tagA', 'tagB'], () => setState(newStateValue));
 
 > [!IMPORTANT]
 > Order of the provided tags represents the order of corresponding snapshots in the DOM. It may be crucial in some cases, when transitioning elements intersect with each other and you want them to be ordered correctly.
+
+## startViewTransition
+
+`startViewTransition` is used to update DOM and perform transitions using native [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) for elements by specified tags.
+
+### Why even use it?
+
+While `startTransition` provides much more options and control over animation, it's not as performant as the native View Transition API. In some cases, it's better to use `startViewTransition`, such as for large and deeply nested elements (SPA transitions). This helper function provides greater control over which elements should be animated for each transition and allows you to reuse available transition options, so you don't have to define animations in CSS, for example. You can easily replace `startViewTransition` with `startTransition` and vice versa, but expect animations to look different in most cases.
+
+### Type declaration
+
+```ts
+declare const startViewTransition: (tags: FalsyArray<Tag>, update?: UpdateCallback, config?: ViewTransitionConfig) => ViewTransition;
+
+type FalsyArray<T> = (T | Falsy)[];
+
+type Falsy = false | 0 | '' | null | undefined;
+
+type UpdateCallback = () => void | Promise<void>;
+
+interface TransitionConfig {
+  onBegin?(): void;
+  onCancel?(): void;
+  onFinish?(): void;
+}
+
+type ViewTransitionConfig = Omit<TransitionConfig, 'onCancel'>;
+```
+
+### Usage
+
+```ts
+startViewTransition(['tagA', 'tagB'], () => setState(newStateValue));
+```
 
 ### `TransitionConfig` options
 
@@ -379,6 +425,9 @@ type Tag = string;
 cancelTransition('tagA', 'tagB');
 ```
 
+> [!IMPORTANT]
+> `cancelTransition` will not perform transition skip for view transition. Use ViewTransition object returned by `startViewTransition` to skip it instead.
+
 ## `defaults`
 
 `defaults` is used to configure default library options.
@@ -389,6 +438,7 @@ cancelTransition('tagA', 'tagB');
 declare const defaults: ConfigurableDefaults;
 
 interface ConfigurableDefaults {
+  debug: boolean;
   transitionOptions: ResolvedTransitionOptions;
 }
 
@@ -437,12 +487,14 @@ interface MutationTransitionOptions {
   contentAlign?: ContentAlign;
   forcePresenceTransition?: boolean;
   persistBounds?: boolean;
+  viewTransitionPlayMutationTransition?: boolean;
 }
 
 interface PresenceTransitionOptions {
   enterKeyframes?: Keyframes;
   exitKeyframes?: Keyframes | 'reversedEnter';
   useLayoutProxyAsRoot?: boolean;
+  viewTransitionPlayPresenceTransition?: boolean;
 }
 
 type TransitionOptions = CommonTransitionOptions & MutationTransitionOptions & PresenceTransitionOptions;
@@ -500,6 +552,8 @@ const defaults: ConfigurableDefaults = {
     captureDynamicStatesDepth: 0,
     captureTransform: false,
     disabled: false,
+    viewTransitionPlayMutationTransition: true,
+    viewTransitionPlayPresenceTransition: true,
   },
 };
 ```

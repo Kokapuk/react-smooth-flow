@@ -4,7 +4,7 @@ import { getTransitioned } from '../registry/store';
 import captureSnapshot from '../snapshot/captureSnapshot';
 import { cancelTransition, finishTransition, getRecordById, getTransitionsById, setupRecord } from '../store';
 import getPersistentBounds from '../transition/getPersistentBounds';
-import { FalsyArray, Tag, TransitionConfig } from '../types';
+import { FalsyArray, Tag, TransitionConfig, UpdateCallback } from '../types';
 import appendPairsToDOM from './appendPairsToDOM';
 import applyDynamicStatesToPairs from './applyDynamicStatesToPairs';
 import applyMaxZIndexToSnapshotPairs from './applyMaxZIndexToSnapshotPairs';
@@ -19,11 +19,7 @@ import playMutationTransition from './playMutationTransition';
 import playPresenceTransition from './playPresenceTransition';
 import validateSnapshotPairs from './validateSnapshotPairs';
 
-const startTransition = async (
-  tags: FalsyArray<Tag>,
-  updateDOM?: () => void | Promise<void>,
-  config?: TransitionConfig
-) => {
+const startTransition = async (tags: FalsyArray<Tag>, update?: UpdateCallback, config?: TransitionConfig) => {
   const validTags = Array.from(new Set(getTruthyArray(tags)));
   const allTags = getAllTags(validTags);
 
@@ -45,7 +41,7 @@ const startTransition = async (
     );
   });
 
-  await updateDOM?.();
+  await update?.();
 
   const nextSnapshots = validTags.map((tag) => {
     const transitioned = getTransitioned(tag);

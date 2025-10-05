@@ -59,12 +59,14 @@ export interface MutationTransitionOptions {
   contentAlign?: ContentAlign;
   forcePresenceTransition?: boolean;
   persistBounds?: boolean;
+  viewTransitionPlayMutationTransition?: boolean;
 }
 
 export interface PresenceTransitionOptions {
   enterKeyframes?: Keyframes;
   exitKeyframes?: Keyframes | 'reversedEnter';
   useLayoutProxyAsRoot?: boolean;
+  viewTransitionPlayPresenceTransition?: boolean;
 }
 
 export type TransitionOptions = CommonTransitionOptions & MutationTransitionOptions & PresenceTransitionOptions;
@@ -79,11 +81,15 @@ export type ResolvedTransitionOptions = Required<
 
 export type TransitionMapping<T extends TransitionOptions | ResolvedTransitionOptions> = Record<Tag, T>;
 
+export type UpdateCallback = () => void | Promise<void>;
+
 export interface TransitionConfig {
   onBegin?(): void;
   onCancel?(): void;
   onFinish?(): void;
 }
+
+export type ViewTransitionConfig = Omit<TransitionConfig, 'onCancel'>;
 
 export interface Bounds {
   top: number;

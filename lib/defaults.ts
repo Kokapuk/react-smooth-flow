@@ -81,6 +81,8 @@ export const CONSISTENT_TRANSITION_OPTIONS = [
   'forcePresenceTransition',
   'clip',
   'captureTransform',
+  'viewTransitionPlayMutationTransition',
+  'viewTransitionPlayPresenceTransition',
 ] as const satisfies Readonly<(keyof TransitionOptions)[]>;
 
 export const CONSISTENT_SNAPSHOT_PROPERTIES = ['tag'] as const satisfies Readonly<(keyof Snapshot)[]>;
@@ -117,6 +119,8 @@ const defaults: ConfigurableDefaults = {
     captureDynamicStatesDepth: 0,
     captureTransform: false,
     disabled: false,
+    viewTransitionPlayMutationTransition: true,
+    viewTransitionPlayPresenceTransition: true,
   },
 };
 

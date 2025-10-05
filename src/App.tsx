@@ -12,12 +12,13 @@ import PreserveAspectRatio from './Examples/PreserveAspectRatio';
 import ScaleContent from './Examples/ScaleContent';
 import Transform from './Examples/Transform';
 import TransitioningRoot from './Examples/TransitioningRoot';
+import ViewTransition from './Examples/ViewTransition';
 
 const App = () => {
   return (
     <>
-      <Benchmark />
       <ReducedMotionAlert />
+      <Benchmark />
       <AnimatedList />
       <ContentSizeChange />
       <Playground />
@@ -30,6 +31,7 @@ const App = () => {
       <Layout />
       <DynamicStates />
       <Transform />
+      <ViewTransition />
     </>
   );
 };
