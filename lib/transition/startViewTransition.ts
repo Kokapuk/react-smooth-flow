@@ -65,6 +65,11 @@ const startViewTransition = (tags: FalsyArray<Tag>, update?: UpdateCallback, con
     return element;
   });
 
+  if (!elements.some((element) => element !== null)) {
+    update?.();
+    return null;
+  }
+
   document.head.append(style);
 
   const transition = document.startViewTransition(update);
